@@ -3,21 +3,18 @@ TITLE Animations of a pixel art girl
 .8086
 .STACK 100h
 
+; Useful macros
+INCLUDE defs/macros.inc
+
 .DATA
-  ; Girl animations sprite data
-  INCLUDE assets/anim.inc
+  INCLUDE defs/consts.inc
+  INCLUDE assets/anim.inc   ; animations sprite data
 
   pos_x DW 150
   pos_y DW 90
 
-  width_screen DW 320
-  height_screen DW 200
-
-  width_sprite DW 16
-  height_sprite DW 17
-
-  curr_sprite DB g_front_1   ; Front animation for starting point
-  anim_state DB 0            ; 0, 1, 2 (three animations state)
+  curr_sprite DW OFFSET g_front_1   ; Front animation for starting point
+  anim_state  DB 0                  ; 0, 1, 2 (three animations state)
 
 .CODE
 MAIN PROC
@@ -46,8 +43,7 @@ MAIN ENDP
 
 ; --- Game loop ---
 GAME_LOOP PROC
-  ; Save registers
-  PUSH AX BX CX DX SI DI
+  SAVE_REGS
 
 NEXT_KEY:
   ; Get keyboard input
@@ -58,67 +54,78 @@ NEXT_KEY:
 
   ; -- Key handling --
   ; https://www.fountainware.com/EXPL/bios_key_codes.htm
-  CMP AH, 01h       ; Escape key
+  CMP AH, KEY_ESC
   JE EXIT_GAME
 
-  CMP AH, 4Dh       ; Right arrow key
+  CMP AH, KEY_RIGHT
   JE RIGHT_DIRECTION
 
-  CMP AH, 4Bh       ; Left arrow key
+  CMP AH, KEY_LEFT
   JE LEFT_DIRECTION
 
-  CMP AH, 48h       ; Up arrow key
+  CMP AH, KEY_UP
   JE UP_DIRECTION
 
-  CMP AH, 50h       ; Down arrow key
+  CMP AH, KEY_DOWN
   JE DOWN_DIRECTION
 
-  JMP NEXT_KEY      ; Other key press, ignore
+  ; Other key press, ignore
+  JMP NEXT_KEY
 
 RIGHT_DIRECTION:
+  CALL ERASE_GIRL
+
 LEFT_DIRECTION:
+  CALL ERASE_GIRL
+
 UP_DIRECTION:
+  CALL ERASE_GIRL
+
 DOWN_DIRECTION:
+  CALL ERASE_GIRL
 
 EXIT_GAME:
-
-  ; Restore registers
-  POP AX BX CX DX SI DI
+  RESTORE_REGS
   RET
 GAME_LOOP ENDP
 
-; -- Erase girl animation --
+; --- Erase girl ---
 ERASE_GIRL PROC
-  ; Save registers
-  PUSH AX BX CX DX SI DI
-
-  ; Clear direction flag
-  CLD
+  SAVE_REGS
+  CLD ; Clear direction flag, ensure right direction for STOBS operation
 
   ; Calcul DI = (pos_y * 320) + pos_x
   ; Memory address of the sprite
   MOV AX, pos_y
-  MUL width_screen      ; This can be optimized (costly on 8086)
+  MOV BX, SCREEN_WIDTH
+  MUL BX                ; This can be optimized (costly on 8086)
   ADD AX, pos_x
   MOV DI, AX            ; First pixel of the sprite
 
   MOV AL, 00h           ; Black color (screen background)
-  MOV DX, height_sprite
+  MOV DX, GIRL_HEIGHT
 
 ERASE_LINE:
   PUSH DI                ; Save DI (begin of line)
-  MOV  CX, width_sprite  ; Width of the sprite
+  MOV  CX, GIRL_WIDTH    ; Width of the sprite
   REP  STOSB             ; Fill the line with black pixels (MOV ES:DI AL | INC DI | DEC CX)
   POP  DI                ; Restore DI (begin of line)
 
-  ADD DI, width_screen   ; Move to next line
+  ADD DI, SCREEN_WIDTH   ; Move to next line
   DEC DX                 ; Decrement height
-  
+
   JNZ ERASE_LINE         ; If height > 0, repeat
 
-  ; Restore registers
-  POP AX BX CX DX SI DI
+  RESTORE_REGS
   RET
-ERASE_GIRL
+ERASE_GIRL ENDP
+
+; --- Draw girl right direction ---
+DRAW_GIRL_RIGHT PROC
+  SAVE_REGS
+
+  RESTORE_REGS
+  RET
+DRAW_GIRL_RIGHT ENDP
 
 END MAIN
