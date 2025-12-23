@@ -30,7 +30,7 @@ MAIN PROC
 
   DRAW_Y:    
              PUSH  DI
-             MOV   CX, 16       ; 10 pixels
+             MOV   CX, 16       ; 16 pixels
   DRAW_X:    
              LODSB              ; Charger pixel de Mario
              OR    AL, AL       ; Est-ce que c'est 0 (transparent) ?

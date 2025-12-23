@@ -1,11 +1,10 @@
-TITLE Mario Register 8086
+TITLE Girl Register 8086
 .MODEL SMALL
 .STACK 100h
 
 .DATA
   ; Sprite 16x16
-  mario LABEL BYTE
-  include assets/mario.inc
+  include assets/girl.inc
 
 .CODE
 MAIN PROC
@@ -23,7 +22,7 @@ MAIN PROC
               MOV   BP, 90       ; BP = Position Y (On utilise BP car DX est cassé par MUL)
 
   ; Premier affichage
-              CALL  DRAW_MARIO
+              CALL  DRAW_GIRL
 
   GAME_LOOP:
   ; 1. Attendre une touche
@@ -33,8 +32,8 @@ MAIN PROC
   ; 2. Sauvegarder la touche dans un registre sûr (SI n'est pas utilisé ici)
               MOV   SI, AX
 
-  ; 3. Effacer Mario (utilise BX et BP actuels)
-              CALL  ERASE_MARIO
+  ; 3. Effacer Girl (utilise BX et BP actuels)
+              CALL  ERASE_GIRL
 
   ; 4. Restaurer la touche depuis SI et tester
               MOV   AX, SI
@@ -62,7 +61,7 @@ MAIN PROC
 
   REDRAW:
   ; 5. Dessiner à la nouvelle position (BX, BP)
-              CALL  DRAW_MARIO
+              CALL  DRAW_GIRL
               JMP   GAME_LOOP
 
   FIN:
@@ -73,7 +72,7 @@ MAIN PROC
 MAIN ENDP
 
   ; --- DESSINER (Utilise BX pour X, BP pour Y) ---
-DRAW_MARIO PROC
+DRAW_GIRL PROC
               PUSH  BX           ; Sauvegarder BX (X)
               PUSH  BP           ; Sauvegarder BP (Y)
 
@@ -84,8 +83,8 @@ DRAW_MARIO PROC
               ADD   AX, BX
               MOV   DI, AX
 
-              LEA   SI, mario    ; Source des données (nécessite DS correct)
-              MOV   DX, 16       ; Hauteur (On peut utiliser DX maintenant, MUL est fini)
+              LEA   SI, p_dos_1    ; Source des données (nécessite DS correct)
+              MOV   DX, 17       ; Hauteur (On peut utiliser DX maintenant, MUL est fini)
 
   D_L:
               PUSH  DI
@@ -106,10 +105,10 @@ DRAW_MARIO PROC
               POP   BP           ; Restaurer les registres de position
               POP   BX
               RET
-DRAW_MARIO ENDP
+DRAW_GIRL ENDP
 
   ; --- EFFACER (Utilise BX pour X, BP pour Y) ---
-ERASE_MARIO PROC
+ERASE_GIRL PROC
               PUSH  BX
               PUSH  BP
 
@@ -119,7 +118,7 @@ ERASE_MARIO PROC
               ADD   AX, BX
               MOV   DI, AX
 
-              MOV   DX, 16       ; Hauteur
+              MOV   DX, 17       ; Hauteur
   E_L:
               PUSH  DI
               MOV   CX, 16
@@ -136,6 +135,6 @@ ERASE_MARIO PROC
               POP   BP
               POP   BX
               RET
-ERASE_MARIO ENDP
+ERASE_GIRL ENDP
 
 END MAIN
