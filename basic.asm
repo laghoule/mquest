@@ -4,7 +4,7 @@ TITLE Mario Sprite 8086
 
 .DATA
    testing LABEL BYTE
-   INCLUDE assets\testing.inc
+   INCLUDE assets\testing2.inc
 
 .CODE
 MAIN PROC
@@ -22,15 +22,15 @@ MAIN PROC
              MOV   AX, 90
              MOV   BX, 320
              MUL   BX
-             ADD   AX, 150
+             ADD   AX, 150      ; dx est ecrase
              MOV   DI, AX
 
              LEA   SI, testing
-             MOV   DX, 16       ; 16 lignes
+             MOV   DX, 17       ; 16 lignes
 
   DRAW_Y:    
              PUSH  DI
-             MOV   CX, 10       ; 16 pixels
+             MOV   CX, 16       ; 10 pixels
   DRAW_X:    
              LODSB              ; Charger pixel de Mario
              OR    AL, AL       ; Est-ce que c'est 0 (transparent) ?
@@ -53,6 +53,7 @@ MAIN PROC
              MOV   AX, 0003h
              INT   10h
 
+  ; retour au dos
              MOV   AX, 4C00h
              INT   21h
 MAIN ENDP
