@@ -120,9 +120,58 @@ ERASE_LINE:
   RET
 ERASE_GIRL ENDP
 
-; --- Draw girl right direction ---
+; --- Draw girl in right direction ---
 DRAW_GIRL_RIGHT PROC
   SAVE_REGS
+  CLD ; Clear direction flag
+
+  CMP anim_state, 0 ; Check if animation state is 0
+  JE r_load_state_0
+
+  CMP anim_state, 1 ; Check if animation state is 1
+  JE r_load_state_1
+
+  ; Else it's animation state 2
+  MOV SI, OFFSET g_right_2
+  JMP r_start_draw
+
+r_load_state_0:
+  MOV SI, OFFSET g_right_0
+  JMP r_start_draw
+
+r_load_state_1:
+  MOV SI, OFFSET g_right_1
+  JMP r_start_draw
+
+r_start_draw:
+  ; Calcul DI = (pos_y * 320) + pos_x
+  ; Memory address of the sprite
+  MOV AX, pos_y
+  MOV BX, SCREEN_WIDTH
+  MUL BX
+  ADD AX, pos_x
+  MOV DI, AX
+
+  MOV DX, GIRL_HEIGHT  ; For counting lines
+
+r_draw_line:
+  PUSH DI              ; Save DI (begin of line)
+  MOV CX, GIRL_WIDTH   ; Counter for lines looping
+
+r_draw_pixel:
+  LODSB                ; Load pixel in AL, and SI++
+  OR AL, AL            ; Check if pixel is transparent (black)
+  JZ r_skip_pixel      ; If transparent, draw the next pixel
+  MOV ES:[DI], AL      ; Draw pixel on screen
+
+r_skip_pixel:
+  INC DI               ; Increment line counter
+  LOOP r_draw_pixel
+
+  POP DI               ; Restore DI (begin of line)
+  ADD DI, SCREEN_WIDTH ; Move to next line
+  DEC DX               ; Decrement line counter
+  JNZ r_draw_line      ; If height > 0, repeat
 
   RESTORE_REGS
   RET
