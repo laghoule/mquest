@@ -13,7 +13,7 @@ INCLUDE defs/macros.inc
   pos_x DW 150
   pos_y DW 90
 
-  curr_sprite DW OFFSET g_front_1   ; Front animation for starting point
+  curr_sprite DW OFFSET g_front_0   ; Front animation for starting point (TODO: will be used when unifying DRAW_GIRL)
   anim_state  DB 0                  ; 0, 1, 2 (three animations state)
 
 .CODE
@@ -45,7 +45,7 @@ MAIN ENDP
 GAME_LOOP PROC
   SAVE_REGS
 
-NEXT_KEY:
+next_key:
   ; Get keyboard input
   ; Wait for a key press, this is a blocking call
   ; TODO: Implement the 01h interrupt (non-blocking)
@@ -55,36 +55,49 @@ NEXT_KEY:
   ; -- Key handling --
   ; https://www.fountainware.com/EXPL/bios_key_codes.htm
   CMP AH, KEY_ESC
-  JE EXIT_GAME
+  JE exit_game
 
   CMP AH, KEY_RIGHT
-  JE RIGHT_DIRECTION
+  JE right_direction
 
   CMP AH, KEY_LEFT
-  JE LEFT_DIRECTION
+  JE left_direction
 
   CMP AH, KEY_UP
-  JE UP_DIRECTION
+  JE up_direction
 
   CMP AH, KEY_DOWN
-  JE DOWN_DIRECTION
+  JE down_direction
 
   ; Other key press, ignore
-  JMP NEXT_KEY
+  JMP next_key
 
-RIGHT_DIRECTION:
+right_direction:
   CALL ERASE_GIRL
 
-LEFT_DIRECTION:
-  CALL ERASE_GIRL
+  ADD pos_x, 1          ; Move the girl one pixel to the right
 
-UP_DIRECTION:
-  CALL ERASE_GIRL
+  INC anim_state        ; Increment animation state
+  CMP anim_state, 3     ; If animation state is greater than 3, reset it to 0
+  JNE @F                ; FastForward if animation state is not 3
+  MOV anim_state, 0
+@@:
+  CALL DRAW_GIRL_RIGHT  ; Draw the girl on the screen
+  JMP NEXT_KEY          ; Wait for next key press
 
-DOWN_DIRECTION:
+left_direction:
   CALL ERASE_GIRL
+  JMP next_key
 
-EXIT_GAME:
+up_direction:
+  CALL ERASE_GIRL
+  JMP next_key
+
+down_direction:
+  CALL ERASE_GIRL
+  JMP next_key
+
+exit_game:
   RESTORE_REGS
   RET
 GAME_LOOP ENDP
@@ -94,18 +107,16 @@ ERASE_GIRL PROC
   SAVE_REGS
   CLD ; Clear direction flag, ensure right direction for STOBS operation
 
-  ; Calcul DI = (pos_y * 320) + pos_x
-  ; Memory address of the sprite
-  MOV AX, pos_y
+  MOV AX, pos_y         ; Calcul DI = (pos_y * 320) + pos_x
   MOV BX, SCREEN_WIDTH
-  MUL BX                ; This can be optimized (costly on 8086)
+  MUL BX                ; TODO: This can be optimized (costly on 8086)
   ADD AX, pos_x
-  MOV DI, AX            ; First pixel of the sprite
+  MOV DI, AX            ; First pixel of the sprite to display on screen
 
   MOV AL, 00h           ; Black color (screen background)
   MOV DX, GIRL_HEIGHT
 
-ERASE_LINE:
+e_erase_line:
   PUSH DI                ; Save DI (begin of line)
   MOV  CX, GIRL_WIDTH    ; Width of the sprite
   REP  STOSB             ; Fill the line with black pixels (MOV ES:DI AL | INC DI | DEC CX)
@@ -114,7 +125,7 @@ ERASE_LINE:
   ADD DI, SCREEN_WIDTH   ; Move to next line
   DEC DX                 ; Decrement height
 
-  JNZ ERASE_LINE         ; If height > 0, repeat
+  JNZ e_erase_line       ; If height > 0, repeat
 
   RESTORE_REGS
   RET
@@ -123,34 +134,32 @@ ERASE_GIRL ENDP
 ; --- Draw girl in right direction ---
 DRAW_GIRL_RIGHT PROC
   SAVE_REGS
-  CLD ; Clear direction flag
+  CLD                           ; Clear direction flag
 
-  CMP anim_state, 0 ; Check if animation state is 0
+  CMP anim_state, 0             ; Check if animation state is 0
   JE r_load_state_0
 
-  CMP anim_state, 1 ; Check if animation state is 1
+  CMP anim_state, 1             ; Check if animation state is 1
   JE r_load_state_1
 
-  ; Else it's animation state 2
-  MOV SI, OFFSET g_right_2
+
+  MOV SI, OFFSET g_right_2      ; Else it's animation state 2
   JMP r_start_draw
 
-r_load_state_0:
+r_load_state_0:                 ; Load animation state 0
   MOV SI, OFFSET g_right_0
   JMP r_start_draw
 
-r_load_state_1:
+r_load_state_1:                 ; Load animation state 1
   MOV SI, OFFSET g_right_1
   JMP r_start_draw
 
-r_start_draw:
-  ; Calcul DI = (pos_y * 320) + pos_x
-  ; Memory address of the sprite
-  MOV AX, pos_y
-  MOV BX, SCREEN_WIDTH
-  MUL BX
+r_start_draw:           ; Start drawing the sprite
+  MOV AX, pos_y         ; Calcul DI = (pos_y * 320) + pos_x
+  MOV BX, SCREEN_WIDTH  ; This gets the position of the sprite on the screen
+  MUL BX                ; TODO: This can be optimized (costly on 8086)
   ADD AX, pos_x
-  MOV DI, AX
+  MOV DI, AX            ; First pixel of the sprite to display on screen
 
   MOV DX, GIRL_HEIGHT  ; For counting lines
 
