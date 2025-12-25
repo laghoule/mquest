@@ -12,5 +12,8 @@ KEY_DOWN      EQU 50h
 KEY_LEFT      EQU 4Bh
 KEY_RIGHT     EQU 4Dh
 
-; Default screen background 
+; Default screen background
 COLOR_BLACK   EQU 0
+
+; VGA memory at 0A000h
+VGA_MEM_SEG   EQU 0A000h
