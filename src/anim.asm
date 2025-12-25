@@ -26,7 +26,7 @@ MAIN PROC
   ; Initialize mode 13h with bios call / VGA
   MOV AX, 13h
   INT 10h
-  MOV AX, VGA_MEM_SEG
+  MOV AX, VGA_ADDR
   MOV ES, AX
 
   CALL GAME_LOOP
