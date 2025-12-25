@@ -201,26 +201,26 @@ DRAW_GIRL_LEFT PROC
   CLD ; Clear Direction Flag
 
   CMP g_l_anim_state, 0             ; Check if animation state is 0
-  JE g_load_state_0
+  JE l_load_state_0
 
   CMP g_l_anim_state, 1             ; Check if animation state is 1
-  JE g_load_state_1
+  JE l_load_state_1
 
   MOV curr_sprite, OFFSET g_left_2  ; Load animation state 2
   MOV SI, [curr_sprite]
-  JMP g_start_draw
+  JMP l_start_draw
 
-g_load_state_0:
+l_load_state_0:
   MOV curr_sprite, OFFSET g_left_0  ; Load animation state 0
   MOV SI, [curr_sprite]
   JMP g_start_draw
 
-g_load_state_1:
+l_load_state_1:
   MOV curr_sprite, OFFSET g_left_1  ; Load animation state 1
   MOV SI, [curr_sprite]
   JMP g_start_draw
 
-g_start_draw:             ; Start drawing the sprite
+l_start_draw:             ; Start drawing the sprite
   MOV AX, g_pos_y         ; Calcul DI = (pos_y * 320) + pos_x
   MOV BX, SCREEN_WIDTH
   MUL BX                  ; TODO: This can be optimized (costly on 8086)
@@ -251,6 +251,5 @@ l_skip_pixel:
   RESTORE_REGS
   RET
 DRAW_GIRL_LEFT ENDP
-
 
 END MAIN
