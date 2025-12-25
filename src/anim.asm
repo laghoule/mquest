@@ -149,18 +149,15 @@ DRAW_GIRL_RIGHT PROC
   CMP g_r_anim_state, 1         ; Check if animation state is 1
   JE r_load_state_1
 
-  MOV curr_sprite, OFFSET g_right_2
-  MOV SI, [curr_sprite]
+  MOV SI,OFFSET g_right_2
   JMP r_start_draw
 
 r_load_state_0:                 ; Load animation state 0
-  MOV curr_sprite, OFFSET g_right_0
-  MOV SI, [curr_sprite]
+  MOV SI, OFFSET g_right_0
   JMP r_start_draw
 
 r_load_state_1:                 ; Load animation state 1
-  MOV curr_sprite, OFFSET g_right_1
-  MOV SI, [curr_sprite]
+  MOV SI, OFFSET g_right_1
   JMP r_start_draw
 
 r_start_draw:           ; Start drawing the sprite
@@ -206,18 +203,15 @@ DRAW_GIRL_LEFT PROC
   CMP g_l_anim_state, 1             ; Check if animation state is 1
   JE l_load_state_1
 
-  MOV curr_sprite, OFFSET g_left_2  ; Load animation state 2
-  MOV SI, [curr_sprite]
+  MOV SI, OFFSET g_left_2  ; Load animation state 2
   JMP l_start_draw
 
 l_load_state_0:
-  MOV curr_sprite, OFFSET g_left_0  ; Load animation state 0
-  MOV SI, [curr_sprite]
+  MOV SI, OFFSET g_left_0  ; Load animation state 0
   JMP l_start_draw
 
 l_load_state_1:
-  MOV curr_sprite, OFFSET g_left_1  ; Load animation state 1
-  MOV SI, [curr_sprite]
+  MOV SI, OFFSET g_left_1  ; Load animation state 1
   JMP l_start_draw
 
 l_start_draw:             ; Start drawing the sprite
