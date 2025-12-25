@@ -213,12 +213,12 @@ DRAW_GIRL_LEFT PROC
 l_load_state_0:
   MOV curr_sprite, OFFSET g_left_0  ; Load animation state 0
   MOV SI, [curr_sprite]
-  JMP g_start_draw
+  JMP l_start_draw
 
 l_load_state_1:
   MOV curr_sprite, OFFSET g_left_1  ; Load animation state 1
   MOV SI, [curr_sprite]
-  JMP g_start_draw
+  JMP l_start_draw
 
 l_start_draw:             ; Start drawing the sprite
   MOV AX, g_pos_y         ; Calcul DI = (pos_y * 320) + pos_x
@@ -233,20 +233,20 @@ l_draw_line:
   PUSH DI                 ; Save the pixel address
   MOV CX, GIRL_WIDTH      ; For counting pixels
 
-l_draw_pixel:
-  LODSB                   ; Load byte in AL, and SI++
-  OR AL, AL               ; Check if pixel is transparent
-  JZ l_skip_pixel         ; If transparent, skip pixel
-  MOV ES:[DI], AL         ; Draw pixel on screen
+  l_draw_pixel:
+    LODSB                   ; Load byte in AL, and SI++
+    OR AL, AL               ; Check if pixel is transparent
+    JZ l_skip_pixel         ; If transparent, skip pixel
+    MOV ES:[DI], AL         ; Draw pixel on screen
 
-l_skip_pixel:
-  INC DI                  ; Increment the pixel address
-  LOOP l_draw_pixel
+  l_skip_pixel:
+    INC DI                  ; Increment the pixel address
+    LOOP l_draw_pixel
 
-  POP DI                  ; Restore the pixel address
-  ADD DI, SCREEN_WIDTH    ; Move to next line
-  DEC DX                  ; Decrement line counter
-  JNZ l_draw_line         ; If height > 0, repeat
+    POP DI                  ; Restore the pixel address
+    ADD DI, SCREEN_WIDTH    ; Move to next line
+    DEC DX                  ; Decrement line counter
+    JNZ l_draw_line         ; If height > 0, repeat
 
   RESTORE_REGS
   RET
