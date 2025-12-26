@@ -102,15 +102,22 @@ up_direction:
   CALL ERASE_GIRL        ; Erase the girl from the screen
   DEC g_pos_y            ; Move the girl one pixel up
   INC g_u_anim_state     ; Increment animation state
-  CMP g_u_anim_state, 3 ; If animation state is greater than 3, reset it to 0
+  CMP g_u_anim_state, 3  ; If animation state is greater than 3, reset it to 0
   JNE @F
   MOV g_u_anim_state, 0
 @@:
-  CALL DRAW_GIRL_UP     ; Draw the girl on the screen
+  CALL DRAW_GIRL_UP      ; Draw the girl on the screen
   JMP next_key
 
 down_direction:
-  CALL ERASE_GIRL
+  CALL ERASE_GIRL        ; Erase the girl from the screen
+  INC g_pos_y            ; Move the girl one pixel down
+  INC g_d_anim_state     ; Increment animation state
+  CMP g_d_anim_state, 3  ; If animation state is greater than 3, reset it to 0
+  JNE @F
+  MOV g_d_anim_state, 0
+@@:
+  CALL DRAW_GIRL_DOWN    ; Draw the girl on the screen
   JMP next_key
 
 exit_game:
@@ -141,7 +148,7 @@ e_erase_line:
   ADD DI, SCREEN_WIDTH   ; Move to next line
   DEC DX                 ; Decrement height
 
-  JNZ e_erase_line       ; If height > 0, repeat
+  JNZ e_erase_line       ; If height > 0, draw next line
 
   RESTORE_REGS
   RET
@@ -194,7 +201,7 @@ r_skip_pixel:
   POP DI               ; Restore the pixel address
   ADD DI, SCREEN_WIDTH ; Move to next line
   DEC DX               ; Decrement line counter
-  JNZ r_draw_line      ; If height > 0, repeat
+  JNZ r_draw_line      ; If height > 0, draw next line
 
   RESTORE_REGS
   RET
@@ -238,7 +245,7 @@ l_draw_line:
     LODSB                   ; Load byte in AL, and SI++
     OR AL, AL               ; Check if pixel is transparent
     JZ l_skip_pixel         ; If transparent, skip pixel
-    MOV ES:[DI], AL         ; Draw pixel on screen
+    MOV ES:[DI], AL         ; Else, draw pixel on screen
 
   l_skip_pixel:
     INC DI                  ; Increment the pixel address
@@ -247,7 +254,7 @@ l_draw_line:
     POP DI                  ; Restore the pixel address
     ADD DI, SCREEN_WIDTH    ; Move to next line
     DEC DX                  ; Decrement line counter
-    JNZ l_draw_line         ; If height > 0, repeat
+    JNZ l_draw_line         ; If height > 0, draw next line
 
   RESTORE_REGS
   RET
@@ -258,21 +265,21 @@ DRAW_GIRL_UP PROC
   SAVE_REGS
   CLD ; Clear Direction Flag
 
-  CMP g_u_anim_state, 0  ; Check if animation state is 0
+  CMP g_u_anim_state, 0   ; Check if animation state is 0
   JE u_load_state_0
 
-  CMP g_u_anim_state, 1  ; Check if animation state is 1
+  CMP g_u_anim_state, 1   ; Check if animation state is 1
   JE u_load_state_1
 
-  MOV SI, OFFSET g_up_2 ; Load animation state 2
+  MOV SI, OFFSET g_up_2   ; Load animation state 2
   JMP u_start_draw
 
 u_load_state_0:
-  MOV SI, OFFSET g_up_0 ; Load animation state 0
+  MOV SI, OFFSET g_up_0   ; Load animation state 0
   JMP u_start_draw
 
 u_load_state_1:
-  MOV SI, OFFSET g_up_1 ; Load animation state 1
+  MOV SI, OFFSET g_up_1   ; Load animation state 1
 
 u_start_draw:
   MOV AX, g_pos_y         ; Calcul DI = (g_pos_y * 320) + g_pos_x
@@ -281,29 +288,84 @@ u_start_draw:
   ADD AX, g_pos_x
   MOV DI, AX              ; First pixel of the sprite to display on screen
 
-  MOV DX, GIRL_HEIGHT ; Lines counter
+  MOV DX, GIRL_HEIGHT     ; Lines counter
 
 u_draw_line:
-  PUSH DI
-  MOV CX, GIRL_WIDTH ; For counting pixels
+  PUSH DI                 ; Save the pixel address
+  MOV CX, GIRL_WIDTH      ; For counting pixels
 
   u_draw_pixel:
-    LODSB
-    OR AL, AL
-    JZ u_skip_pixel
-    MOV ES:[DI], AL
+    LODSB                 ; Load byte in AL and SI++
+    OR AL, AL             ; Check if pixel is transparent
+    JZ u_skip_pixel       ; If transparent, skip pixel
+    MOV ES:[DI], AL       ; Else, draw pixel
 
   u_skip_pixel:
-    INC DI
+    INC DI                ; Inc the pixel address
     LOOP u_draw_pixel
 
-    POP DI
-    ADD DI, SCREEN_WIDTH
-    DEC DX
-    JNZ u_draw_line
+    POP DI                ; Restore the pixel address
+    ADD DI, SCREEN_WIDTH  ; Move to the next line
+    DEC DX                ; Decrement lines counter
+    JNZ u_draw_line       ; If height > 0, draw next line
 
   RESTORE_REGS
   RET
 DRAW_GIRL_UP ENDP
+
+; --- Draw girl in down direction ---
+DRAW_GIRL_DOWN PROC
+  SAVE_REGS
+  CLD                       ; Clear direction flag
+
+  CMP g_d_anim_state, 0     ; Check animation state is 0
+  JE d_load_state_0
+
+  CMP g_d_anim_state, 1     ; Check animation state is 1
+  JE d_load_state_1
+
+  MOV SI, OFFSET g_down_2   ; Load animation state 2
+  JMP d_start_draw
+
+d_load_state_0:
+  MOV SI, OFFSET g_down_0   ; Load animation state 0
+  JMP d_start_draw
+
+d_load_state_1:
+  MOV SI, OFFSET g_down_1   ; Load animation state 1
+  JMP d_start_draw
+
+
+d_start_draw:
+  MOV AX, g_pos_y           ; Calcul DI = (g_pos_y * 320) + g_pos_x
+  MOV BX, SCREEN_WIDTH
+  MUL BX                    ; TODO: This can be optimized (costly on 8086)
+  ADD AX, g_pos_x
+  MOV DI, AX                ; First pixel of the sprite to display on screen
+
+  MOV DX, GIRL_HEIGHT       ; Lines counter
+
+d_draw_line:
+  MOV CX, GIRL_WIDTH
+  PUSH DI
+
+  d_draw_pixel:
+    LODSB                   ; Load byte in AL and SI++
+    OR AL, AL               ; Check if pixel is transparent
+    JZ d_skip_pixel         ; If transparent, skip pixel
+    MOV ES:[DI], AL         ; Else, draw pixel
+
+    d_skip_pixel:
+      INC DI                ; Inc the pixel address
+      LOOP d_draw_pixel
+
+    POP DI                  ; Restore the pixel adress
+    ADD DI, SCREEN_WIDTH    ; Move to the next line
+    DEC DX                  ; Decrement the lines counter
+    JNZ d_draw_line         ; If height > 0, draw next line
+
+  RESTORE_REGS
+  RET
+DRAW_GIRL_DOWN ENDP
 
 END MAIN
