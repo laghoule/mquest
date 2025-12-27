@@ -1,4 +1,4 @@
-TITLE Animations of a pixel art girl
+TITLE Animations of a pixel art caractere
 .MODEL SMALL
 .8086
 .STACK 100h
@@ -10,14 +10,14 @@ INCLUDE defs/macros.inc
   INCLUDE defs/consts.inc ; constants
   INCLUDE assets/anim.inc ; animations sprite data
 
-  g_pos_x DW 150
-  g_pos_y DW 90
+  m_pos_x DW 150 ; Main caracter initial X position
+  m_pos_y DW 90  ; Main caracter initial Y position
 
-  curr_sprite     DW OFFSET g_down_0    ; Front / down animation for starting point (TODO: will be used when unifying DRAW_GIRL)
-  g_r_anim_state  DB 0                  ; Girl right animation state (0, 1, 2 state)
-  g_l_anim_state  DB 0                  ; Girl left animation state (0, 1, 2 state)
-  g_u_anim_state  DB 0                  ; Girl up animation state (0, 1, 2 state)
-  g_d_anim_state  DB 0                  ; Girl down animation state (0, 1, 2 state)
+  m_curr_sprite   DW OFFSET g_down_0    ; Front / down animation for starting point (TODO: will be used when unifying DRAW_GIRL)
+  m_r_anim_state  DB 0                  ; Main caracter right animation state (0, 1, 2 state)
+  m_l_anim_state  DB 0                  ; Main caracter left animation state (0, 1, 2 state)
+  m_u_anim_state  DB 0                  ; Main caracter up animation state (0, 1, 2 state)
+  m_d_anim_state  DB 0                  ; Main caracter down animation state (0, 1, 2 state)
 
 .CODE
 MAIN PROC
@@ -74,298 +74,207 @@ next_key:
   ; Other key press, ignore
   JMP next_key
 
-; --- Girl move to right ---
+; --- Main caracter move to right ---
 right_direction:
-  CALL ERASE_GIRL        ; Erase the girl from the screen
-  INC g_pos_x            ; Move the girl one pixel to the right
-  INC g_r_anim_state     ; Increment animation state
-  CMP g_r_anim_state, 3  ; If animation state is greater than 3, reset it to 0
-  JNE @F                 ; FastForward if animation state is not 3
-  MOV g_r_anim_state, 0
+  CALL ERASE_CARACTER       ; Erase the caracter from the screen
+
+  INC m_pos_x               ; Move the caracter to the right
+  INC m_r_anim_state        ; Increment the animation state
+
+  CMP m_r_anim_state, 3     ; If the animation state is 3, reset it to 0 (3 states)
+  JNE @F
+  MOV m_r_anim_state, 0
+
 @@:
-  CALL DRAW_GIRL_RIGHT   ; Draw the girl on the screen
+  CMP m_r_anim_state, 0
+  JE m_r_anim_state_0
+
+  CMP m_r_anim_state, 1
+  JE m_r_anim_state_1
+
+  MOV m_curr_sprite, OFFSET m_right_2  ; If the animation state is 2, draw the third sprite
+  JMP draw_r_caracter
+
+m_r_anim_state_0:
+  MOV m_curr_sprite, OFFSET mright_0  ; If the animation state is 0, draw the first sprite
+  JMP draw_r_caracter
+
+m_r_anim_state_1:
+  MOV m_curr_sprite, OFFSET m_right_1  ; If the animation state is 1, draw the second sprite
+  JMP draw_r_caracter
+
+draw_r_caracter:
+  CALL DRAW_CARACTER     ; Draw the caracter on the screen
   JMP NEXT_KEY           ; Wait for next key press
 
-; --- Girl move to left ---
+; --- Main caracter move to left ---
 left_direction:
-  CALL ERASE_GIRL        ; Erase the girl from the screen
-  DEC g_pos_x            ; Move the girl one pixel to the left
-  INC g_l_anim_state     ; Increment animation state
-  CMP g_l_anim_state, 3  ; If animation state is greater than 3, reset it to 0
-  JNE @F                 ; FastForward if animation state is not 3
-  MOV g_l_anim_state, 0
-@@:
-  CALL DRAW_GIRL_LEFT    ; Draw the girl on the screen
-  JMP next_key
+  CALL ERASE_CARACTER    ; Erase the caracter from the screen
 
+  DEC m_pos_x            ; Move the caracter to the left
+  INC m_l_anim_state     ; Increment the animation state
+
+  CMP m_l_anim_state, 3  ; If the animation state is 3, reset it to 0 (3 states)
+  JNE @F
+  MOV m_l_anim_state, 0
+
+@@:
+  CMP m_l_anim_state, 0
+  JE m_l_anim_state_0
+
+  CMP m_l_anim_state, 1
+  JE m_l_anim_state_1
+
+  MOV m_curr_sprite, OFFSET m_left_2  ; If the animation state is 2, draw the third sprite
+  JMP draw_l_caracter
+
+m_l_anim_state_0:
+  MOV m_curr_sprite, OFFSET m_left_0  ; If the animation state is 0, draw the first sprite
+  JMP draw_l_caracter
+
+m_l_anim_state_1:
+  MOV m_curr_sprite, OFFSET m_left_1  ; If the animation state is 1, draw the second sprite
+  JMP draw_l_caracter
+
+draw_l_caracter:
+  CALL DRAW_CARACTER     ; Draw the caracter on the screen
+  JMP NEXT_KEY           ; Wait for next key press
+
+; --- Main caracter move up ---
 up_direction:
-  CALL ERASE_GIRL        ; Erase the girl from the screen
-  DEC g_pos_y            ; Move the girl one pixel up
-  INC g_u_anim_state     ; Increment animation state
-  CMP g_u_anim_state, 3  ; If animation state is greater than 3, reset it to 0
-  JNE @F
-  MOV g_u_anim_state, 0
-@@:
-  CALL DRAW_GIRL_UP      ; Draw the girl on the screen
-  JMP next_key
+  CALL ERASE_CARACTER    ; Erase the caracter from the screen
 
-down_direction:
-  CALL ERASE_GIRL        ; Erase the girl from the screen
-  INC g_pos_y            ; Move the girl one pixel down
-  INC g_d_anim_state     ; Increment animation state
-  CMP g_d_anim_state, 3  ; If animation state is greater than 3, reset it to 0
+  DEC m_pos_y            ; Move the caracter up
+  INC m_u_anim_state     ; Increment the animation state
+
+  CMP m_u_anim_state, 3  ; If the animation state is 3, reset it to 0
   JNE @F
-  MOV g_d_anim_state, 0
+  MOV m_u_anim_state, 0
+
 @@:
-  CALL DRAW_GIRL_DOWN    ; Draw the girl on the screen
-  JMP next_key
+  CMP m_u_anim_state, 0
+  JE m_u_anim_state_0
+
+  CMP m_u_anim_state, 1
+  JE m_u_anim_state_1
+
+  MOV m_curr_sprite, OFFSET m_up_2  ; If the animation state is 2, draw the third sprite
+  JMP draw_u_caracter
+
+m_u_anim_state_0:
+  MOV m_curr_sprite, OFFSET m_up_0  ; If the animation state is 0, draw the first sprite
+  JMP draw_u_caracter
+
+m_u_anim_state_1:
+  MOV m_curr_sprite, OFFSET m_up_1  ; If the animation state is 1, draw the second sprite
+  JMP draw_u_caracter
+
+draw_u_caracter:
+  CALL DRAW_CARACTER     ; Draw the caracter on the screen
+  JMP NEXT_KEY           ; Wait for next key press
+
+; --- Main caracter move down ---
+down_direction:
+  CALL ERASE_CARACTER    ; Erase the caracter from the screen
+
+  INC m_pos_y            ; Move the caracter down
+  INC m_d_anim_state     ; Increment the animation state
+
+  CMP m_d_anim_state, 3  ; If the animation state is 3, reset it to 0
+  JNE @F
+  MOV m_d_anim_state, 0
+
+@@:
+  CMP m_d_anim_state, 0
+  JE m_d_anim_state_0
+
+  CMP m_d_anim_state, 1
+  JE m_d_anim_state_1
+
+  MOV m_curr_sprite, OFFSET m_down_2  ; If the animation state is 2, draw the third sprite
+  JMP draw_d_caracter
+
+m_d_anim_state_0:
+  MOV m_curr_sprite, OFFSET m_down_0  ; If the animation state is 0, draw the first sprite
+  JMP draw_d_caracter
+
+m_d_anim_state_1:
+  MOV m_curr_sprite, OFFSET m_down_1  ; If the animation state is 1, draw the second sprite
+  JMP draw_d_caracter
+
+draw_d_caracter:
+  CALL DRAW_CARACTER     ; Draw the sprite
+  JMP NEXT_KEY           ; Wait for next key press
 
 exit_game:
   RESTORE_REGS
   RET
 GAME_LOOP ENDP
 
-; --- Erase girl ---
-ERASE_GIRL PROC
+; --- Erase caracter ---
+ERASE_CARACTER PROC
   SAVE_REGS
-  CLD ; Clear direction flag, ensure right direction for STOBS operation
+  CLD                     ; Clear direction flag
 
-  MOV AX, g_pos_y       ; Calcul DI = (pos_y * 320) + pos_x
+  MOV AX, m_pos_y         ; Calcul DI = (m_pos_y * 320) + m_pos_x
   MOV BX, SCREEN_WIDTH
-  MUL BX                ; TODO: This can be optimized (costly on 8086)
-  ADD AX, g_pos_x
-  MOV DI, AX            ; First pixel of the sprite to display on screen
+  MUL BX                  ; TODO: This can be optimized (costly on 8086)
+  ADD AX, m_pos_x
+  MOV DI, AX              ; First pixel of the sprite to display on screen
 
-  MOV AL, 00h           ; Black color (screen background)
-  MOV DX, GIRL_HEIGHT
+  MOV AL, 00h             ; Black color (screen background)
+  MOV DX, CARACTER_HEIGHT
 
 e_erase_line:
-  PUSH DI                ; Save DI (begin of line)
-  MOV  CX, GIRL_WIDTH    ; Width of the sprite
-  REP  STOSB             ; Fill the line with black pixels (MOV ES:DI AL | INC DI | DEC CX)
-  POP  DI                ; Restore DI (begin of line)
+  PUSH DI                 ; Save DI (begin of line)
+  MOV  CX, CARACTER_WIDTH ; Width of the sprite
+  REP  STOSB              ; Fill the line with black pixels (MOV ES:DI AL | INC DI | DEC CX)
+  POP  DI                 ; Restore DI (begin of line)
 
-  ADD DI, SCREEN_WIDTH   ; Move to next line
-  DEC DX                 ; Decrement height
+  ADD DI, SCREEN_WIDTH    ; Move to next line
+  DEC DX                  ; Decrement height
 
-  JNZ e_erase_line       ; If height > 0, draw next line
+  JNZ e_erase_line        ; If height > 0, draw next line
 
   RESTORE_REGS
   RET
-ERASE_GIRL ENDP
+ERASE_CARACTER ENDP
 
-; --- Draw girl in right direction ---
-DRAW_GIRL_RIGHT PROC
+; --- Draw caracter ---
+DRAW_CARACTER PROC
   SAVE_REGS
-  CLD                           ; Clear direction flag
+  CLD                         ; Clear direction flag
 
-  CMP g_r_anim_state, 0         ; Check if animation state is 0
-  JE r_load_state_0
+  MOV SI, m_curr_sprite       ; Load main caracter current sprite
 
-  CMP g_r_anim_state, 1         ; Check if animation state is 1
-  JE r_load_state_1
-
-  MOV SI,OFFSET g_right_2
-  JMP r_start_draw
-
-r_load_state_0:                 ; Load animation state 0
-  MOV SI, OFFSET g_right_0
-  JMP r_start_draw
-
-r_load_state_1:                 ; Load animation state 1
-  MOV SI, OFFSET g_right_1
-
-r_start_draw:           ; Start drawing the sprite
-  MOV AX, g_pos_y       ; Calcul DI = (g_pos_y * 320) + g_pos_x
+  MOV AX, m_pos_y             ; Calcul DI = (m_pos_y * 320) + m_pos_x
   MOV BX, SCREEN_WIDTH
-  MUL BX                ; TODO: This can be optimized (costly on 8086)
-  ADD AX, g_pos_x
-  MOV DI, AX            ; First pixel of the sprite to display on screen
+  MUL BX
+  ADD AX, m_pos_x
+  MOV DI, AX                  ; Current line start
 
-  MOV DX, GIRL_HEIGHT  ; For counting lines
+  MOV DX, CARACTER_HEIGHT
 
-r_draw_line:
-  PUSH DI              ; Save the pixel address
-  MOV CX, GIRL_WIDTH   ; Counter for lines looping
+  ; --- draw the caracter loop
+  c_draw_line:
+    MOV CX, CARACTER_WIDTH
+    PUSH DI                   ; Save current line start
+    c_draw_pixel:
+      LODSB                   ; Load pixel from SI in AL then SI++
+      OR AL, AL               ; Check if pixel color is 0 (transparent)
+      JZ c_skip_pixel         ; If pixel is transparent, skip pixel
+      MOV ES:[DI], AL         ; Draw pixel
+      c_skip_pixel:
+        INC DI                ; Next pixel on sreen
+        LOOP c_draw_pixel
 
-r_draw_pixel:
-  LODSB                ; Load byte in AL, and SI++
-  OR AL, AL            ; Check if pixel is transparent (black)
-  JZ r_skip_pixel      ; If transparent, draw the next pixel
-  MOV ES:[DI], AL      ; Draw pixel on screen
-
-r_skip_pixel:
-  INC DI               ; Increment the pixel address
-  LOOP r_draw_pixel
-
-  POP DI               ; Restore the pixel address
-  ADD DI, SCREEN_WIDTH ; Move to next line
-  DEC DX               ; Decrement line counter
-  JNZ r_draw_line      ; If height > 0, draw next line
+      POP DI                  ; Restore line start
+      ADD DI, SCREEN_WIDTH    ; Move DI to the next line
+      DEC DX
+      JNZ c_draw_line         ; Draw next line if caracter is not entirely draw
 
   RESTORE_REGS
   RET
-DRAW_GIRL_RIGHT ENDP
-
-; --- Draw girl in the left direction ---
-DRAW_GIRL_LEFT PROC
-  SAVE_REGS
-  CLD ; Clear Direction Flag
-
-  CMP g_l_anim_state, 0    ; Check if animation state is 0
-  JE l_load_state_0
-
-  CMP g_l_anim_state, 1    ; Check if animation state is 1
-  JE l_load_state_1
-
-  MOV SI, OFFSET g_left_2  ; Load animation state 2
-  JMP l_start_draw
-
-l_load_state_0:
-  MOV SI, OFFSET g_left_0  ; Load animation state 0
-  JMP l_start_draw
-
-l_load_state_1:
-  MOV SI, OFFSET g_left_1  ; Load animation state 1
-
-l_start_draw:             ; Start drawing the sprite
-  MOV AX, g_pos_y         ; Calcul DI = (g_pos_y * 320) + g_pos_x
-  MOV BX, SCREEN_WIDTH
-  MUL BX                  ; TODO: This can be optimized (costly on 8086)
-  ADD AX, g_pos_x
-  MOV DI, AX              ; First pixel of the sprite to display on screen
-
-  MOV DX, GIRL_HEIGHT     ; For counting lines
-
-l_draw_line:
-  PUSH DI                 ; Save the pixel address
-  MOV CX, GIRL_WIDTH      ; For counting pixels
-
-  l_draw_pixel:
-    LODSB                   ; Load byte in AL, and SI++
-    OR AL, AL               ; Check if pixel is transparent
-    JZ l_skip_pixel         ; If transparent, skip pixel
-    MOV ES:[DI], AL         ; Else, draw pixel on screen
-
-  l_skip_pixel:
-    INC DI                  ; Increment the pixel address
-    LOOP l_draw_pixel
-
-    POP DI                  ; Restore the pixel address
-    ADD DI, SCREEN_WIDTH    ; Move to next line
-    DEC DX                  ; Decrement line counter
-    JNZ l_draw_line         ; If height > 0, draw next line
-
-  RESTORE_REGS
-  RET
-DRAW_GIRL_LEFT ENDP
-
-; --- Draw girl in up direction ---
-DRAW_GIRL_UP PROC
-  SAVE_REGS
-  CLD ; Clear Direction Flag
-
-  CMP g_u_anim_state, 0   ; Check if animation state is 0
-  JE u_load_state_0
-
-  CMP g_u_anim_state, 1   ; Check if animation state is 1
-  JE u_load_state_1
-
-  MOV SI, OFFSET g_up_2   ; Load animation state 2
-  JMP u_start_draw
-
-u_load_state_0:
-  MOV SI, OFFSET g_up_0   ; Load animation state 0
-  JMP u_start_draw
-
-u_load_state_1:
-  MOV SI, OFFSET g_up_1   ; Load animation state 1
-
-u_start_draw:
-  MOV AX, g_pos_y         ; Calcul DI = (g_pos_y * 320) + g_pos_x
-  MOV BX, SCREEN_WIDTH
-  MUL BX                  ; TODO: This can be optimized (costly on 8086)
-  ADD AX, g_pos_x
-  MOV DI, AX              ; First pixel of the sprite to display on screen
-
-  MOV DX, GIRL_HEIGHT     ; Lines counter
-
-u_draw_line:
-  PUSH DI                 ; Save the pixel address
-  MOV CX, GIRL_WIDTH      ; For counting pixels
-
-  u_draw_pixel:
-    LODSB                 ; Load byte in AL and SI++
-    OR AL, AL             ; Check if pixel is transparent
-    JZ u_skip_pixel       ; If transparent, skip pixel
-    MOV ES:[DI], AL       ; Else, draw pixel
-
-  u_skip_pixel:
-    INC DI                ; Inc the pixel address
-    LOOP u_draw_pixel
-
-    POP DI                ; Restore the pixel address
-    ADD DI, SCREEN_WIDTH  ; Move to the next line
-    DEC DX                ; Decrement lines counter
-    JNZ u_draw_line       ; If height > 0, draw next line
-
-  RESTORE_REGS
-  RET
-DRAW_GIRL_UP ENDP
-
-; --- Draw girl in down direction ---
-DRAW_GIRL_DOWN PROC
-  SAVE_REGS
-  CLD                       ; Clear direction flag
-
-  CMP g_d_anim_state, 0     ; Check animation state is 0
-  JE d_load_state_0
-
-  CMP g_d_anim_state, 1     ; Check animation state is 1
-  JE d_load_state_1
-
-  MOV SI, OFFSET g_down_2   ; Load animation state 2
-  JMP d_start_draw
-
-d_load_state_0:
-  MOV SI, OFFSET g_down_0   ; Load animation state 0
-  JMP d_start_draw
-
-d_load_state_1:
-  MOV SI, OFFSET g_down_1   ; Load animation state 1
-  JMP d_start_draw
-
-
-d_start_draw:
-  MOV AX, g_pos_y           ; Calcul DI = (g_pos_y * 320) + g_pos_x
-  MOV BX, SCREEN_WIDTH
-  MUL BX                    ; TODO: This can be optimized (costly on 8086)
-  ADD AX, g_pos_x
-  MOV DI, AX                ; First pixel of the sprite to display on screen
-
-  MOV DX, GIRL_HEIGHT       ; Lines counter
-
-d_draw_line:
-  MOV CX, GIRL_WIDTH
-  PUSH DI
-
-  d_draw_pixel:
-    LODSB                   ; Load byte in AL and SI++
-    OR AL, AL               ; Check if pixel is transparent
-    JZ d_skip_pixel         ; If transparent, skip pixel
-    MOV ES:[DI], AL         ; Else, draw pixel
-
-    d_skip_pixel:
-      INC DI                ; Inc the pixel address
-      LOOP d_draw_pixel
-
-    POP DI                  ; Restore the pixel adress
-    ADD DI, SCREEN_WIDTH    ; Move to the next line
-    DEC DX                  ; Decrement the lines counter
-    JNZ d_draw_line         ; If height > 0, draw next line
-
-  RESTORE_REGS
-  RET
-DRAW_GIRL_DOWN ENDP
+DRAW_CARACTER ENDP
 
 END MAIN
