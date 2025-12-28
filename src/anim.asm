@@ -13,7 +13,7 @@ INCLUDE defs/macros.inc
   m_pos_x DW 150 ; Main caracter initial X position
   m_pos_y DW 90  ; Main caracter initial Y position
 
-  m_curr_sprite   DW OFFSET g_down_0    ; Front / down animation for starting point (TODO: will be used when unifying DRAW_GIRL)
+  m_curr_sprite   DW OFFSET m_down_0    ; Front / down animation for starting point
   m_r_anim_state  DB 0                  ; Main caracter right animation state (0, 1, 2 state)
   m_l_anim_state  DB 0                  ; Main caracter left animation state (0, 1, 2 state)
   m_u_anim_state  DB 0                  ; Main caracter up animation state (0, 1, 2 state)
@@ -34,7 +34,7 @@ MAIN PROC
   CALL GAME_LOOP
 
   ; Return to text mode
-  MOV AX, 0003h
+  MOV AX, TEXT_MODE
   INT 10h
 
   ; Return to dos
@@ -47,15 +47,16 @@ MAIN ENDP
 GAME_LOOP PROC
   SAVE_REGS
 
-next_key:
-  ; Get keyboard input
-  ; Wait for a key press, this is a blocking call
-  ; TODO: Implement the 01h interrupt (non-blocking)
-  MOV AH, 00h
+get_next_key:
+  MOV AH, 01h       ; Read keyboard input buffer
+  INT 16h
+  JZ no_key_pressed
+
+read_key_pressed:
+  MOV AH, 00h       ; Read key pressed on keyboard
   INT 16h
 
   ; -- Key handling --
-  ; https://www.fountainware.com/EXPL/bios_key_codes.htm
   CMP AH, KEY_ESC
   JE exit_game
 
@@ -72,7 +73,11 @@ next_key:
   JE down_direction
 
   ; Other key press, ignore
-  JMP next_key
+  JMP get_next_key
+
+  no_key_pressed:
+    CALL DRAW_CARACTER
+    JMP get_next_key
 
 ; --- Main caracter move to right ---
 right_direction:
@@ -96,7 +101,7 @@ right_direction:
   JMP draw_r_caracter
 
 m_r_anim_state_0:
-  MOV m_curr_sprite, OFFSET mright_0  ; If the animation state is 0, draw the first sprite
+  MOV m_curr_sprite, OFFSET m_right_0  ; If the animation state is 0, draw the first sprite
   JMP draw_r_caracter
 
 m_r_anim_state_1:
@@ -105,7 +110,7 @@ m_r_anim_state_1:
 
 draw_r_caracter:
   CALL DRAW_CARACTER     ; Draw the caracter on the screen
-  JMP NEXT_KEY           ; Wait for next key press
+  JMP get_next_key           ; Wait for next key press
 
 ; --- Main caracter move to left ---
 left_direction:
@@ -138,7 +143,7 @@ m_l_anim_state_1:
 
 draw_l_caracter:
   CALL DRAW_CARACTER     ; Draw the caracter on the screen
-  JMP NEXT_KEY           ; Wait for next key press
+  JMP get_next_key           ; Wait for next key press
 
 ; --- Main caracter move up ---
 up_direction:
@@ -171,7 +176,7 @@ m_u_anim_state_1:
 
 draw_u_caracter:
   CALL DRAW_CARACTER     ; Draw the caracter on the screen
-  JMP NEXT_KEY           ; Wait for next key press
+  JMP get_next_key           ; Wait for next key press
 
 ; --- Main caracter move down ---
 down_direction:
@@ -204,7 +209,7 @@ m_d_anim_state_1:
 
 draw_d_caracter:
   CALL DRAW_CARACTER     ; Draw the sprite
-  JMP NEXT_KEY           ; Wait for next key press
+  JMP get_next_key           ; Wait for next key press
 
 exit_game:
   RESTORE_REGS
@@ -214,13 +219,9 @@ GAME_LOOP ENDP
 ; --- Erase caracter ---
 ERASE_CARACTER PROC
   SAVE_REGS
-  CLD                     ; Clear direction flag
+  CLD                                 ; Clear direction flag
 
-  MOV AX, m_pos_y         ; Calcul DI = (m_pos_y * 320) + m_pos_x
-  MOV BX, SCREEN_WIDTH
-  MUL BX                  ; TODO: This can be optimized (costly on 8086)
-  ADD AX, m_pos_x
-  MOV DI, AX              ; First pixel of the sprite to display on screen
+  CALC_VGA_POSITION m_pos_x, m_pos_y  ; Calculate the position in VGA memory
 
   MOV AL, 00h             ; Black color (screen background)
   MOV DX, CARACTER_HEIGHT
@@ -245,13 +246,8 @@ DRAW_CARACTER PROC
   SAVE_REGS
   CLD                         ; Clear direction flag
 
-  MOV SI, m_curr_sprite       ; Load main caracter current sprite
-
-  MOV AX, m_pos_y             ; Calcul DI = (m_pos_y * 320) + m_pos_x
-  MOV BX, SCREEN_WIDTH
-  MUL BX
-  ADD AX, m_pos_x
-  MOV DI, AX                  ; Current line start
+  MOV SI, m_curr_sprite               ; Load main caracter current sprite
+  CALC_VGA_POSITION m_pos_x, m_pos_y  ; Calculate VGA position in DI
 
   MOV DX, CARACTER_HEIGHT
 

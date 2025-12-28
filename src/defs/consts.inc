@@ -15,5 +15,7 @@ KEY_RIGHT     EQU 4Dh
 ; Default screen background
 COLOR_BLACK   EQU 0 ; FIXME: should be background color
 
-; VGA memory at 0A000h
+; Video modes
+; https://en.wikipedia.org/wiki/Mode_13h
 VGA_ADDR      EQU 0A000h
+TEXT_MODE     EQU 0003h
