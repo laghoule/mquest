@@ -48,6 +48,8 @@ GAME_LOOP PROC
   SAVE_REGS
 
 get_next_key:
+  WAIT_VSYNC        ; Wait for vertical syncronization to avoid flickering
+
   MOV AH, 01h       ; Read keyboard input buffer
   INT 16h
   JZ no_key_pressed
