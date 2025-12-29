@@ -35,7 +35,7 @@ CALC_VGA_POSITION MACRO pos_x, pos_y
   MOV DI, AX
 ENDM
 
-; Wait for the vertical sync
+; Synchronize with the vertical retrace to avoid screen tearing
 ; https://www.scs.stanford.edu/22wi-cs212/pintos/specs/freevga/vga/vgacrtc.htm
 WAIT_VSYNC MACRO
   LOCAL wait_start, wait_end
