@@ -40,12 +40,12 @@ ENDM
 WAIT_VSYNC MACRO
   LOCAL wait_start, wait_end
   MOV DX, 03DAh
-wait_start:
-  IN AL, DX
-  TEST AL, 8
-  JZ wait_start
 wait_end:
   IN AL, DX
   TEST AL, 8
-  JNZ wait_end
+  JNZ wait_end  ; Wait for the end of the vertical sync
+wait_start:
+  IN AL, DX
+  TEST AL, 8
+  JZ wait_start ; Wait for the start of the vertical sync
 ENDM
