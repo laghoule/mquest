@@ -15,7 +15,7 @@ Mia is a young herbalist apprentice. Her grandmother has fallen ill, and the onl
 - **Development Environment:**
   - **OS:** Linux (Cross-development).
   - **IDE:** Zed.
-  - **Tools:** Custom Go script for PNG-to-ASM conversion.
+  - **Tools:** [Custom Go script for PNG-to-ASM conversion](https://github.com/laghoule/png2asm).
   - **Emulator:** DOSBox-X for rapid testing.
 
 ## Current Features
@@ -37,7 +37,7 @@ Mia is a young herbalist apprentice. Her grandmother has fallen ill, and the onl
 
 ## Assets
 
-- **Character Sprites:** Custom 16x17 pixel art.
+- **Character Sprites:** Custom 16x17 pixel art by ***Fleurman*** via [OpenGameArt.org](https://opengameart.org/content/tiny-characters-set).
 - **Environment Tiles:** Based on the "Batch 5" (16x16) tileset by **Hyptosis** via [OpenGameArt.org](https://opengameart.org/content/lots-of-free-2d-tiles-and-sprites-by-hyptosis).
 
 ## Build Instructions
@@ -48,4 +48,4 @@ Mia is a young herbalist apprentice. Her grandmother has fallen ill, and the onl
 
 ---
 
-_This project is a personal journey into low-level programming, bringing modern development workflows to the classic 8086/8088 architecture. It's a tribute to the era of early PCs and a testament to the enduring power of silicon._
+_This project is a personal journey into low-level programming, bringing modern development workflows to the classic 8086/8088 architecture. It's a tribute to the era of early PCs._
