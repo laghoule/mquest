@@ -1,11 +1,11 @@
 ; --- Erase caracter ---
 ERASE_CARACTER PROC
   SAVE_REGS
-  CLD                                     ; Clear direction flag
+  CLD                            ; Clear direction flag
 
-  CALC_VGA_POSITION mia_pos_x, mia_pos_y  ; Calculate the position in VGA memory
+  CALC_VGA_POSITION pos_x, pos_y ; Calculate the position in VGA memory
 
-  MOV AL, 00h             ; Black color (screen background)
+  MOV AL, 00h                    ; Black color (screen background)
   MOV DX, CARACTER_HEIGHT
 
 e_erase_line:
@@ -26,12 +26,12 @@ ERASE_CARACTER ENDP
 ; --- Draw caracter ---
 DRAW_CARACTER PROC
   SAVE_REGS
-  CLD                                     ; Clear direction flag
+  CLD                            ; Clear direction flag
 
-  MOV SI, mia_curr_sprite                 ; Load main caracter current sprite
-  CALC_VGA_POSITION mia_pos_x, mia_pos_y  ; Calculate VGA position in DI
+  MOV SI, curr_sprite            ; Load main caracter current sprite
+  CALC_VGA_POSITION pos_x, pos_y ; Calculate VGA position in DI
 
-  MOV DX, CARACTER_HEIGHT     ; Height of the sprite (number of lines)
+  MOV DX, CARACTER_HEIGHT        ; Height of the sprite (number of lines)
 
   ; --- draw the caracter loop
   c_draw_line:

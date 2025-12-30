@@ -49,3 +49,13 @@ wait_start:
   TEST AL, 8
   JZ wait_start ; Wait for the start of the vertical sync
 ENDM
+
+; Prepare Mia position to use the draw generic position
+PREPARE_MIA_DRAW MACRO
+  MOV AX, mia_pos_x       ; Save X position to generic position
+  MOV pos_x, AX
+  MOV AX, mia_pos_y       ; Save Y position to generic position
+  MOV pos_y, AX
+  MOV AX, mia_curr_sprite ; Save current sprite to generic sprite
+  MOV curr_sprite, AX
+ENDM

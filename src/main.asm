@@ -10,8 +10,14 @@ INCLUDE defs/consts.inc ; Constants
 
   INCLUDE assets/mia.inc ; Mia animations sprite data
 
-  mia_pos_x DW 150 ; Main caracter initial X position
-  mia_pos_y DW 90  ; Main caracter initial Y position
+  ; Generic position
+  curr_sprite DW ?
+  pos_x DW ?
+  pos_y DW ?
+
+  ; Mia's position
+  mia_pos_x DW 150
+  mia_pos_y DW 90
 
   mia_curr_sprite   DW OFFSET mia_down_0  ; Front / down animation for starting point
   mia_r_anim_state  DB 0                  ; Main caracter right animation state (0, 1, 2 state)
@@ -80,6 +86,7 @@ read_key_pressed:
   JMP get_next_key
 
   no_key_pressed:
+    PREPARE_MIA_DRAW
     CALL DRAW_CARACTER
     JMP get_next_key
 
@@ -113,6 +120,7 @@ mia_r_anim_state_1:
   JMP draw_r_caracter
 
 draw_r_caracter:
+  PREPARE_MIA_DRAW
   CALL DRAW_CARACTER      ; Draw the caracter on the screen
   JMP get_next_key        ; Wait for next key press
 
@@ -146,6 +154,7 @@ mia_l_anim_state_1:
   JMP draw_l_caracter
 
 draw_l_caracter:
+  PREPARE_MIA_DRAW
   CALL DRAW_CARACTER      ; Draw the caracter on the screen
   JMP get_next_key        ; Wait for next key press
 
@@ -179,6 +188,7 @@ mia_u_anim_state_1:
   JMP draw_u_caracter
 
 draw_u_caracter:
+  PREPARE_MIA_DRAW
   CALL DRAW_CARACTER       ; Draw the caracter on the screen
   JMP get_next_key         ; Wait for next key press
 
@@ -212,6 +222,7 @@ mia_d_anim_state_1:
   JMP draw_d_caracter
 
 draw_d_caracter:
+  PREPARE_MIA_DRAW
   CALL DRAW_CARACTER     ; Draw the sprite
   JMP get_next_key       ; Wait for next key press
 
