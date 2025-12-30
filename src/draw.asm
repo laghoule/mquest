@@ -1,3 +1,8 @@
+;  Copyright (C) 2025  [Ton Nom/Pseudo]
+;  This program is free software: you can redistribute it and/or modify
+;  it under the terms of the GNU General Public License as published by
+;  the Free Software Foundation, either version 3 of the License.
+
 ; --- Draw caracter ---
 DRAW_CARACTER PROC
   SAVE_REGS
@@ -30,36 +35,51 @@ DRAW_CARACTER PROC
   RET
 DRAW_CARACTER ENDP
 
-; Save caracter background
+; Save caracter background (with inversion of DS and ES for using MOVSB optimization)
 SAVE_CARACTER_BG PROC
   SAVE_REGS
   CLD
 
   CALC_VGA_POSITION pos_x, pos_y    ; Calculate VGA position in DI
-  MOV SI, OFFSET bg_sprite          ; Background buffer
+
+  MOV SI, DI                        ; Save VGA position in SI
+
+  ; Save and inverse DS and ES
+  PUSH DS
+  PUSH ES
+
+  MOV AX, DS                        ; Save DS in AX
+  MOV BX, ES                        ; Save ES in BX
+  MOV DS, BX                        ; Inverse DS and ES
+  MOV ES, AX                        ; Inverse DS and ES
+  ; Now we have : DS:SI = VGA, ES:DI = RAM
+
+  MOV DI, OFFSET bg_sprite          ; Background buffer in DI
 
   MOV DX, CARACTER_HEIGHT           ; Number of lines to read
 
   s_read_line:
     MOV CX, CARACTER_WIDTH          ; Number of pixels to read
-    PUSH DI
-    s_read_pixel:
-      MOV AL, ES:[DI]               ; TODO: optimi with SEGS & REP MOVSB
-      MOV [SI], AL                  ; Save pixel in background buffer
-      INC DI                        ; Next pixel
-      INC SI                        ; Next pixel in background buffer
-      LOOP s_read_pixel
+    PUSH SI
+    ; MOVSB is used to copy a byte from DS:SI to ES:DI
+    ; REP is used to repeat the instruction CX times
+    REP MOVSB
+    POP SI
 
-    POP DI
-    ADD DI, SCREEN_WIDTH            ; Next line
-    DEC DX                          ; Decrement line counter
-    JNZ s_read_line
+
+  ADD SI, SCREEN_WIDTH            ; Next line
+  DEC DX                          ; Decrement line counter
+  JNZ s_read_line
+
+  ; ---Restore DS & ES---
+  POP ES
+  POP DS
 
   RESTORE_REGS
   RET
 SAVE_CARACTER_BG ENDP
 
-; Restore caracter background
+; Restore caracter background (with MOVSB optimization)
 RESTORE_CARACTER_BG PROC
   SAVE_REGS
   CLD
@@ -71,14 +91,16 @@ RESTORE_CARACTER_BG PROC
 
 r_restore_line:
   PUSH DI
-  MOV CX, CARACTER_WIDTH          ; Number of pixels to draw
+  MOV CX, CARACTER_WIDTH          ; Number of pixels to draw (line width)
 
-  REP MOVSB                       ; Copy line from buffer to screen (TODO: better comments)
+  ; MOVSB copies a byte from DS:SI to ES:DI and increments both pointers
+  ; REP repeats the MOVSB instruction CX times (line width)
+  REP MOVSB
 
-  POP DI
-  ADD DI, SCREEN_WIDTH            ; Next line
+  POP DI                          ; Restore the initial position of the line
+  ADD DI, SCREEN_WIDTH            ; Calcul the position of the next line
   DEC DX                          ; Decrement line counter
-  JNZ r_restore_line
+  JNZ r_restore_line              ; If not zero, repeat the process
 
   RESTORE_REGS
   RET

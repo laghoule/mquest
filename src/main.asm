@@ -1,3 +1,8 @@
+;  Copyright (C) 2025  [Ton Nom/Pseudo]
+;  This program is free software: you can redistribute it and/or modify
+;  it under the terms of the GNU General Public License as published by
+;  the Free Software Foundation, either version 3 of the License.
+
 TITLE Mia's Herbal Quest
 .MODEL SMALL
 .8086
