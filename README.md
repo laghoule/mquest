@@ -29,7 +29,7 @@ Mia is a young herbalist apprentice. Her grandmother has fallen ill, and the onl
 
 ## Roadmap
 
-- [ ] **Background Restoration System:** Implement "Save/Restore" buffer logic to allow Mia to walk over complex terrains without erasing them.
+- [X] **Background Restoration System:** Implement "Save/Restore" buffer logic to allow Mia to walk over complex terrains without erasing them.
 - [ ] **Tiled Map Engine:** Create a "Flip-Screen" world navigation system (Zelda-style).
 - [ ] **Collision Detection:** Implement tile-based or pixel-based collision sensing.
 - [ ] **OPL3 Sound:** Integrate music and sound effects using the Yamaha YMF262 chip.

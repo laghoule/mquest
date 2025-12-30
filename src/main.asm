@@ -10,15 +10,17 @@ INCLUDE defs/consts.inc ; Constants
 
   INCLUDE assets/mia.inc ; Mia animations sprite data
 
-  ; Generic position
-  curr_sprite DW ?
-  pos_x DW ?
-  pos_y DW ?
+  ; Generic sprite info
+  curr_sprite DW ?        ; Current sprite to draw
+  bg_sprite DB 272 DUP(0) ; Background sprite
+  pos_x DW ?              ; Sprite x position
+  pos_y DW ?              ; Sprite y position
 
-  ; Mia's position
-  mia_pos_x DW 150
-  mia_pos_y DW 90
+  ; Mia sprite info
+  mia_pos_x DW 150        ; Mia starting x position
+  mia_pos_y DW 90         ; Mia starting y position
 
+  mia_bg_sprite     DB 272 DUP(0)         ; Mia background sprite
   mia_curr_sprite   DW OFFSET mia_down_0  ; Front / down animation for starting point
   mia_r_anim_state  DB 0                  ; Main caracter right animation state (0, 1, 2 state)
   mia_l_anim_state  DB 0                  ; Main caracter left animation state (0, 1, 2 state)
@@ -27,29 +29,37 @@ INCLUDE defs/consts.inc ; Constants
 
 .CODE
 MAIN PROC
-  ; Initialize data segment
+  ; ---Initialize data segment---
   MOV AX, @DATA
   MOV DS, AX
 
-  ; Initialize mode 13h with bios call / VGA
+  ; ---Initialize mode 13h with bios call / VGA---
   MOV AX, 13h
   INT 10h
   MOV AX, VGA_ADDR
   MOV ES, AX
 
+  ; --- Draw background and caracter ---
+  CALL DRAW_TMP_BG
+  PREPARE_MIA_DRAW
+  CALL SAVE_CARACTER_BG
+  CALL DRAW_CARACTER
+
+  ; --- Game loop ---
   CALL GAME_LOOP
 
-  ; Return to text mode
+  ; ---Return to text mode---
   MOV AX, TEXT_MODE
   INT 10h
 
-  ; Return to dos
+  ; ---Return to dos---
   MOV AX, 4C00h
   INT 21h
 
 MAIN ENDP
 
-INCLUDE draw.asm    ; Draw functions
+INCLUDE draw.asm        ; Draw functions
+INCLUDE bground.asm  ; Background functions
 
 ; --- Game loop ---
 GAME_LOOP PROC
@@ -86,13 +96,13 @@ read_key_pressed:
   JMP get_next_key
 
   no_key_pressed:
-    PREPARE_MIA_DRAW
-    CALL DRAW_CARACTER
+    ; Place older for future use
     JMP get_next_key
 
 ; --- Mia move to right ---
 right_direction:
-  CALL ERASE_CARACTER       ; Erase the caracter from the screen
+  ; Restore -> Move -> Save -> Draw
+  CALL RESTORE_CARACTER_BG  ; Restore the background of the caracter
 
   INC mia_pos_x             ; Move the caracter to the right
   INC mia_r_anim_state      ; Increment the animation state
@@ -121,17 +131,19 @@ mia_r_anim_state_1:
 
 draw_r_caracter:
   PREPARE_MIA_DRAW
+  CALL SAVE_CARACTER_BG   ; Save the background of the caracter
   CALL DRAW_CARACTER      ; Draw the caracter on the screen
   JMP get_next_key        ; Wait for next key press
 
 ; --- Mia move to left ---
 left_direction:
-  CALL ERASE_CARACTER     ; Erase the caracter from the screen
+  ; Restore -> Move -> Save -> Draw
+  CALL RESTORE_CARACTER_BG  ; Restore the background of the caracter
 
-  DEC mia_pos_x           ; Move the caracter to the left
-  INC mia_l_anim_state    ; Increment the animation state
+  DEC mia_pos_x             ; Move the caracter to the left
+  INC mia_l_anim_state      ; Increment the animation state
 
-  CMP mia_l_anim_state, 3 ; If the animation state is 3, reset it to 0 (3 states)
+  CMP mia_l_anim_state, 3   ; If the animation state is 3, reset it to 0 (3 states)
   JNE @F
   MOV mia_l_anim_state, 0
 
@@ -155,12 +167,14 @@ mia_l_anim_state_1:
 
 draw_l_caracter:
   PREPARE_MIA_DRAW
+  CALL SAVE_CARACTER_BG   ; Save the background behind the caracter
   CALL DRAW_CARACTER      ; Draw the caracter on the screen
   JMP get_next_key        ; Wait for next key press
 
 ; --- Mia move up ---
 up_direction:
-  CALL ERASE_CARACTER     ; Erase the caracter from the screen
+  ; Restore -> Move -> Save -> Draw
+  CALL RESTORE_CARACTER_BG ; Restore the background behind the caracter
 
   DEC mia_pos_y           ; Move the caracter up
   INC mia_u_anim_state    ; Increment the animation state
@@ -189,12 +203,13 @@ mia_u_anim_state_1:
 
 draw_u_caracter:
   PREPARE_MIA_DRAW
+  CALL SAVE_CARACTER_BG    ; Save the background of the caracter
   CALL DRAW_CARACTER       ; Draw the caracter on the screen
   JMP get_next_key         ; Wait for next key press
 
 ; --- Mia move down ---
 down_direction:
-  CALL ERASE_CARACTER      ; Erase the caracter from the screen
+  CALL RESTORE_CARACTER_BG
 
   INC mia_pos_y            ; Move the caracter down
   INC mia_d_anim_state     ; Increment the animation state
@@ -223,6 +238,7 @@ mia_d_anim_state_1:
 
 draw_d_caracter:
   PREPARE_MIA_DRAW
+  CALL SAVE_CARACTER_BG
   CALL DRAW_CARACTER     ; Draw the sprite
   JMP get_next_key       ; Wait for next key press
 

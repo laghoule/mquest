@@ -2,7 +2,7 @@ SCREEN_WIDTH  EQU 320
 SCREEN_HEIGHT EQU 200
 
 CARACTER_WIDTH  EQU 16
-CARACTER_HEIGHT EQU 16
+CARACTER_HEIGHT EQU 17
 
 ; Key scan codes
 ; https://www.fountainware.com/EXPL/bios_key_codes.htm
