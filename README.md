@@ -1,5 +1,7 @@
 # Mia's Herbal Quest
 
+![Mia's Herbal Quest](title.png)
+
 A retro adventure game developed in **8086 Assembly**, designed specifically for the **IBM PC-XT** architecture running MS-DOS.
 
 ## The Story
