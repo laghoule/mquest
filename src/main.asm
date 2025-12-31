@@ -14,7 +14,11 @@ INCLUDE defs/consts.inc ; Constants
 .DATA
 
   INCLUDE assets/mia.inc ; Mia animations sprite data
+  INCLUDE assets/tiles/forest.inc
 
+  ; Tiles info
+  tile DW ?               ; Tile
+  
   ; Generic sprite info
   curr_sprite DW ?        ; Current sprite to draw
   bg_sprite DB 272 DUP(0) ; Background sprite

@@ -8,10 +8,27 @@ DRAW_TMP_BG PROC
   SAVE_REGS
   CLD
 
-  XOR DI, DI
-  MOV AL, 06h ; brown color
-  MOV CX, 64000
-  REP STOSB
+  ;XOR DI, DI
+  ;MOV AL, 06h ; brown color
+  ;MOV CX, 64000
+  ;REP STOSB
+
+  MOV pos_x, 0
+  MOV pos_y, 0
+
+  MOV tile, OFFSET forest_bg_0
+  MOV DX, 12
+  MOV CX, 20
+dt_draw_line:
+  MOV CX, 20
+  MOV pos_x, 0
+  dt_draw_tile:
+    CALL DRAW_TILE
+    ADD pos_x, TILE_WIDTH
+    LOOP dt_draw_tile
+  ADD pos_y, TILE_HEIGHT
+  DEC DX
+  JNZ dt_draw_line
 
   RESTORE_REGS
   RET

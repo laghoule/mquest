@@ -3,6 +3,34 @@
 ;  it under the terms of the GNU General Public License as published by
 ;  the Free Software Foundation, either version 3 of the License.
 
+; --- Draw tile ---
+DRAW_TILE PROC
+  SAVE_REGS
+  CLD                             ; Clear direction flag
+
+  MOV SI, tile                    ; Load tile
+  CALC_VGA_POSITION pos_x, pos_y  ; Calculate VGA position in DI
+
+  MOV DX, TILE_HEIGHT             ; Height of the sprite (number of lines)
+
+  ; --- draw the tile loop
+  dt_draw_line:
+    MOV CX, TILE_WIDTH
+    PUSH DI                       ; Save current line start
+
+    ; MOVSB copies a byte from DS:SI to ES:DI and increments both pointers
+    ; REP repeats the MOVSB instruction CX times (line width)
+    REP MOVSB
+
+    POP DI                        ; Restore line start
+    ADD DI, SCREEN_WIDTH          ; Move DI to the next line
+    DEC DX
+    JNZ dt_draw_line              ; Draw next line if tile is not entirely draw
+
+  RESTORE_REGS
+  RET
+DRAW_TILE ENDP
+
 ; --- Draw caracter ---
 DRAW_CARACTER PROC
   SAVE_REGS
@@ -14,22 +42,22 @@ DRAW_CARACTER PROC
   MOV DX, CARACTER_HEIGHT         ; Height of the sprite (number of lines)
 
   ; --- draw the caracter loop
-  c_draw_line:
+  dc_draw_line:
     MOV CX, CARACTER_WIDTH
     PUSH DI                       ; Save current line start
-    c_draw_pixel:
+    dc_draw_pixel:
       LODSB                       ; Load pixel from SI in AL then SI++
       OR AL, AL                   ; Check if pixel color is 0 (transparent)
-      JZ c_skip_pixel             ; If pixel is transparent, skip pixel
+      JZ dc_skip_pixel            ; If pixel is transparent, skip pixel
       MOV ES:[DI], AL             ; Draw pixel
-      c_skip_pixel:
+      dc_skip_pixel:
         INC DI                    ; Next pixel on sreen
-        LOOP c_draw_pixel
+        LOOP dc_draw_pixel
 
       POP DI                      ; Restore line start
       ADD DI, SCREEN_WIDTH        ; Move DI to the next line
       DEC DX
-      JNZ c_draw_line             ; Draw next line if caracter is not entirely draw
+      JNZ dc_draw_line            ; Draw next line if caracter is not entirely draw
 
   RESTORE_REGS
   RET
@@ -51,7 +79,7 @@ SAVE_CARACTER_BG PROC
   MOV AX, DS                        ; Save DS in AX
   MOV BX, ES                        ; Save ES in BX
   MOV DS, BX                        ; Inverse DS and ES
-  MOV ES, AX                        ; Inverse DS and ES
+  MOV ES, AX                        ; Inverse ES and DS
   ; Now we have : DS:SI = VGA, ES:DI = RAM
 
   MOV DI, OFFSET bg_sprite          ; Background buffer in DI
