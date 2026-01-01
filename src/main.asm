@@ -13,9 +13,11 @@ INCLUDE defs/consts.inc ; Constants
 
 .DATA
 
-  INCLUDE assets/mia.inc ; Mia animations sprite data
-  INCLUDE assets/tiles/forest.inc
-  INCLUDE assets/tiles/items.inc
+  INCLUDE assets/carac/mia.inc      ; Mia animations sprite data
+  INCLUDE assets/tiles/grass.inc    ; Grass tiles data
+  INCLUDE assets/tiles/flowers.inc  ; Items tiles data
+  INCLUDE assets/tiles/table.inc    ; Tiles table data
+  INCLUDE assets/tiles/rock.inc     ; Rock tiles data
 
   ; Tiles info
   tile DW ?               ; Tile
@@ -38,6 +40,10 @@ INCLUDE defs/consts.inc ; Constants
   mia_d_anim_state  DB 0                  ; Main caracter down animation state (0, 1, 2 state)
 
 .CODE
+INCLUDE car_draw.asm  ; Caracters drawing functions
+INCLUDE til_draw.asm  ; Tiles drawing functions
+INCLUDE map_draw.asm  ; Maps drawing functions
+
 MAIN PROC
   ; ---Initialize data segment---
   MOV AX, @DATA
@@ -50,18 +56,11 @@ MAIN PROC
   MOV ES, AX
 
   ; --- Draw background and caracter ---
-  MOV tile, OFFSET forest_base_0
-  CALL DRAW_TMP_BG
+  MOV tile, OFFSET grass_opq_0
+  CALL DRAW_OPAQUE_MAP                ; This is the base map layer
 
-  MOV pos_x, 25
-  MOV pos_y, 40
-  MOV tile, OFFSET forest_rock_0
-  CALL DRAW_TILE_TRANSPARENCE
-
-  MOV pos_x, 70
-  MOV pos_y, 100
-  MOV tile, OFFSET flower_0
-  CALL DRAW_TILE_TRANSPARENCE
+  ;MOV map, OFFSET map_transparent_0
+  ;CALL DRAW_TRANSPARENT_MAP           ; This is the transparent items on the map
 
   PREPARE_MIA_DRAW
   CALL SAVE_CARACTER_BG
@@ -79,10 +78,6 @@ MAIN PROC
   INT 21h
 
 MAIN ENDP
-
-INCLUDE car_draw.asm  ; Caracters drawing functions
-INCLUDE til_draw.asm  ; Tiles drawing functions
-INCLUDE bg.asm        ; Background drawing functions
 
 ; --- Game loop ---
 GAME_LOOP PROC
