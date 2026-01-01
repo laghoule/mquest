@@ -1,4 +1,4 @@
-;  Copyright (C) 2025 Pascal Gauthier
+;  Copyright (C) 2025, 2026 Pascal Gauthier
 ;  This program is free software: you can redistribute it and/or modify
 ;  it under the terms of the GNU General Public License as published by
 ;  the Free Software Foundation, either version 3 of the License.
@@ -32,7 +32,7 @@ DRAW_TILE_OPAQUE PROC
 DRAW_TILE_OPAQUE ENDP
 
 ; --- Draw tile with transparence ---
-DRAW_TILE_TRANSPARENCE PROC
+DRAW_TILE_TRANSPARENT PROC
   SAVE_REGS
   CLD                             ; Clear direction flag
 
@@ -62,4 +62,4 @@ DRAW_TILE_TRANSPARENCE PROC
 
   RESTORE_REGS
   RET
-DRAW_TILE_TRANSPARENCE ENDP
+DRAW_TILE_TRANSPARENT ENDP

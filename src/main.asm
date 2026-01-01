@@ -1,4 +1,4 @@
-;  Copyright (C) 2025 Pascal Gauthier
+;  Copyright (C) 2025, 2026 Pascal Gauthier
 ;  This program is free software: you can redistribute it and/or modify
 ;  it under the terms of the GNU General Public License as published by
 ;  the Free Software Foundation, either version 3 of the License.
@@ -16,8 +16,9 @@ INCLUDE defs/consts.inc ; Constants
   INCLUDE assets/carac/mia.inc      ; Mia animations sprite data
   INCLUDE assets/tiles/grass.inc    ; Grass tiles data
   INCLUDE assets/tiles/flowers.inc  ; Items tiles data
-  INCLUDE assets/tiles/table.inc    ; Tiles table data
+  INCLUDE assets/tiles/tables.inc   ; Tiles table data
   INCLUDE assets/tiles/rock.inc     ; Rock tiles data
+  INCLUDE assets/maps/map_0.inc     ; Map data 0
 
   ; Tiles info
   tile DW ?               ; Tile
@@ -40,9 +41,9 @@ INCLUDE defs/consts.inc ; Constants
   mia_d_anim_state  DB 0                  ; Main caracter down animation state (0, 1, 2 state)
 
 .CODE
-INCLUDE car_draw.asm  ; Caracters drawing functions
-INCLUDE til_draw.asm  ; Tiles drawing functions
-INCLUDE map_draw.asm  ; Maps drawing functions
+INCLUDE car_draw.asm            ; Caracters drawing functions
+INCLUDE til_draw.asm            ; Tiles drawing functions
+INCLUDE map_draw.asm            ; Maps drawing functions
 
 MAIN PROC
   ; ---Initialize data segment---
@@ -59,8 +60,9 @@ MAIN PROC
   MOV tile, OFFSET grass_opq_0
   CALL DRAW_OPAQUE_MAP                ; This is the base map layer
 
-  ;MOV map, OFFSET map_transparent_0
-  ;CALL DRAW_TRANSPARENT_MAP           ; This is the transparent items on the map
+  MOV AX, OFFSET map_trns_0
+  MOV curr_map, AX
+  CALL DRAW_TRANSPARENT_MAP           ; This is the transparent items on the map
 
   PREPARE_MIA_DRAW
   CALL SAVE_CARACTER_BG
