@@ -15,10 +15,11 @@ INCLUDE defs/consts.inc ; Constants
 
   INCLUDE assets/mia.inc ; Mia animations sprite data
   INCLUDE assets/tiles/forest.inc
+  INCLUDE assets/tiles/items.inc
 
   ; Tiles info
   tile DW ?               ; Tile
-  
+
   ; Generic sprite info
   curr_sprite DW ?        ; Current sprite to draw
   bg_sprite DB 272 DUP(0) ; Background sprite
@@ -49,7 +50,19 @@ MAIN PROC
   MOV ES, AX
 
   ; --- Draw background and caracter ---
+  MOV tile, OFFSET forest_base_0
   CALL DRAW_TMP_BG
+
+  MOV pos_x, 25
+  MOV pos_y, 40
+  MOV tile, OFFSET forest_rock_0
+  CALL DRAW_TILE_TRANSPARENCE
+
+  MOV pos_x, 70
+  MOV pos_y, 100
+  MOV tile, OFFSET flower_0
+  CALL DRAW_TILE_TRANSPARENCE
+
   PREPARE_MIA_DRAW
   CALL SAVE_CARACTER_BG
   CALL DRAW_CARACTER
@@ -67,8 +80,9 @@ MAIN PROC
 
 MAIN ENDP
 
-INCLUDE draw.asm        ; Draw functions
-INCLUDE bground.asm  ; Background functions
+INCLUDE car_draw.asm  ; Caracters drawing functions
+INCLUDE til_draw.asm  ; Tiles drawing functions
+INCLUDE bg.asm        ; Background drawing functions
 
 ; --- Game loop ---
 GAME_LOOP PROC
