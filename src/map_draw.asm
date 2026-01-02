@@ -7,65 +7,78 @@
 DRAW_OPAQUE_MAP PROC
   SAVE_REGS
 
-  MOV pos_x, 0
   MOV pos_y, 0
-
   MOV DX, TILE_ROWS   ; Lines
+
+  MOV SI, curr_map
 
   dom_draw_line:
     MOV CX, TILE_COLS ; Columns
     MOV pos_x, 0
+
     dom_draw_tile:
+      PUSH CX
       ; 'tile' is loaded outside of this proc (before)
       ; and is used in DRAW_TILE_OPAQUE
-      CALL DRAW_TILE_OPAQUE
-      ADD pos_x, TILE_WIDTH
-      LOOP dom_draw_tile
-  ADD pos_y, TILE_HEIGHT
-  DEC DX
-  JNZ dom_draw_line
+      LODSB
+
+      XOR AH, AH                      ; Clear AH register
+      SHL AX, 1                       ; Shift left by 1 bit (multiply by 2)
+      MOV BX, AX
+      MOV AX, [tiles_opq_table + BX]  ; Load tile index from table
+      MOV tile, AX
+
+      CALL DRAW_TILE_OPAQUE           ; Draw opaque tile
+
+      POP CX                          ; Restore columns counter
+      ADD pos_x, TILE_WIDTH           ; Increment position by tile width
+      LOOP dom_draw_tile              ; Loop until all columns are drawn
+
+    ADD pos_y, TILE_HEIGHT            ; Increment position by tile height
+    DEC DX                            ; Decrement rows counter
+    JNZ dom_draw_line                 ; Loop until all lines are drawn
 
   RESTORE_REGS
   RET
 DRAW_OPAQUE_MAP ENDP
 
-; --- Items with transparence on the map ---
+; --- Draw items with transparency on the map ---
 DRAW_TRANSPARENT_MAP PROC
   SAVE_REGS
   CLD
 
   MOV pos_y, 0
-  MOV DX, TILE_ROWS                         ; Rows counter
+  MOV DX, TILE_ROWS                    ; Rows counter
 
-  MOV SI, curr_map                          ; Load current map index
+  MOV SI, curr_map                     ; Load current map index
 
   dtm_rows_loop:
     MOV CX, TILE_COLS
     MOV pos_x, 0
 
     dtm_colums_loop:
-      PUSH CX                               ; Save columns counter
-      LODSB                                 ; AL = ID of tile, SI++
+      PUSH CX                          ; Save columns counter
+      LODSB                            ; AL = ID of tile, SI++
 
-      OR AL, AL                             ; Check if tile ID is zero
-      JZ dtm_skip_tile
+      OR AL, AL                        ; Check if tile ID is zero
+      JZ dtm_skip_tile                 ; Skip if zero
 
       ; --- Get tile index ---
-      XOR AH, AH                            ; Clear AH register
-      SHL AX, 1                             ; Shift left by 1 bit (multiply by 2)
+      XOR AH, AH                       ; Clear AH register
+      SHL AX, 1                        ; Shift left by 1 bit (multiply by 2)
       MOV BX, AX
-      MOV AX, [tiles_trns_table + BX]       ; Load tile index from table
+      MOV AX, [tiles_trns_table + BX]  ; Load tile index from table
       MOV tile, AX
 
-      CALL DRAW_TILE_TRANSPARENT
+      CALL DRAW_TILE_TRANSPARENT       ; Draw tile with transparency
 
       dtm_skip_tile:
-      POP CX                                ; Restore columns counter
-      ADD pos_x, TILE_WIDTH                 ; Next tile column
-      LOOP dtm_colums_loop
+      POP CX                           ; Restore columns counter
+      ADD pos_x, TILE_WIDTH            ; Increment position by tile width
+      LOOP dtm_colums_loop             ; Loop until all columns are drawn
 
-      ADD pos_y, TILE_HEIGHT                ; Next tile row
-      DEC DX                                ; Decrement rows counter
+      ADD pos_y, TILE_HEIGHT           ; Increment position by tile height
+      DEC DX                           ; Decrement rows counter
       JNZ dtm_rows_loop
 
   RESTORE_REGS

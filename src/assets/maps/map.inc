@@ -1,0 +1,1 @@
+curr_map DW 0

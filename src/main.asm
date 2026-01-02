@@ -13,13 +13,17 @@ INCLUDE defs/consts.inc ; Constants
 
 .DATA
 
-  INCLUDE assets/carac/mia.inc      ; Mia animations sprite data
-  INCLUDE assets/tiles/grass.inc    ; Grass tiles data
-  INCLUDE assets/tiles/flowers.inc  ; Items tiles data
-  INCLUDE assets/tiles/tables.inc   ; Tiles table data
-  INCLUDE assets/tiles/rock.inc     ; Rock tiles data
-  INCLUDE assets/maps/map_0.inc     ; Map data 0
+  INCLUDE assets/carac/mia.inc       ; Mia animations sprite data
 
+  INCLUDE assets/tiles/grass.inc     ; Grass tiles data
+  INCLUDE assets/tiles/flowers.inc   ; Items tiles data
+  INCLUDE assets/tiles/tables.inc    ; Tiles table data
+  INCLUDE assets/tiles/rock.inc      ; Rock tiles data
+  
+  INCLUDE assets/maps/map.inc        ; Map data
+  INCLUDE assets/maps/map_o_0.inc  ; Map opaque
+  INCLUDE assets/maps/map_t_0.inc ; Map transparent
+  
   ; Tiles info
   tile DW ?               ; Tile
 
@@ -57,7 +61,7 @@ MAIN PROC
   MOV ES, AX
 
   ; --- Draw background and caracter ---
-  MOV tile, OFFSET grass_opq_0
+  MOV curr_map, OFFSET map_opq_0
   CALL DRAW_OPAQUE_MAP                ; This is the base map layer
 
   MOV AX, OFFSET map_trns_0
