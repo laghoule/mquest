@@ -1,5 +1,25 @@
 ; Tool for sprites creation: https://github.com/laghoule/png2asm
 
+; --- mia animation down table ---
+mia_sprites_table_down DW OFFSET mia_down_0
+  DW OFFSET mia_down_1
+  DW OFFSET mia_down_2
+
+; --- mia animation up table ---
+mia_sprites_table_up DW OFFSET mia_up_0
+  DW OFFSET mia_up_1
+  DW OFFSET mia_up_2
+
+; --- mia animation left table ---
+mia_sprites_table_left DW OFFSET mia_left_0
+  DW OFFSET mia_left_1
+  DW OFFSET mia_left_2
+
+; --- mia animation right table ---
+mia_sprites_table_right DW OFFSET mia_right_0
+  DW OFFSET mia_right_1
+  DW OFFSET mia_right_2
+
 ; --- FRONT | DOWN direction ---
 mia_down_0 LABEL BYTE
     DB 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0

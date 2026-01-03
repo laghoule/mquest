@@ -9,6 +9,11 @@ TILE_ROWS       EQU 12
 CARACTER_WIDTH  EQU 16
 CARACTER_HEIGHT EQU 17
 
+DOWN_DIR        EQU 0
+UP_DIR          EQU 1
+LEFT_DIR        EQU 2
+RIGHT_DIR       EQU 3
+
 ; Key scan codes
 ; https://www.fountainware.com/EXPL/bios_key_codes.htm
 KEY_ESC         EQU 01h

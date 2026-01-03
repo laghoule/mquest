@@ -3,6 +3,35 @@
 ;  it under the terms of the GNU General Public License as published by
 ;  the Free Software Foundation, either version 3 of the License.
 
+;--------------------------------------------------------------------------------------
+; UPDATE_CARACTER_ANIM_STATE
+; Description : Update the right sprite of the character based on the animation state.
+; Input       : curr_anim_state, curr_sprite_table
+; Output      : curr_anim_state, curr_sprite
+;--------------------------------------------------------------------------------------
+UPDATE_CARACTER_ANIM_STATE PROC
+  SAVE_REGS
+
+  INC curr_anim_state           ; Increment the animation state (3 states)
+  CMP curr_anim_state, 3        ; If the animation state is 3, reset it to 0 (3 states)
+  JNE @F
+  MOV curr_anim_state, 0
+
+@@:
+  MOV AL, curr_anim_state       ; Load the animation state into AL
+  XOR AH, AH                    ; Clear AH
+  SHL AX, 1                     ; Multiply by 2 to get the offset of the sprite in the table
+  MOV BX, AX                    ; Move the offset into BX
+
+  MOV SI, curr_sprite_table     ; Load the sprite table address into SI
+  MOV AX, [SI + BX]             ; [SI + BX] is the offset of the sprite in the table
+  MOV curr_sprite, AX
+
+ucrs_exit:
+  RESTORE_REGS
+  RET
+UPDATE_CARACTER_ANIM_STATE ENDP
+
 ; --- Draw caracter ---
 DRAW_CARACTER PROC
   SAVE_REGS
