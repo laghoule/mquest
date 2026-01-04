@@ -11,20 +11,22 @@
 ;--------------------------------------------------------------------------------------
 UPDATE_CARACTER_ANIM_STATE PROC
   SAVE_REGS
+  PUSH ES                       ; Save ES register
 
-  INC anim_time                 ; Increment the animation timer
-  CMP anim_time, 5              ; Check if the animation frequency is reached
-  JL ucrs_skip_anim             ; If not, skip the animation update
+  ; -- we use the bios timer to loop the animation
+  MOV AX, 40h                   ; Load the segment of the BIOS data area into AX
+  MOV ES, AX                    ; Load the segment of the BIOS data area into ES
+  MOV AL, ES:[6Ch]              ; Load the current time into AL
 
-  INC curr_anim_state           ; Increment the animation state (3 states)
-  CMP curr_anim_state, 3        ; If the animation state is 3, reset it to 0 (3 states)
-  JNE @F
-  MOV curr_anim_state, 0        ; Reset the animation state to 0
-
+  ; --- via the timer stored in AL ---
+  AND AL, 03h                   ; Mask the lower 2 bits of the time value
+  CMP AL, 3                     ; Check if the animation frequency is reached
+  JNE @F                        ; If not, skip the animation update
+  XOR AL, AL                    ; Reset the animation state to 0
 @@:
-  MOV anim_time, 0              ; Reset the animation timer
-ucrs_skip_anim:
-  MOV AL, curr_anim_state       ; Load the animation state into AL
+  MOV curr_anim_state, AL
+
+  ; --- we get the index of the sprite in the table ---
   XOR AH, AH                    ; Clear AH
   SHL AX, 1                     ; Multiply by 2 to get the offset of the sprite in the table
   MOV BX, AX                    ; Move the offset into BX
@@ -34,6 +36,7 @@ ucrs_skip_anim:
   MOV curr_sprite, AX
 
 ucrs_exit:
+  POP ES                        ; Restore ES register
   RESTORE_REGS
   RET
 UPDATE_CARACTER_ANIM_STATE ENDP
