@@ -103,7 +103,7 @@ get_next_key:
 
   MOV AH, 01h       ; Read keyboard input buffer
   INT 16h
-  JZ no_key_pressed
+  JZ get_next_key
 
   MOV AH, 00h       ; Read key pressed on keyboard
   INT 16h
@@ -127,33 +127,29 @@ get_next_key:
   ; Other key press, ignore
   JMP get_next_key
 
-  no_key_pressed:
-    ;CALL RENDER_CARACTER
-    JMP get_next_key
-
 ; ---------------------------------------
 ; --- Restore -> Move -> Save -> Draw ---
 ; ---------------------------------------
 
 right_direction:
   CALL MOVE_MIA_RIGHT
-  CALL RENDER_CARACTER
-  JMP no_key_pressed
+  JMP no_key_logic
 
 left_direction:
   CALL MOVE_MIA_LEFT
-  CALL RENDER_CARACTER
-  JMP no_key_pressed
+  JMP no_key_logic
 
 up_direction:
   CALL MOVE_MIA_UP
-  CALL RENDER_CARACTER
-  JMP no_key_pressed
+  JMP no_key_logic
 
 down_direction:
   CALL MOVE_MIA_DOWN
+  JMP no_key_logic
+
+no_key_logic:
   CALL RENDER_CARACTER
-  JMP no_key_pressed
+  JMP get_next_key
 
 exit_game:
   RESTORE_REGS
