@@ -12,12 +12,18 @@
 UPDATE_CARACTER_ANIM_STATE PROC
   SAVE_REGS
 
+  INC anim_time                 ; Increment the animation timer
+  CMP anim_time, 5              ; Check if the animation frequency is reached
+  JL ucrs_skip_anim             ; If not, skip the animation update
+
   INC curr_anim_state           ; Increment the animation state (3 states)
   CMP curr_anim_state, 3        ; If the animation state is 3, reset it to 0 (3 states)
   JNE @F
-  MOV curr_anim_state, 0
+  MOV curr_anim_state, 0        ; Reset the animation state to 0
 
 @@:
+  MOV anim_time, 0              ; Reset the animation timer
+ucrs_skip_anim:
   MOV AL, curr_anim_state       ; Load the animation state into AL
   XOR AH, AH                    ; Clear AH
   SHL AX, 1                     ; Multiply by 2 to get the offset of the sprite in the table
@@ -31,6 +37,18 @@ ucrs_exit:
   RESTORE_REGS
   RET
 UPDATE_CARACTER_ANIM_STATE ENDP
+
+;-------------------------------------------------
+; RENDER_CARACTER
+; Description: Render the caracter on the screen
+; Input:       none
+; Output:      none
+; ------------------------------------------------
+RENDER_CARACTER PROC
+  PREPARE_MIA_DRAW        ; TODO: comment
+  CALL SAVE_CARACTER_BG   ; Save the background of the caracter
+  CALL DRAW_CARACTER      ; Draw the caracter on the screen
+RENDER_CARACTER ENDP
 
 ; --- Draw caracter ---
 DRAW_CARACTER PROC

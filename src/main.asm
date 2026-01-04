@@ -39,6 +39,13 @@ INCLUDE defs/consts.inc ; Constants
   mia_pos_x DW 150        ; Mia starting x position
   mia_pos_y DW 90         ; Mia starting y position
 
+  ; For smooth animation
+  mia_sub_x DB 0          ; Mia x subposition
+  mia_sub_y DB 0          ; Mia y subposition
+  mia_speed DB 128        ; Speed (128 = 0.5px/frame)
+  game_tick DB 0          ; Global metronome for smooth animation
+  anim_time DB 0          ; Animation timer
+
   mia_bg_sprite     DB 272 DUP(0)         ; Mia background sprite
   mia_curr_sprite   DW OFFSET mia_down_0  ; Front / down animation for starting point
   mia_r_anim_state  DB 0                  ; Mia right animation state (0, 1, 2 state)
@@ -93,6 +100,7 @@ GAME_LOOP PROC
 
 get_next_key:
   WAIT_VSYNC        ; Wait for vertical syncronization to avoid flickering
+  INC game_tick     ; Increment the global metronome (animation)
 
   MOV AH, 01h       ; Read keyboard input buffer
   INT 16h
@@ -130,7 +138,11 @@ right_direction:
   ; Restore -> Move -> Save -> Draw
   CALL RESTORE_CARACTER_BG  ; Restore the background of the caracter
 
-  INC mia_pos_x             ; Move the caracter to the right
+  ; TODO: not optimal
+  MOV AL, mia_sub_x         ; Get the current subposition
+  ADD AL, mia_speed         ; Add the speed to the subposition (carry flag is used via this instruction)
+  MOV mia_sub_x, AL         ; Update the subposition
+  ADC mia_pos_x, 0          ; Update the position via carry flag
 
   ; -- TODO: not optimal, but easier for now ---
   MOV curr_sprite_table, OFFSET mia_sprites_table_right
@@ -148,17 +160,19 @@ right_direction:
   ;----------------------------------------------
 
 draw_r_caracter:
-  PREPARE_MIA_DRAW        ; TODO: comment
-  CALL SAVE_CARACTER_BG   ; Save the background of the caracter
-  CALL DRAW_CARACTER      ; Draw the caracter on the screen
-  JMP get_next_key        ; Wait for next key press
+  CALL RENDER_CARACTER      ; Render the caracter on the screen
+  JMP get_next_key          ; Wait for next key press
 
 ; --- Mia move to left ---
 left_direction:
   ; Restore -> Move -> Save -> Draw
   CALL RESTORE_CARACTER_BG  ; Restore the background of the caracter
 
-  DEC mia_pos_x             ; Move the caracter to the left
+  ; TODO: not optimal
+  MOV AL, mia_sub_x         ; Get the current subposition
+  SUB AL, mia_speed         ; Subtract the speed from the subposition (carry flag is used via this instruction)
+  MOV mia_sub_x, AL         ; Update the subposition
+  SBB mia_pos_x, 0          ; Update the position via carry flag
 
   ; -- TODO: not optimal, but easier for now ---
   MOV curr_sprite_table, OFFSET mia_sprites_table_left
@@ -176,17 +190,19 @@ left_direction:
   ;----------------------------------------------
 
 draw_l_caracter:
-  PREPARE_MIA_DRAW
-  CALL SAVE_CARACTER_BG   ; Save the background behind the caracter
-  CALL DRAW_CARACTER      ; Draw the caracter on the screen
-  JMP get_next_key        ; Wait for next key press
+  CALL RENDER_CARACTER     ; Render the caracter on the screen
+  JMP get_next_key         ; Wait for next key press
 
 ; --- Mia move up ---
 up_direction:
   ; Restore -> Move -> Save -> Draw
   CALL RESTORE_CARACTER_BG ; Restore the background behind the caracter
 
-  DEC mia_pos_y           ; Move the caracter up
+  ; TODO: not optimal
+  MOV AL, mia_sub_y        ; Get the current subposition
+  SUB AL, mia_speed        ; Subtract the speed from the subposition (carry flag is used via this instruction)
+  MOV mia_sub_y, AL        ; Update the subposition
+  SBB mia_pos_y, 0         ; Update the position via carry flag
 
   ; -- TODO: not optimal, but easier for now ---
   MOV curr_sprite_table, OFFSET mia_sprites_table_up
@@ -204,16 +220,18 @@ up_direction:
   ;----------------------------------------------
 
 draw_u_caracter:
-  PREPARE_MIA_DRAW
-  CALL SAVE_CARACTER_BG    ; Save the background of the caracter
-  CALL DRAW_CARACTER       ; Draw the caracter on the screen
+  CALL RENDER_CARACTER     ; Render the caracter on the screen
   JMP get_next_key         ; Wait for next key press
 
 ; --- Mia move down ---
 down_direction:
   CALL RESTORE_CARACTER_BG
 
-  INC mia_pos_y            ; Move the caracter down
+  ; TODO: not optimal
+  MOV AL, mia_sub_y        ; Get the current subposition
+  ADD AL, mia_speed        ; Subtract the speed from the subposition (carry flag is used via this instruction)
+  MOV mia_sub_y, AL        ; Update the subposition
+  ADC mia_pos_y, 0         ; Update the position via carry flag
 
   ; -- TODO: not optimal, but easier for now ---
   MOV curr_sprite_table, OFFSET mia_sprites_table_down
@@ -231,9 +249,7 @@ down_direction:
   ;----------------------------------------------
 
 draw_d_caracter:
-  PREPARE_MIA_DRAW
-  CALL SAVE_CARACTER_BG
-  CALL DRAW_CARACTER     ; Draw the sprite
+  CALL RENDER_CARACTER   ; Render the caracter on the screen
   JMP get_next_key       ; Wait for next key press
 
 exit_game:
