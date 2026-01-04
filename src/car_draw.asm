@@ -51,6 +51,7 @@ RENDER_CARACTER PROC
   PREPARE_MIA_DRAW        ; TODO: comment
   CALL SAVE_CARACTER_BG   ; Save the background of the caracter
   CALL DRAW_CARACTER      ; Draw the caracter on the screen
+  RET
 RENDER_CARACTER ENDP
 
 ; --- Draw caracter ---

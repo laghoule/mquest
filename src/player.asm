@@ -1,5 +1,6 @@
 MOVE_MIA_RIGHT PROC
   ; Restore -> Move -> Save -> Draw
+  PREPARE_MIA_DRAW
   CALL RESTORE_CARACTER_BG  ; Restore the background of the caracter
 
   ; TODO: not optimal
@@ -25,6 +26,7 @@ MOVE_MIA_RIGHT ENDP
 
 MOVE_MIA_LEFT PROC
   ; Restore -> Move -> Save -> Draw
+  PREPARE_MIA_DRAW
   CALL RESTORE_CARACTER_BG  ; Restore the background of the caracter
 
   ; TODO: not optimal
@@ -49,6 +51,7 @@ MOVE_MIA_LEFT ENDP
 
 MOVE_MIA_UP PROC
   ; Restore -> Move -> Save -> Draw
+  PREPARE_MIA_DRAW
   CALL RESTORE_CARACTER_BG ; Restore the background behind the caracter
 
   ; TODO: not optimal
@@ -74,19 +77,20 @@ MOVE_MIA_UP ENDP
 
 MOVE_MIA_DOWN PROC
   ; Restore -> Move -> Save -> Draw
+  PREPARE_MIA_DRAW
   CALL RESTORE_CARACTER_BG
-  
+
   ; TODO: not optimal
   INC mia_pos_y            ; Update the position via carry flag
-  
+
   ; -- TODO: not optimal, but easier for now ---
   MOV curr_sprite_table, OFFSET mia_sprites_table_down
   MOV AL, mia_d_anim_state
   MOV curr_anim_state, AL
   ; --------------------------------------------
-  
+
   CALL UPDATE_CARACTER_ANIM_STATE
-  
+
   ; --- TODO: not optimal, but easier for now ---
   MOV AL, curr_anim_state
   MOV mia_d_anim_state, AL
