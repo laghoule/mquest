@@ -101,19 +101,31 @@ GAME_LOOP PROC
 
 get_next_key:
   WAIT_VSYNC            ; Wait for vertical syncronization to avoid flickering
+  CALL SYNC_TICKS
+  JCXZ get_next_key
 
-  CALL HANDLE_KEYBOARD_INPUT
+  MOV AH, 01h
+  INT 16h
+  JZ get_next_key
 
-  CMP AL, 0
+  CALL RENDER_RESTORE_BACKGROUNG
+
+catch_up_loop:                        ; Use CX of SYNC_TICKS to get the catch up movement
+  PUSH CX                             ; Save CX register
+  CALL HANDLE_KEYBOARD_INPUT          ; Output AL = 0 (no key), AL = 1 (action), AL = 2 (quit game)
+  POP CX                              ; Restore CX register
+  LOOP catch_up_loop
+
+  CMP AL, 0                           ; Check if no key was pressed
   JE get_next_key
 
-  CMP AL, 1
-  JE no_key_logic
+  CMP AL, 1                           ; Check if action key was pressed
+  JE draw
 
-  CMP AL, 2
+  CMP AL, 2                           ; Check if quit game key was pressed
   JE exit_game
 
-no_key_logic:
+draw:
   CALL RENDER_CARACTER
   JMP get_next_key
 
