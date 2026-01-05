@@ -54,6 +54,18 @@ RENDER_CARACTER PROC
   RET
 RENDER_CARACTER ENDP
 
+;-------------------------------------------------
+; RENDER_RESTORE_BACKGROUNG
+; Description: Restore the background of the caracter on the screen
+; Input:       none
+; Output:      none
+; ------------------------------------------------
+RENDER_RESTORE_BACKGROUNG PROC
+  SYNC_MIA_POSITION
+  CALL RESTORE_CARACTER_BG  ; Restore the background of the caracter
+  RET
+RENDER_RESTORE_BACKGROUNG ENDP
+
 ; --- Draw caracter ---
 DRAW_CARACTER PROC
   SAVE_REGS

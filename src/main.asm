@@ -53,6 +53,7 @@ INCLUDE defs/consts.inc ; Constants
 
 .CODE
 INCLUDE timer.asm         ; Timer functions
+INCLUDE inputs.asm        ; Inputs functions
 INCLUDE player.asm        ; Player functions
 INCLUDE car_draw.asm      ; Caracters drawing functions
 INCLUDE til_draw.asm      ; Tiles drawing functions
@@ -99,53 +100,18 @@ GAME_LOOP PROC
   SAVE_REGS
 
 get_next_key:
-  WAIT_VSYNC        ; Wait for vertical syncronization to avoid flickering
+  WAIT_VSYNC            ; Wait for vertical syncronization to avoid flickering
 
-  MOV AH, 01h       ; Read keyboard input buffer
-  INT 16h
-  JZ get_next_key
+  CALL HANDLE_KEYBOARD_INPUT
 
-  MOV AH, 00h       ; Read key pressed on keyboard
-  INT 16h
+  CMP AL, 0
+  JE get_next_key
 
-  ; -- Key handling --
-  CMP AH, KEY_ESC
+  CMP AL, 1
+  JE no_key_logic
+
+  CMP AL, 2
   JE exit_game
-
-  CMP AH, KEY_RIGHT
-  JE right_direction
-
-  CMP AH, KEY_LEFT
-  JE left_direction
-
-  CMP AH, KEY_UP
-  JE up_direction
-
-  CMP AH, KEY_DOWN
-  JE down_direction
-
-  ; Other key press, ignore
-  JMP get_next_key
-
-; ---------------------------------------
-; --- Restore -> Move -> Save -> Draw ---
-; ---------------------------------------
-
-right_direction:
-  CALL MOVE_MIA_RIGHT
-  JMP no_key_logic
-
-left_direction:
-  CALL MOVE_MIA_LEFT
-  JMP no_key_logic
-
-up_direction:
-  CALL MOVE_MIA_UP
-  JMP no_key_logic
-
-down_direction:
-  CALL MOVE_MIA_DOWN
-  JMP no_key_logic
 
 no_key_logic:
   CALL RENDER_CARACTER

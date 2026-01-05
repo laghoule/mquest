@@ -1,8 +1,4 @@
 MOVE_MIA_RIGHT PROC
-  ; Restore -> Move -> Save -> Draw
-  PREPARE_MIA_DRAW
-  CALL RESTORE_CARACTER_BG  ; Restore the background of the caracter
-
   ; TODO: not optimal
   INC mia_pos_x             ; Update the position via carry flag
 
@@ -25,10 +21,6 @@ MOVE_MIA_RIGHT PROC
 MOVE_MIA_RIGHT ENDP
 
 MOVE_MIA_LEFT PROC
-  ; Restore -> Move -> Save -> Draw
-  PREPARE_MIA_DRAW
-  CALL RESTORE_CARACTER_BG  ; Restore the background of the caracter
-
   ; TODO: not optimal
   DEC mia_pos_x             ; Update the position via carry flag
 
@@ -50,10 +42,6 @@ MOVE_MIA_LEFT PROC
 MOVE_MIA_LEFT ENDP
 
 MOVE_MIA_UP PROC
-  ; Restore -> Move -> Save -> Draw
-  PREPARE_MIA_DRAW
-  CALL RESTORE_CARACTER_BG ; Restore the background behind the caracter
-
   ; TODO: not optimal
   DEC mia_pos_y            ; Update the position via carry flag
 
@@ -76,10 +64,6 @@ MOVE_MIA_UP PROC
 MOVE_MIA_UP ENDP
 
 MOVE_MIA_DOWN PROC
-  ; Restore -> Move -> Save -> Draw
-  PREPARE_MIA_DRAW
-  CALL RESTORE_CARACTER_BG
-
   ; TODO: not optimal
   INC mia_pos_y            ; Update the position via carry flag
 
