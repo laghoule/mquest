@@ -1,6 +1,6 @@
 ;-----------------------------------------------------------
 ; HANDLE_KEYBOARD_INPUT
-; INPUT:  None
+; INPUT:  CX (number of ticks)
 ; Output: AL = 0 (nothing), 1 (mouvement), 2 (quit)
 ;-----------------------------------------------------------
 HANDLE_KEYBOARD_INPUT PROC

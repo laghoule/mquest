@@ -40,9 +40,10 @@ INCLUDE defs/consts.inc ; Constants
   mia_pos_y DW 90         ; Mia starting y position
 
   ; For smooth animation
-  mia_speed DB 128        ; Speed (128 = 0.5px/frame)
+  ;mia_speed DB 128        ; Speed (128 = 0.5px/frame)
   game_tick DB 0          ; Global metronome for smooth animation (TODO: name)
-  anim_time DB 0          ; Animation timer (TODO: name)
+  delta_tick DB 0         ; Delta tick for smooth animation
+  ;anim_time DB 0          ; Animation timer (TODO: name)
 
   mia_bg_sprite     DB 272 DUP(0)         ; Mia background sprite
   mia_curr_sprite   DW OFFSET mia_down_0  ; Front / down animation for starting point
@@ -104,17 +105,9 @@ get_next_key:
   CALL SYNC_TICKS
   JCXZ get_next_key
 
-  MOV AH, 01h
-  INT 16h
-  JZ get_next_key
-
-  CALL RENDER_RESTORE_BACKGROUNG
-
-catch_up_loop:                        ; Use CX of SYNC_TICKS to get the catch up movement
-  PUSH CX                             ; Save CX register
-  CALL HANDLE_KEYBOARD_INPUT          ; Output AL = 0 (no key), AL = 1 (action), AL = 2 (quit game)
-  POP CX                              ; Restore CX register
-  LOOP catch_up_loop
+  MOV delta_tick, CL
+  
+  CALL HANDLE_KEYBOARD_INPUT          ; Input game_tick, Output AL = 0 (no key), AL = 1 (action), AL = 2 (quit game)
 
   CMP AL, 0                           ; Check if no key was pressed
   JE get_next_key

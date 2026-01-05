@@ -1,6 +1,9 @@
 MOVE_MIA_RIGHT PROC
-  ; TODO: not optimal
-  INC mia_pos_x             ; Update the position via carry flag
+  CALL RENDER_RESTORE_BACKGROUNG
+
+  MOV AL, delta_tick
+  XOR AH, AH
+  ADD mia_pos_x, AX
 
   ; -- TODO: not optimal, but easier for now ---
   MOV curr_sprite_table, OFFSET mia_sprites_table_right
@@ -21,8 +24,11 @@ MOVE_MIA_RIGHT PROC
 MOVE_MIA_RIGHT ENDP
 
 MOVE_MIA_LEFT PROC
-  ; TODO: not optimal
-  DEC mia_pos_x             ; Update the position via carry flag
+  CALL RENDER_RESTORE_BACKGROUNG
+
+  MOV AL, delta_tick
+  XOR AH, AH
+  SUB mia_pos_x, AX
 
   ; -- TODO: not optimal, but easier for now ---
   MOV curr_sprite_table, OFFSET mia_sprites_table_left
@@ -42,8 +48,11 @@ MOVE_MIA_LEFT PROC
 MOVE_MIA_LEFT ENDP
 
 MOVE_MIA_UP PROC
-  ; TODO: not optimal
-  DEC mia_pos_y            ; Update the position via carry flag
+  CALL RENDER_RESTORE_BACKGROUNG
+
+  MOV AL, delta_tick
+  XOR AH, AH
+  SUB mia_pos_y, AX
 
   ; -- TODO: not optimal, but easier for now ---
   MOV curr_sprite_table, OFFSET mia_sprites_table_up
@@ -64,8 +73,11 @@ MOVE_MIA_UP PROC
 MOVE_MIA_UP ENDP
 
 MOVE_MIA_DOWN PROC
-  ; TODO: not optimal
-  INC mia_pos_y            ; Update the position via carry flag
+  CALL RENDER_RESTORE_BACKGROUNG
+
+  MOV AL, delta_tick
+  XOR AH, AH
+  ADD mia_pos_y, AX
 
   ; -- TODO: not optimal, but easier for now ---
   MOV curr_sprite_table, OFFSET mia_sprites_table_down
