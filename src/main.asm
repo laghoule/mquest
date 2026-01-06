@@ -102,15 +102,17 @@ GAME_LOOP PROC
 
 get_next_key:
   WAIT_VSYNC            ; Wait for vertical syncronization to avoid flickering
-  CALL SYNC_TICKS
-  JCXZ get_next_key
 
-  MOV delta_tick, CL
-  
+  CALL SYNC_TICKS
+  ADD delta_tick, CL
+
+  CMP delta_tick, 0         ; Est-ce qu'on a du temps en banque ?
+  JE no_key_pressed
+
   CALL HANDLE_KEYBOARD_INPUT          ; Input game_tick, Output AL = 0 (no key), AL = 1 (action), AL = 2 (quit game)
 
   CMP AL, 0                           ; Check if no key was pressed
-  JE get_next_key
+  JE no_key_pressed
 
   CMP AL, 1                           ; Check if action key was pressed
   JE draw
@@ -118,8 +120,15 @@ get_next_key:
   CMP AL, 2                           ; Check if quit game key was pressed
   JE exit_game
 
+no_key_pressed:
+  CMP delta_tick, 3
+  JL get_next_key       ; Moins de 4 ? On garde la dette et on reboucle
+  MOV delta_tick, 0     ; Plus de 4 ? L'utilisateur a lâché, on reset.
+  JMP get_next_key
+
 draw:
   CALL RENDER_CARACTER
+  MOV delta_tick, 0
   JMP get_next_key
 
 exit_game:
