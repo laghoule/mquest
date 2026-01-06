@@ -35,16 +35,13 @@ INCLUDE defs/consts.inc ; Constants
   pos_x DW 0              ; Sprite x position
   pos_y DW 0              ; Sprite y position
 
-  ; Mia sprite info
-  mia_pos_x DW 150        ; Mia starting x position
-  mia_pos_y DW 90         ; Mia starting y position
-
   ; For smooth animation
-  ;mia_speed DB 128        ; Speed (128 = 0.5px/frame)
   game_tick DB 0          ; Global metronome for smooth animation (TODO: name)
-  delta_tick DB 0         ; Delta tick for smooth animation
-  ;anim_time DB 0          ; Animation timer (TODO: name)
+  pending_tick DB 0       ; Pending tick used for slow hardware
 
+  ; Mia sprite info
+  mia_pos_x         DW 150                ; Mia starting x position
+  mia_pos_y         DW 90                 ; Mia starting y position
   mia_bg_sprite     DB 272 DUP(0)         ; Mia background sprite
   mia_curr_sprite   DW OFFSET mia_down_0  ; Front / down animation for starting point
   mia_r_anim_state  DB 0                  ; Mia right animation state (0, 1, 2 state)
@@ -84,7 +81,8 @@ MAIN PROC
   CALL DRAW_CARACTER
 
   ; --- Game loop ---
-  CALL GAME_LOOP
+  CALL INIT_TICKS                     ; Initialise the game_tick & pending_tick
+  CALL GAME_LOOP                      ; Start the game loop
 
   ; ---Return to text mode---
   MOV AX, TEXT_MODE
@@ -101,34 +99,27 @@ GAME_LOOP PROC
   SAVE_REGS
 
 get_next_key:
-  WAIT_VSYNC            ; Wait for vertical syncronization to avoid flickering
+  WAIT_VSYNC                  ; Wait for vertical syncronization to avoid flickering
 
-  CALL SYNC_TICKS
-  ADD delta_tick, CL
+  CALL SYNC_TICKS             ; Syncing timing
+  ADD pending_tick, CL        ; Ticks count
 
-  CMP delta_tick, 0         ; Est-ce qu'on a du temps en banque ?
-  JE no_key_pressed
+  CALL HANDLE_KEYBOARD_INPUT  ; Input game_tick, Output AL = 0 (no key), AL = 1 (action), AL = 2 (quit game)
 
-  CALL HANDLE_KEYBOARD_INPUT          ; Input game_tick, Output AL = 0 (no key), AL = 1 (action), AL = 2 (quit game)
+  CMP AL, 0                   ; Check if no key was pressed
+  JE no_movement
 
-  CMP AL, 0                           ; Check if no key was pressed
-  JE no_key_pressed
-
-  CMP AL, 1                           ; Check if action key was pressed
-  JE draw
-
-  CMP AL, 2                           ; Check if quit game key was pressed
+  CMP AL, 2                   ; Check if quit game key was pressed
   JE exit_game
 
-no_key_pressed:
-  CMP delta_tick, 3
-  JL get_next_key       ; Moins de 4 ? On garde la dette et on reboucle
-  MOV delta_tick, 0     ; Plus de 4 ? L'utilisateur a lâché, on reset.
+  CALL RENDER_CARACTER        ; Render the Mia character
+  MOV pending_tick, 0         ; Reset pending ticks
   JMP get_next_key
 
-draw:
-  CALL RENDER_CARACTER
-  MOV delta_tick, 0
+no_movement:
+  CMP pending_tick, 3         ; Less than 4 ticks?
+  JL get_next_key             ; Yes, keep the debt and loop again
+  MOV pending_tick, 0         ; Reset pending ticks
   JMP get_next_key
 
 exit_game:

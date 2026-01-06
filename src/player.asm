@@ -1,7 +1,7 @@
 MOVE_MIA_RIGHT PROC
   CALL RENDER_RESTORE_BACKGROUNG
 
-  MOV AL, delta_tick
+  MOV AL, pending_tick
   XOR AH, AH
   ADD mia_pos_x, AX
 
@@ -26,7 +26,7 @@ MOVE_MIA_RIGHT ENDP
 MOVE_MIA_LEFT PROC
   CALL RENDER_RESTORE_BACKGROUNG
 
-  MOV AL, delta_tick
+  MOV AL, pending_tick
   XOR AH, AH
   SUB mia_pos_x, AX
 
@@ -50,7 +50,7 @@ MOVE_MIA_LEFT ENDP
 MOVE_MIA_UP PROC
   CALL RENDER_RESTORE_BACKGROUNG
 
-  MOV AL, delta_tick
+  MOV AL, pending_tick
   XOR AH, AH
   SUB mia_pos_y, AX
 
@@ -75,7 +75,7 @@ MOVE_MIA_UP ENDP
 MOVE_MIA_DOWN PROC
   CALL RENDER_RESTORE_BACKGROUNG
 
-  MOV AL, delta_tick
+  MOV AL, pending_tick
   XOR AH, AH
   ADD mia_pos_y, AX
 

@@ -1,7 +1,27 @@
+; ------------------------------------------
+; INIT_TICKS
+; Initialize the game tick and pending tick
+; INPUT: game_tick, pending_tick
+; OUTPUT: game_tick, pending_tick
+; ------------------------------------------
+INIT_TICKS PROC
+  PUSH ES
+
+  MOV AX, 40h         ; Load the segment of the BIOS data area into AX
+  MOV ES, AX          ; Load the segment of the BIOS data area into ES
+  MOV AL, ES:[6Ch]    ; Load the current tick count into AL
+
+  MOV game_tick, AL   ; Save the current tick count into game_tick
+  MOV pending_tick, 0 ; Initialize pending_tick to 0
+
+  POP ES
+  RET
+INIT_TICKS ENDP
+
 ; -----------------------------------------------
 ; SYNC_TICKS
 ; Count the number of ticks since the last check
-; INPUT: game_tick
+; INPUT:  game_tick
 ; OUTPUT: CX (number of tick missed)
 ; -----------------------------------------------
 SYNC_TICKS PROC
