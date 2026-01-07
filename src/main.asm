@@ -18,7 +18,8 @@ INCLUDE defs/consts.inc ; Constants
   INCLUDE assets/tiles/grass.inc     ; Grass tiles data
   INCLUDE assets/tiles/flowers.inc   ; Items tiles data
   INCLUDE assets/tiles/tables.inc    ; Tiles table data
-  INCLUDE assets/tiles/rock.inc      ; Rock tiles data
+  INCLUDE assets/tiles/rocks.inc     ; Rocks tiles data
+  INCLUDE assets/tiles/plants.inc    ; Plants tiles data
 
   INCLUDE assets/maps/map.inc        ; Map data
   INCLUDE assets/maps/map_o_0.inc    ; Map opaque

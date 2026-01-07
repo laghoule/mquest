@@ -5,6 +5,7 @@
 ; OUTPUT: game_tick, pending_tick
 ; ------------------------------------------
 INIT_TICKS PROC
+  SAVE_REGS
   PUSH ES
 
   MOV AX, 40h         ; Load the segment of the BIOS data area into AX
@@ -15,6 +16,7 @@ INIT_TICKS PROC
   MOV pending_tick, 0 ; Initialize pending_tick to 0
 
   POP ES
+  RESTORE_REGS
   RET
 INIT_TICKS ENDP
 
