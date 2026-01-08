@@ -13,12 +13,9 @@ UPDATE_CARACTER_ANIM_STATE PROC
   SAVE_REGS
   PUSH ES                       ; Save ES register
 
-  ; -- we use the bios timer to loop the animation
-  MOV AX, 40h                   ; Load the segment of the BIOS data area into AX
-  MOV ES, AX                    ; Load the segment of the BIOS data area into ES
-  MOV AL, ES:[6Ch]              ; Load the current time into AL
 
-  ; --- via the timer stored in AL ---
+  ; --- via the timer stored in game_tick ---
+  MOV AL, game_tick
   AND AL, 03h                   ; Mask the lower 2 bits of the time value
   CMP AL, 3                     ; Check if the animation frequency is reached
   JNE @F                        ; If not, skip the animation update
