@@ -11,8 +11,6 @@
 ;--------------------------------------------------------------------------------------
 UPDATE_CARACTER_ANIM_STATE PROC
   SAVE_REGS
-  PUSH ES                       ; Save ES register
-
 
   ; --- via the timer stored in game_tick ---
   MOV AL, game_tick
@@ -33,7 +31,6 @@ UPDATE_CARACTER_ANIM_STATE PROC
   MOV curr_sprite, AX
 
 ucrs_exit:
-  POP ES                        ; Restore ES register
   RESTORE_REGS
   RET
 UPDATE_CARACTER_ANIM_STATE ENDP
