@@ -30,7 +30,6 @@ UPDATE_CARACTER_ANIM_STATE PROC
   MOV AX, [SI + BX]             ; [SI + BX] is the offset of the sprite in the table
   MOV curr_sprite, AX
 
-ucrs_exit:
   RESTORE_REGS
   RET
 UPDATE_CARACTER_ANIM_STATE ENDP
@@ -71,22 +70,22 @@ DRAW_CARACTER PROC
   MOV DX, CARACTER_HEIGHT         ; Height of the sprite (number of lines)
 
   ; --- draw the caracter loop
-  dc_draw_line:
+  @dc_draw_line:
     MOV CX, CARACTER_WIDTH
     PUSH DI                       ; Save current line start
-    dc_draw_pixel:
+    @dc_draw_pixel:
       LODSB                       ; Load pixel from SI in AL then SI++
       OR AL, AL                   ; Check if pixel color is 0 (transparent)
-      JZ dc_skip_pixel            ; If pixel is transparent, skip pixel
+      JZ @dc_skip_pixel            ; If pixel is transparent, skip pixel
       MOV ES:[DI], AL             ; Draw pixel
-      dc_skip_pixel:
+      @dc_skip_pixel:
         INC DI                    ; Next pixel on sreen
-        LOOP dc_draw_pixel
+        LOOP @dc_draw_pixel
 
     POP DI                      ; Restore line start
     ADD DI, SCREEN_WIDTH        ; Move DI to the next line
     DEC DX
-    JNZ dc_draw_line            ; Draw next line if caracter is not entirely draw
+    JNZ @dc_draw_line            ; Draw next line if caracter is not entirely draw
 
   RESTORE_REGS
   RET
@@ -115,7 +114,7 @@ SAVE_CARACTER_BG PROC
 
   MOV DX, CARACTER_HEIGHT           ; Number of lines to read
 
-  s_read_line:
+  @scb_read_line:
     MOV CX, CARACTER_WIDTH          ; Number of pixels to read
     PUSH SI
     ; MOVSB is used to copy a byte from DS:SI to ES:DI
@@ -126,7 +125,7 @@ SAVE_CARACTER_BG PROC
 
   ADD SI, SCREEN_WIDTH            ; Next line
   DEC DX                          ; Decrement line counter
-  JNZ s_read_line
+  JNZ @scb_read_line
 
   ; ---Restore DS & ES---
   POP ES
@@ -146,7 +145,7 @@ RESTORE_CARACTER_BG PROC
 
   MOV DX, CARACTER_HEIGHT         ; Number of lines to draw
 
-r_restore_line:
+@rcb_restore_line:
   PUSH DI
   MOV CX, CARACTER_WIDTH          ; Number of pixels to draw (line width)
 
@@ -157,7 +156,7 @@ r_restore_line:
   POP DI                          ; Restore the initial position of the line
   ADD DI, SCREEN_WIDTH            ; Calcul the position of the next line
   DEC DX                          ; Decrement line counter
-  JNZ r_restore_line              ; If not zero, repeat the process
+  JNZ @rcb_restore_line              ; If not zero, repeat the process
 
   RESTORE_REGS
   RET

@@ -14,7 +14,7 @@ DRAW_TILE_OPAQUE PROC
   MOV DX, TILE_HEIGHT             ; Height of the sprite (number of lines)
 
   ; --- draw the tile loop
-  dto_draw_line:
+  @dto_draw_line:
     MOV CX, TILE_WIDTH
     PUSH DI                       ; Save current line start
 
@@ -25,7 +25,7 @@ DRAW_TILE_OPAQUE PROC
     POP DI                        ; Restore line start
     ADD DI, SCREEN_WIDTH          ; Move DI to the next line
     DEC DX
-    JNZ dto_draw_line              ; Draw next line if tile is not entirely draw
+    JNZ @dto_draw_line              ; Draw next line if tile is not entirely draw
 
   RESTORE_REGS
   RET
@@ -42,23 +42,23 @@ DRAW_TILE_TRANSPARENT PROC
   MOV DX, TILE_HEIGHT             ; Height of the sprite (number of lines)
 
   ; --- draw the tile loop
-  dtt_draw_line:
+  @dtt_draw_line:
     MOV CX, TILE_WIDTH
     PUSH DI                       ; Save current line start
 
-    dtt_draw_pixel:
+    @dtt_draw_pixel:
       LODSB                       ; Load from SI in AL then increment SI
       OR AL, AL                   ; Check if pixel is transparent
-      JZ dtt_skip_pixel           ; Skip pixel if transparent
+      JZ @dtt_skip_pixel           ; Skip pixel if transparent
       MOV ES:[DI], AL             ; Draw pixel
-      dtt_skip_pixel:
+      @dtt_skip_pixel:
         INC DI                    ;  Next pixel on screen
-        LOOP dtt_draw_pixel
+        LOOP @dtt_draw_pixel
 
     POP DI                        ; Restore line start
     ADD DI, SCREEN_WIDTH          ; Move DI to the next line
     DEC DX                        ; Decrement line counter
-    JNZ dtt_draw_line             ; Draw next line if tile is not entirely draw
+    JNZ @dtt_draw_line             ; Draw next line if tile is not entirely draw
 
   RESTORE_REGS
   RET

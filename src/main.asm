@@ -100,7 +100,7 @@ MAIN ENDP
 GAME_LOOP PROC
   SAVE_REGS
 
-get_next_key:
+@gl_get_next_key:
   WAIT_VSYNC                  ; Wait for vertical syncronization to avoid flickering
 
   CALL SYNC_TICKS             ; Syncing timing
@@ -109,22 +109,22 @@ get_next_key:
   CALL HANDLE_KEYBOARD_INPUT  ; Input game_tick, Output AL = 0 (no key), AL = 1 (action), AL = 2 (quit game)
 
   CMP AL, 0                   ; Check if no key was pressed
-  JE no_movement
+  JE @gl_no_movement
 
   CMP AL, 2                   ; Check if quit game key was pressed
-  JE exit_game
+  JE @gl_exit_game
 
   CALL RENDER_CARACTER        ; Render the Mia character
   MOV pending_tick, 0         ; Reset pending ticks
-  JMP get_next_key
+  JMP @gl_get_next_key
 
-no_movement:
+@gl_no_movement:
   CMP pending_tick, 3         ; Less than 4 ticks?
-  JL get_next_key             ; Yes, keep the debt and loop again
+  JL @gl_get_next_key             ; Yes, keep the debt and loop again
   MOV pending_tick, 0         ; Reset pending ticks
-  JMP get_next_key
+  JMP @gl_get_next_key
 
-exit_game:
+@gl_exit_game:
   RESTORE_REGS
   RET
 GAME_LOOP ENDP

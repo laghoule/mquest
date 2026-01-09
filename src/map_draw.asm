@@ -12,11 +12,11 @@ DRAW_OPAQUE_MAP PROC
 
   MOV SI, curr_map
 
-  dom_draw_line:
+  @dom_draw_line:
     MOV CX, TILE_COLS ; Columns
     MOV pos_x, 0
 
-    dom_draw_tile:
+    @dom_draw_tile:
       PUSH CX
       ; 'tile' is loaded outside of this proc (before)
       ; and is used in DRAW_TILE_OPAQUE
@@ -32,11 +32,11 @@ DRAW_OPAQUE_MAP PROC
 
       POP CX                          ; Restore columns counter
       ADD pos_x, TILE_WIDTH           ; Increment position by tile width
-      LOOP dom_draw_tile              ; Loop until all columns are drawn
+      LOOP @dom_draw_tile              ; Loop until all columns are drawn
 
     ADD pos_y, TILE_HEIGHT            ; Increment position by tile height
     DEC DX                            ; Decrement rows counter
-    JNZ dom_draw_line                 ; Loop until all lines are drawn
+    JNZ @dom_draw_line                 ; Loop until all lines are drawn
 
   RESTORE_REGS
   RET
@@ -52,16 +52,16 @@ DRAW_TRANSPARENT_MAP PROC
 
   MOV SI, curr_map                     ; Load current map index
 
-  dtm_rows_loop:
+  @dtm_rows_loop:
     MOV CX, TILE_COLS
     MOV pos_x, 0
 
-    dtm_colums_loop:
+    @dtm_colums_loop:
       PUSH CX                          ; Save columns counter
       LODSB                            ; AL = ID of tile, SI++
 
       OR AL, AL                        ; Check if tile ID is zero
-      JZ dtm_skip_tile                 ; Skip if zero
+      JZ @dtm_skip_tile                 ; Skip if zero
 
       ; --- Get tile index ---
       XOR AH, AH                       ; Clear AH register
@@ -72,14 +72,14 @@ DRAW_TRANSPARENT_MAP PROC
 
       CALL DRAW_TILE_TRANSPARENT       ; Draw tile with transparency
 
-      dtm_skip_tile:
+      @dtm_skip_tile:
       POP CX                           ; Restore columns counter
       ADD pos_x, TILE_WIDTH            ; Increment position by tile width
-      LOOP dtm_colums_loop             ; Loop until all columns are drawn
+      LOOP @dtm_colums_loop             ; Loop until all columns are drawn
 
       ADD pos_y, TILE_HEIGHT           ; Increment position by tile height
       DEC DX                           ; Decrement rows counter
-      JNZ dtm_rows_loop
+      JNZ @dtm_rows_loop
 
   RESTORE_REGS
   RET
