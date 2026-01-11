@@ -21,9 +21,10 @@ KEY_UP          EQU 48h
 KEY_DOWN        EQU 50h
 KEY_LEFT        EQU 4Bh
 KEY_RIGHT       EQU 4Dh
+KEY_MUTE        EQU 32h   ; m key
 
 ; Default screen background
-COLOR_BLACK     EQU 0 ; FIXME: should be background color
+COLOR_BLACK     EQU 0     ; FIXME: should be background color
 
 ; Video modes
 ; https://en.wikipedia.org/wiki/Mode_13h

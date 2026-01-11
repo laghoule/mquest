@@ -1,5 +1,6 @@
 ;-----------------------------------------------------------
 ; HANDLE_KEYBOARD_INPUT
+; Description: Handles keyboard input for the game
 ; INPUT:  CX (number of ticks)
 ; Output: AL = 0 (nothing), 1 (mouvement), 2 (quit)
 ;-----------------------------------------------------------
@@ -13,6 +14,9 @@ HANDLE_KEYBOARD_INPUT PROC
 
   CMP AH, KEY_ESC
   JE @hki_exit_game
+
+  CMP AH, KEY_MUTE        ; m key
+  JE @hki_mute_music
 
   CMP AH, KEY_RIGHT
   JE @hki_move_right
@@ -48,6 +52,17 @@ HANDLE_KEYBOARD_INPUT PROC
 @hki_return:
   MOV AL, 1
   RET
+
+; Mute / Unmute the music
+@hki_mute_music:
+  CMP music_theme_active, 1
+  JE @F
+  MOV music_theme_active, 1
+  JMP @hki_return
+@@:
+  MOV music_theme_active, 0
+  CALL MUTE_SPEAKER
+  JMP @hki_return
 
 @hki_exit_game:
   MOV AL, 2

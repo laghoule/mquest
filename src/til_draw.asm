@@ -25,7 +25,7 @@ DRAW_TILE_OPAQUE PROC
     POP DI                        ; Restore line start
     ADD DI, SCREEN_WIDTH          ; Move DI to the next line
     DEC DX
-    JNZ @dto_draw_line              ; Draw next line if tile is not entirely draw
+    JNZ @dto_draw_line            ; Draw next line if tile is not entirely draw
 
   RESTORE_REGS
   RET
@@ -58,7 +58,7 @@ DRAW_TILE_TRANSPARENT PROC
     POP DI                        ; Restore line start
     ADD DI, SCREEN_WIDTH          ; Move DI to the next line
     DEC DX                        ; Decrement line counter
-    JNZ @dtt_draw_line             ; Draw next line if tile is not entirely draw
+    JNZ @dtt_draw_line            ; Draw next line if tile is not entirely draw
 
   RESTORE_REGS
   RET

@@ -8,11 +8,12 @@ TITLE Mia's Herbal Quest
 .8086
 .STACK 100h
 
-INCLUDE defs/macros.inc ; Macros
-INCLUDE defs/consts.inc ; Constants
+INCLUDE defs/macros.inc         ; Macros
+INCLUDE defs/consts/consts.inc  ; Constants
 
 .DATA
 
+  INCLUDE defs/vars/music.inc        ; Music variables and songs
   INCLUDE assets/carac/mia.inc       ; Mia animations sprite data
 
   INCLUDE assets/tiles/grass.inc     ; Grass tiles data
@@ -53,6 +54,7 @@ INCLUDE defs/consts.inc ; Constants
 
 .CODE
 INCLUDE timer.asm         ; Timer functions
+INCLUDE speaker.asm       ; Speaker functions
 INCLUDE inputs.asm        ; Inputs functions
 INCLUDE player.asm        ; Player functions
 INCLUDE car_draw.asm      ; Caracters drawing functions
@@ -79,8 +81,10 @@ MAIN PROC
   CALL DRAW_TRANSPARENT_MAP           ; This is the transparent items on the map
 
   PREPARE_MIA_DRAW
-  CALL SAVE_CARACTER_BG
-  CALL DRAW_CARACTER
+  CALL SAVE_CARACTER_BG               ; Save the background of the character
+  CALL DRAW_CARACTER                  ; Initial position of the character
+
+  CALL INIT_MUSIC_THEME               ; Initialize music theme
 
   ; --- Game loop ---
   CALL INIT_TICKS                     ; Initialise the game_tick & pending_tick
@@ -106,6 +110,12 @@ GAME_LOOP PROC
   CALL SYNC_TICKS             ; Syncing timing
   ADD pending_tick, CL        ; Ticks count
 
+  ; Mute / Unmute music theme
+  CMP music_theme_active, 0
+  JE @F
+  CALL UPDATE_MUSIC_THEME     ; Update theme music
+  @@:
+
   CALL HANDLE_KEYBOARD_INPUT  ; Input game_tick, Output AL = 0 (no key), AL = 1 (action), AL = 2 (quit game)
 
   CMP AL, 0                   ; Check if no key was pressed
@@ -120,11 +130,12 @@ GAME_LOOP PROC
 
 @gl_no_movement:
   CMP pending_tick, 3         ; Less than 4 ticks?
-  JL @gl_get_next_key             ; Yes, keep the debt and loop again
+  JL @gl_get_next_key         ; Yes, keep the debt and loop again
   MOV pending_tick, 0         ; Reset pending ticks
   JMP @gl_get_next_key
 
 @gl_exit_game:
+  CALL MUTE_SPEAKER           ; Stop background music
   RESTORE_REGS
   RET
 GAME_LOOP ENDP
