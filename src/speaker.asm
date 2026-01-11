@@ -2,7 +2,7 @@
 ; INIT_MUSIC_THEME
 ; Description: Initializes the music theme by setting the initial
 ; values for the music theme index, tempo, and speed counter.
-; Input: None
+; Input: SI (music data pointer)
 ; Output: None
 ; -----------------------------------------------------------------
 INIT_MUSIC_THEME PROC
@@ -12,7 +12,7 @@ INIT_MUSIC_THEME PROC
 
   ; Immediately play the first note in the music data table.
   MOV BX, 0
-  MOV AX, [greensleeves_data + BX] ; TODO: replace with music_theme_data
+  MOV AX, [SI + BX] ; TODO: replace with music_theme_data
   CALL SET_SPEAKER_FREQ
   RET
 INIT_MUSIC_THEME ENDP
@@ -59,7 +59,7 @@ SET_SPEAKER_FREQ ENDP
 ; UPDATE_MUSIC_THEME
 ; Description: Updates the music theme by advancing the music theme index,
 ; tempo, and speed counter.
-; Input: None
+; Input: SI (music data pointer)
 ; Output: None
 ;--------------------------------------------------------------------------
 UPDATE_MUSIC_THEME PROC
@@ -77,7 +77,7 @@ UPDATE_MUSIC_THEME PROC
   MOV BX, music_theme_idx               ; Load the music theme index into BX
   ADD BX, BX                            ; Index * 2
   ADD BX, BX                            ; Index * 4
-  MOV AX, [greensleeves_data + BX + 2]  ; Load note duration (data in AL)
+  MOV AX, [SI + BX + 2]  ; Load note duration (data in AL)
 
   CMP music_theme_tempo, AL             ; Compare the current tempo with the note duration
   JL @umt_skipping                      ; The current note is still playing.
@@ -93,7 +93,7 @@ UPDATE_MUSIC_THEME PROC
   MOV BX, music_theme_idx               ; Load the music theme index into BX
   ADD BX, BX                            ; Inxex * 2
   ADD BX, BX                            ; Index * 4
-  MOV AX, [greensleeves_data + BX]      ; Get the new note's frequency
+  MOV AX, [SI + BX]      ; Get the new note's frequency
   CALL SET_SPEAKER_FREQ                 ; Immediately send the new frequency to the speaker
 
 @umt_skipping:

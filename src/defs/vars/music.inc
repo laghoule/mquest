@@ -20,7 +20,7 @@ N_OFF EQU 0
 ; --- Greensleeves: Full Score ---
 ; Format: Frequency, Duration (in ticks multiplied by your music_theme_speed_counter)
 
-greensleeves_data label word
+greensleeves_data LABEL WORD
   ; --- VERSE (Alas, my love...) ---
   DW N_A4, 2, N_C5, 4, N_D5, 2, N_E5, 3, N_FS5, 1, N_E5, 2
   DW N_D5, 4, N_B4, 2, N_G4, 3, N_A4, 1, N_B4, 2

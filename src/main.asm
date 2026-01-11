@@ -31,26 +31,26 @@ INCLUDE defs/consts/consts.inc  ; Constants
   tile DW 0               ; Tile
 
   ; Generic sprite info
-  curr_sprite DW 0        ; Current sprite to draw
-  curr_sprite_table DW 0  ; Current sprite table
-  curr_anim_state DB 0    ; Current animation state
-  bg_sprite DB 272 DUP(0) ; Background sprite
-  pos_x DW 0              ; Sprite x position
-  pos_y DW 0              ; Sprite y position
+  curr_sprite           DW 0          ; Current sprite to draw
+  curr_sprite_table     DW 0          ; Current sprite table
+  curr_anim_state       DB 0          ; Current animation state
+  bg_sprite             DB 272 DUP(0) ; Background sprite
+  pos_x                 DW 0          ; Sprite x position
+  pos_y                 DW 0          ; Sprite y position
 
   ; For smooth animation
-  game_tick DB 0          ; Global metronome for smooth animation (TODO: name)
-  pending_tick DB 0       ; Pending tick used for slow hardware
+  game_tick             DB 0          ; Global metronome for smooth animation (TODO: name)
+  pending_tick          DB 0          ; Pending tick used for slow hardware
 
   ; Mia sprite info
-  mia_pos_x         DW 150                ; Mia starting x position
-  mia_pos_y         DW 90                 ; Mia starting y position
-  mia_bg_sprite     DB 272 DUP(0)         ; Mia background sprite
-  mia_curr_sprite   DW OFFSET mia_down_0  ; Front / down animation for starting point
-  mia_r_anim_state  DB 0                  ; Mia right animation state (0, 1, 2 state)
-  mia_l_anim_state  DB 0                  ; Mia left animation state (0, 1, 2 state)
-  mia_u_anim_state  DB 0                  ; Mia up animation state (0, 1, 2 state)
-  mia_d_anim_state  DB 0                  ; Mia down animation state (0, 1, 2 state)
+  mia_pos_x             DW 150                ; Mia starting x position
+  mia_pos_y             DW 90                 ; Mia starting y position
+  mia_bg_sprite         DB 272 DUP(0)         ; Mia background sprite
+  mia_curr_sprite       DW OFFSET mia_down_0  ; Front / down animation for starting point
+  mia_r_anim_state      DB 0                  ; Mia right animation state (0, 1, 2 state)
+  mia_l_anim_state      DB 0                  ; Mia left animation state (0, 1, 2 state)
+  mia_u_anim_state      DB 0                  ; Mia up animation state (0, 1, 2 state)
+  mia_d_anim_state      DB 0                  ; Mia down animation state (0, 1, 2 state)
 
 .CODE
 INCLUDE timer.asm         ; Timer functions
@@ -84,6 +84,7 @@ MAIN PROC
   CALL SAVE_CARACTER_BG               ; Save the background of the character
   CALL DRAW_CARACTER                  ; Initial position of the character
 
+  MOV SI, OFFSET greensleeves_data
   CALL INIT_MUSIC_THEME               ; Initialize music theme
 
   ; --- Game loop ---
