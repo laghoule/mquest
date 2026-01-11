@@ -28,13 +28,19 @@ Mia is a young herbalist apprentice. Her grandmother has fallen ill, and the onl
 - **VSync Synchronization:** Implemented "Wait for Vertical Retrace" to ensure flicker-free rendering at a stable 60/70 FPS.
 - **High-Performance Math:** Address calculations optimized using bit-shifting (`SHL`) instead of the costly `MUL` instruction, specifically tuned for the 8088's 8-bit bus.
 - **Non-Blocking Input:** Real-time keyboard sensing using BIOS interrupts (AH=01h).
+- **Background Restoration System:** Full "Save/Restore" buffer logic allowing Mia to walk over complex terrains without erasing them.
+- **Tiled Map Engine:** Dual-layer map system with opaque base tiles and transparent overlay items (rocks, flowers, objects).
+- **PC Speaker Music:** Background music playback using the Intel 8253 PIT (Programmable Interval Timer) - features "Greensleeves" theme with configurable tempo and mute/unmute functionality.
+- **Smooth Animation System:** Delta-tick based timing system ensuring consistent animation speed across different hardware configurations.
 
 ## Roadmap
 
 - [X] **Background Restoration System:** Implement "Save/Restore" buffer logic to allow Mia to walk over complex terrains without erasing them.
-- [ ] **Tiled Map Engine:** Create a "Flip-Screen" world navigation system (Zelda-style).
-- [ ] **Collision Detection:** Implement tile-based or pixel-based collision sensing.
-- [ ] **OPL3 Sound:** Integrate music and sound effects using the Yamaha YMF262 chip.
+- [X] **Tiled Map Engine:** Create a dual-layer tile rendering system with transparency support.
+- [X] **PC Speaker Music:** Integrate background music using the Intel 8253 PIT.
+- [ ] **Multi-Screen Navigation:** Implement "Flip-Screen" world navigation system (Zelda-style).
+- [ ] **Collision Detection:** Implement tile-based collision sensing.
+- [ ] **OPL3 Sound:** Add sound effects using the Yamaha YMF262 chip (music already implemented via PC Speaker).
 - [ ] **Joystick Support:** Add support for analog game controllers via Port 201h.
 
 ## Assets
@@ -44,9 +50,9 @@ Mia is a young herbalist apprentice. Her grandmother has fallen ill, and the onl
 
 ## Build Instructions
 
-1.  Convert sprites using the Go tool: `go run main.go -src sprite.png -dst assets/sprite.inc`
-2.  Assemble using MASM 6.11: `ml /Zi mia.asm`
-3.  Run in DOSBox or transfer to hardware via Diskette :)
+1. Convert sprites using the Go tool: `go run main.go -src sprite.png -dst assets/sprite.inc`
+2. Assemble using MASM 6.11: `ml /Zi main.asm`
+3. Run in DOSBox or transfer to hardware via Diskette :)
 
 ---
 
