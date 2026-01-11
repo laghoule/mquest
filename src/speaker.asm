@@ -50,8 +50,8 @@ SET_SPEAKER_FREQ PROC
   MOV AL, AH
   OUT 42h, AL       ; Send the high byte of the divider
 
-  IN AL, 61h        ; Enable the speaker gate
-  OR AL, 03h        ; Set the speaker gate bit
+  IN AL, 61h        ; Read the system status bits
+  OR AL, 03h        ; Enable speaker data and timer gate (Bits 0 and 1) via a 2 bits mask
   OUT 61h, AL       ; Enable the speaker gate
   RET
 
@@ -98,7 +98,7 @@ UPDATE_MUSIC_THEME PROC
   MOV BX, music_theme_idx               ; Load the music theme index into BX
   ADD BX, BX                            ; Inxex * 2
   ADD BX, BX                            ; Index * 4
-  MOV AX, [SI + BX]      ; Get the new note's frequency
+  MOV AX, [SI + BX]                     ; Get the new note's frequency
   CALL SET_SPEAKER_FREQ                 ; Immediately send the new frequency to the speaker
 
 @umt_skipping:
