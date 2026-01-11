@@ -13,9 +13,14 @@ INCLUDE defs/consts/consts.inc  ; Constants
 
 .DATA
 
-  INCLUDE defs/vars/music.inc        ; Music variables and songs
-  INCLUDE assets/carac/mia.inc       ; Mia animations sprite data
+  ; --- Musics ---
+  INCLUDE assets/musics/notes.inc    ; Frequencies (PIT Dividers)
+  INCLUDE assets/musics/themes.inc   ; Music variables and songs
 
+  ; --- Characters ---
+  INCLUDE assets/chars/mia.inc       ; Mia animations sprite data
+
+  ; --- Tiles ---
   INCLUDE assets/tiles/grass.inc     ; Grass tiles data
   INCLUDE assets/tiles/flowers.inc   ; Items tiles data
   INCLUDE assets/tiles/tables.inc    ; Tiles table data
@@ -23,6 +28,7 @@ INCLUDE defs/consts/consts.inc  ; Constants
   INCLUDE assets/tiles/plants.inc    ; Plants tiles data
   INCLUDE assets/tiles/objects.inc   ; Objects tiles data
 
+  ; --- Maps ---
   INCLUDE assets/maps/map.inc        ; Map data
   INCLUDE assets/maps/map_o_0.inc    ; Map opaque
   INCLUDE assets/maps/map_t_0.inc    ; Map transparent
@@ -53,13 +59,13 @@ INCLUDE defs/consts/consts.inc  ; Constants
   mia_d_anim_state      DB 0                  ; Mia down animation state (0, 1, 2 state)
 
 .CODE
-INCLUDE timer.asm         ; Timer functions
-INCLUDE speaker.asm       ; Speaker functions
-INCLUDE inputs.asm        ; Inputs functions
-INCLUDE player.asm        ; Player functions
-INCLUDE car_draw.asm      ; Caracters drawing functions
-INCLUDE til_draw.asm      ; Tiles drawing functions
-INCLUDE map_draw.asm      ; Maps drawing functions
+INCLUDE game/player.asm       ; Player functions
+INCLUDE sys/timer.asm         ; Timer functions
+INCLUDE sys/speaker.asm       ; Speaker functions
+INCLUDE sys/input.asm        ; Inputs functions
+INCLUDE gfx/char.asm          ; Caracters drawing functions
+INCLUDE gfx/tile.asm          ; Tiles drawing functions
+INCLUDE gfx/map.asm           ; Maps drawing functions
 
 MAIN PROC
   ; ---Initialize data segment---

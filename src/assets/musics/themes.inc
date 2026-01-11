@@ -4,18 +4,6 @@ music_theme_tempo         DB 0    ; Duration counter
 music_theme_active        DB 1    ; Mute flag (0 = mute, 1 = active)
 music_theme_speed_counter DB 0    ; Speed counter
 
-; --- Frequencies (PIT Dividers) ---
-N_E4  EQU 3619  ; E4
-N_G4  EQU 3044  ; G4
-N_GS4 EQU 2875  ; G#4
-N_A4  EQU 2712  ; A4
-N_B4  EQU 2415  ; B4
-N_C5  EQU 2280  ; C5
-N_D5  EQU 2031  ; D5
-N_E5  EQU 1809  ; E5
-N_FS5 EQU 1612  ; F#5
-N_G5  EQU 1522  ; G5
-N_OFF EQU 0
 
 ; --- Greensleeves: Full Score ---
 ; Format: Frequency, Duration (in ticks multiplied by your music_theme_speed_counter)
