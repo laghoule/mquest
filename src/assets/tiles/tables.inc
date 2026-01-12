@@ -10,3 +10,4 @@ tiles_trns_table DW 0                 ; ID 0
     DW OFFSET rock_trns_0             ; ID 5
     DW OFFSET rock_trns_1             ; ID 6
     DW OFFSET tresors_trns_0          ; ID 7
+    DW OFFSET flower_trns_1           ; ID 8
