@@ -63,11 +63,11 @@ HANDLE_KEYBOARD_INPUT PROC
   CMP music_theme_active, 1
   JE @F
   MOV music_theme_active, 1
-  JMP @hki_return
+  JMP @hki_no_input
 @@:
   MOV music_theme_active, 0
   CALL MUTE_SPEAKER
-  JMP @hki_return
+  JMP @hki_no_input
 
 @hki_exit_game:
   MOV AL, 2
