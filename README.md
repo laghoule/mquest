@@ -51,7 +51,7 @@ Mia is a young herbalist apprentice. Her grandmother has fallen ill, and the onl
 ## Build Instructions
 
 1. Convert sprites using the Go tool: `go run main.go -src sprite.png -dst assets/sprite.inc`
-2. Assemble using MASM 6.11: `ml /Zi main.asm`
+2. Assemble using MASM 6.11: `ml /Zi /Femquest main.asm`
 3. Run in DOSBox or transfer to hardware via Diskette :)
 
 ---
