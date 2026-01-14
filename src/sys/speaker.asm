@@ -80,9 +80,11 @@ UPDATE_MUSIC_THEME PROC
 
   ; Retrieve the duration of the current note.
   MOV BX, music_theme_idx               ; Load the music theme index into BX
-  ADD BX, BX                            ; Index * 2
-  ADD BX, BX                            ; Index * 4
-  MOV AX, [SI + BX + 2]  ; Load note duration (data in AL)
+  ; Note: SHL BX, 1 is faster than ADD BX, BX (3 cycles)
+  ; and much faster than SHL BX, CL (20+ cycles) on 8088
+  SHL BX, 1                             ; BX = index * 2 (2 cycles)
+  SHL BX, 1                             ; BX = index * 4 (2 cycles)
+  MOV AX, [SI + BX + 2]                 ; Load note duration (data in AL)
 
   CMP music_theme_tempo, AL             ; Compare the current tempo with the note duration
   JL @umt_skipping                      ; The current note is still playing.
@@ -96,8 +98,10 @@ UPDATE_MUSIC_THEME PROC
 
 @umt_play:
   MOV BX, music_theme_idx               ; Load the music theme index into BX
-  ADD BX, BX                            ; Inxex * 2
-  ADD BX, BX                            ; Index * 4
+  ; Note: SHL BX, 1 is faster than ADD BX, BX (3 cycles)
+  ; and much faster than SHL BX, CL (20+ cycles) on 8088
+  SHL BX, 1                             ; BX = index * 2 (2 cycles)
+  SHL BX, 1                             ; BX = index * 4 (2 cycles)
   MOV AX, [SI + BX]                     ; Get the new note's frequency
   CALL SET_SPEAKER_FREQ                 ; Immediately send the new frequency to the speaker
 
