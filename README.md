@@ -35,17 +35,28 @@ Mia is a young herbalist apprentice. Her grandmother has fallen ill, and the onl
 
 ## Roadmap
 
-- [X] **Background Restoration System:** Implement "Save/Restore" buffer logic to allow Mia to walk over complex terrains without erasing them.
-- [X] **Tiled Map Engine:** Create a dual-layer tile rendering system with transparency support.
-- [X] **PC Speaker Music:** Integrate background music using the Intel 8253 PIT.
+- [x] **Background Restoration System:** Implement "Save/Restore" buffer logic to allow Mia to walk over complex terrains without erasing them.
+- [x] **Tiled Map Engine:** Create a dual-layer tile rendering system with transparency support.
+- [x] **PC Speaker Music:** Integrate background music using the Intel 8253 PIT.
 - [ ] **Multi-Screen Navigation:** Implement "Flip-Screen" world navigation system (Zelda-style).
 - [ ] **Collision Detection:** Implement tile-based collision sensing.
 - [ ] **OPL3 Sound:** Add sound effects using the Yamaha YMF262 chip (music already implemented via PC Speaker).
 - [ ] **Joystick Support:** Add support for analog game controllers via Port 201h.
 
+## Testing
+
+For development loop, testing is done on Dosbox-x on Linux.
+
+And on real hardware, with Dos 6.22:
+
+- AMD 80486 DX2/80
+- Intel 8088-1
+- Intel 8086-2
+- Nec V30
+
 ## Assets
 
-- **Character Sprites:** Custom 16x17 pixel art by ***Fleurman*** via [OpenGameArt.org](https://opengameart.org/content/tiny-characters-set).
+- **Character Sprites:** Custom 16x17 pixel art by **_Fleurman_** via [OpenGameArt.org](https://opengameart.org/content/tiny-characters-set).
 - **Environment Tiles:** Based on the "Batch 5" (16x16) tileset by **Hyptosis** via [OpenGameArt.org](https://opengameart.org/content/lots-of-free-2d-tiles-and-sprites-by-hyptosis).
 
 ## Build Instructions
