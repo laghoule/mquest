@@ -19,18 +19,18 @@ RUN uasm -mz src/main.asm && \
   mv main.EXE mquest.exe
 
 # Create a simple zip archive for the game
-RUN zip mquest.jsdos mquest.exe .jsdos/dosbox.conf .jsdos/.json
+RUN zip mquest.jsdos mquest.exe docker/.jsdos/dosbox.conf docker/.jsdos/.json
 
 # Stage 2: Production
 FROM caddy:2-alpine
 
 WORKDIR /app
 
-COPY Caddyfile /etc/caddy/Caddyfile
+COPY docker/Caddyfile /etc/caddy/Caddyfile
 
 # Copy only the necessary assets from the build stage
 COPY --from=builder /app/mquest.jsdos /srv/mquest.jsdos
-COPY --from=builder /app/index.html /srv/index.html
+COPY --from=builder /app/docker/index.html /srv/index.html
 
 # Create a non-root user and group
 RUN addgroup -S caddy && adduser -S caddy -G caddy
