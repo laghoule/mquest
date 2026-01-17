@@ -64,15 +64,15 @@ And on real hardware, with Dos 6.22:
 ### Linux / Windows (UASM)
 
 1. **Install UASM**
-   Download the compiler at https://github.com/Terraspace/UASM
+   - Download the compiler at https://github.com/Terraspace/UASM
 
-2.  **Assemble the code:**
-    ```bash
-    uasm -mz src/main.asm
-    ```
-3.  **Run the executable:**
-    -   Rename `main.EXE` to `mquest.exe`.
-    -   Run in DOSBox-X: `dosbox-x mquest.exe`
+2. **Assemble the code:**
+   ```bash
+   uasm -mz src/main.asm
+   ```
+3. **Run the executable:**
+   - Rename `main.EXE` to `mquest.exe`.
+   - Run in DOSBox-X: `dosbox-x mquest.exe`
 
 ### DOS (MASM)
 
