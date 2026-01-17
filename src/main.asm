@@ -8,8 +8,10 @@ TITLE Mia's Herbal Quest
 .8086
 .STACK 100h
 
-INCLUDE defs/macros.inc         ; Macros
-INCLUDE defs/consts/consts.inc  ; Constants
+INCLUDE defs/macros/chars.inc         ; Character macros
+INCLUDE defs/macros/sys.inc           ; System macros
+INCLUDE defs/macros/vga.inc           ; VGA macros
+INCLUDE defs/consts/consts.inc        ; Constants
 
 .DATA
 

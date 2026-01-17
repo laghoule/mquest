@@ -1,4 +1,4 @@
-
+; --- Tiles IDs ---
 VOID_0 EQU 0           ; Empty
 GRS_O0 EQU 10          ; Grass 0
 

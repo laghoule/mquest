@@ -1,21 +1,3 @@
-SAVE_REGS MACRO
-  PUSH AX
-  PUSH BX
-  PUSH CX
-  PUSH DX
-  PUSH SI
-  PUSH DI
-ENDM
-
-RESTORE_REGS MACRO
-  POP DI
-  POP SI
-  POP DX
-  POP CX
-  POP BX
-  POP AX
-ENDM
-
 ; SHL is faster than MUL
 CALC_VGA_POSITION MACRO pos_x, pos_y
   ; Calculating the position in the VGA memory
@@ -48,18 +30,4 @@ wait_start:
   IN AL, DX
   TEST AL, 8
   JZ wait_start ; Wait for the start of the vertical sync
-ENDM
-
-; Prepare Mia position to use the draw generic position
-PREPARE_MIA_DRAW MACRO
-  SYNC_MIA_POSITION
-  MOV AX, mia_curr_sprite ; Save current sprite to generic sprite
-  MOV curr_sprite, AX
-ENDM
-
-SYNC_MIA_POSITION MACRO
-  MOV AX, mia_pos_x       ; Save X position to generic position
-  MOV pos_x, AX
-  MOV AX, mia_pos_y       ; Save Y position to generic position
-  MOV pos_y, AX
 ENDM
