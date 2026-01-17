@@ -61,9 +61,43 @@ And on real hardware, with Dos 6.22:
 
 ## Build Instructions
 
-1. Convert sprites using the Go tool: `go run main.go -src sprite.png -dst assets/sprite.inc`
-2. Assemble using MASM 6.11: `ml /Zi /Femquest main.asm`
-3. Run in DOSBox or transfer to hardware via Diskette :)
+### Linux / Windows (UASM)
+
+1. **Install UASM**
+   Download the compiler at https://github.com/Terraspace/UASM
+
+2.  **Assemble the code:**
+    ```bash
+    uasm -mz src/main.asm
+    ```
+3.  **Run the executable:**
+    -   Rename `main.EXE` to `mquest.exe`.
+    -   Run in DOSBox-X: `dosbox-x mquest.exe`
+
+### DOS (MASM)
+
+1. **Assemble using MASM 6.11:** `ml /Zi /Femquest main.asm`
+2. **Run in DOSBox or transfer to hardware via Diskette :)**
+
+## Run in Browser (Docker)
+
+This project can be run in a modern web browser using Docker and the [js-dos](https://js-dos.com/) emulator.
+
+1.  **Build the Docker image:**
+
+    ```bash
+    docker build -t mquest .
+    ```
+
+2.  **Run the Docker container:**
+
+    ```bash
+    docker run -d -p 8080:8080 --rm --name mquest-web mquest
+    ```
+
+3.  **Open your browser:**
+
+    Navigate to [http://localhost:8080](http://localhost:8080) to play the game.
 
 ---
 
