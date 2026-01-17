@@ -1,13 +1,26 @@
-tiles_opq_table DW OFFSET grass_opq_0 ; ID 0
-    DW OFFSET rock_opq_0              ; ID 1
+; IDs must follow the definition here: defs/gfx/tiles.inc
 
-; TODO: Review orders
-tiles_trns_table DW 0                 ; ID 0
-    DW OFFSET flower_trns_0           ; ID 1
-    DW OFFSET plant_trns_0            ; ID 2
-    DW OFFSET plant_trns_1            ; ID 3
-    DW OFFSET plant_trns_2            ; ID 4
-    DW OFFSET rock_trns_0             ; ID 5
-    DW OFFSET rock_trns_1             ; ID 6
-    DW OFFSET tresors_trns_0          ; ID 7
-    DW OFFSET flower_trns_1           ; ID 8
+tiles_table DW 10 DUP(0)            ; Place holder
+
+  DW OFFSET grass_opq_0             ; ID 10
+
+  DW 9 DUP(0)                       ; Place holder
+
+  DW OFFSET flower_trns_0           ; ID 20
+  DW OFFSET flower_trns_1           ; ID 21
+
+  DW 8 DUP(0)                       ; Place holder
+
+  DW OFFSET plant_trns_0            ; ID 30
+  DW OFFSET plant_trns_1            ; ID 31
+  DW OFFSET plant_trns_2            ; ID 32
+
+  DW 7 DUP(0)                       ; Place holder
+
+  DW OFFSET rock_opq_0              ; ID 40
+  DW OFFSET rock_trns_0             ; ID 41
+  DW OFFSET rock_trns_1             ; ID 42
+
+  DW 7 DUP(0)                       ; Place holder
+
+  DW OFFSET tresors_trns_0          ; ID 50

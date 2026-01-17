@@ -14,13 +14,14 @@ INCLUDE defs/consts/consts.inc  ; Constants
 .DATA
 
   ; --- Musics ---
-  INCLUDE assets/musics/notes.inc    ; Frequencies (PIT Dividers)
+  INCLUDE defs/musics/notes.inc      ; Frequencies (PIT Dividers)
   INCLUDE assets/musics/themes.inc   ; Music variables and songs
 
   ; --- Characters ---
   INCLUDE assets/chars/mia.inc       ; Mia animations sprite data
 
   ; --- Tiles ---
+  INCLUDE defs/gfx/tiles.inc         ; Tiles tables data
   INCLUDE assets/tiles/grass.inc     ; Grass tiles data
   INCLUDE assets/tiles/flowers.inc   ; Items tiles data
   INCLUDE assets/tiles/tables.inc    ; Tiles table data
@@ -29,6 +30,7 @@ INCLUDE defs/consts/consts.inc  ; Constants
   INCLUDE assets/tiles/objects.inc   ; Objects tiles data
 
   ; --- Maps ---
+  INCLUDE defs/gfx/maps.inc          ; Maps tables data
   INCLUDE assets/maps/map.inc        ; Map data
   INCLUDE assets/maps/map_o_0.inc    ; Map opaque
   INCLUDE assets/maps/map_t_0.inc    ; Map transparent

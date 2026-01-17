@@ -1,14 +1,16 @@
-; --- OPAQUES IDs ---
-GRS0 EQU 0        ; Grass 0
-RK01 EQU 1        ; Rock 1
-RK02 EQU 2        ; Rock 2
-RK03 EQU 3        ; Rock 3
 
-; --- TRANSPARENTS IDs ---
-VOID EQU 0          ; Empty
-FL01 EQU 1          ; Flower 1
-FL02 EQU 2          ; Flower 2
-PL01 EQU 3          ; Plant 1
-PL02 EQU 4          ; Plant 2
-TR01 EQU 5          ; Treasure 1
+VOID_0 EQU 0           ; Empty
+GRS_O0 EQU 10          ; Grass 0
 
+FLO_T0 EQU 20          ; Flower 0
+FLO_T1 EQU 21          ; Flower 1
+
+PLT_T0 EQU 30          ; Plant 0
+PLT_T1 EQU 31          ; Plant 1
+PLT_T2 EQU 32          ; Plant 2
+
+RKS_O0 EQU 40          ; Rock 0
+RKS_T0 EQU 41          ; Rock 1
+RKS_T1 EQU 42          ; Rock 2
+
+TRS_T1 EQU 50          ; Treasure 1
