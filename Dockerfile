@@ -1,5 +1,4 @@
-# Stage 1: Compilation
-# Use a Debian image with the necessary build tools
+# Stage 1: Build
 FROM debian:stable-slim AS builder
 
 # Install build dependencies (wget, unzip, zip)
@@ -20,19 +19,17 @@ RUN uasm -mz src/main.asm && \
   mv main.EXE mquest.exe
 
 # Create a simple zip archive for the game
-RUN zip mquest.zip mquest.exe
+RUN zip mquest.jsdos mquest.exe .jsdos/dosbox.conf .jsdos/.json
 
 # Stage 2: Production
-# Use an official Caddy image, which is very lightweight
 FROM caddy:2-alpine
 
 WORKDIR /app
 
-# Copy the Caddyfile to configure the server
 COPY Caddyfile /etc/caddy/Caddyfile
 
 # Copy only the necessary assets from the build stage
-COPY --from=builder /app/mquest.zip /srv/mquest.zip
+COPY --from=builder /app/mquest.jsdos /srv/mquest.jsdos
 COPY --from=builder /app/index.html /srv/index.html
 
 # Create a non-root user and group
@@ -43,6 +40,4 @@ RUN chown -R caddy:caddy /srv /data /config
 
 # Switch to the non-root user
 USER caddy
-
-# Expose the non-privileged port
 EXPOSE 8080

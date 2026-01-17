@@ -2,44 +2,340 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>MQuest</title>
-    <link rel="stylesheet" href="https://js-dos.com/6.22/current/js-dos.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mia's Herbal Quest - Retro DOS Game</title>
+
     <style>
-      body,
-      html {
-        width: 100%;
-        height: 100%;
+      /* ========================================
+         GLOBAL RESET & BASE STYLES
+         ======================================== */
+      * {
         margin: 0;
         padding: 0;
-        background-color: #000;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        box-sizing: border-box;
       }
-      canvas {
-        width: 1024px;
-        height: 768px;
+
+      body {
+        font-family: "Courier New", monospace;
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: #fff;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ========================================
+         HEADER SECTION
+         ======================================== */
+      header {
+        text-align: center;
+        padding: 2rem 1rem;
+        background: rgba(0, 0, 0, 0.3);
+        border-bottom: 3px solid #00ff00;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        color: #00ff00;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        margin-bottom: 0.5rem;
+        letter-spacing: 2px;
+      }
+
+      .subtitle {
+        font-size: 1.2rem;
+        color: #ffaa00;
+        font-style: italic;
+      }
+
+      /* ========================================
+         MAIN CONTAINER & LAYOUT
+         ======================================== */
+      .container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+        max-width: 1400px;
+        margin: 0 auto;
+        width: 100%;
+      }
+
+      .game-wrapper {
+        flex: 1;
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      /* ========================================
+         GAME CONTAINER (DOS EMULATOR)
+         ======================================== */
+      .game-container {
+        flex: 1;
+        background: #000;
+        border: 4px solid #00ff00;
+        border-radius: 8px;
+        box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        overflow: hidden;
+        position: relative;
+        min-height: 500px;
+      }
+
+      #dos {
+        width: 100%;
+        height: 100%;
+      }
+
+      /* ========================================
+         SIDEBAR (CONTROLS & INFO)
+         ======================================== */
+      .sidebar {
+        width: 300px;
+        background: rgba(0, 0, 0, 0.5);
+        border: 2px solid #000000;
+        border-radius: 8px;
+        padding: 1.5rem;
+        height: fit-content;
+      }
+
+      .sidebar h2 {
+        color: #00ff00;
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #00ff00;
+        padding-bottom: 0.5rem;
+      }
+
+      .sidebar h3 {
+        color: #ffaa00;
+        font-size: 1.1rem;
+        margin-top: 1.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .sidebar ul {
+        list-style: none;
+        padding-left: 0;
+      }
+
+      .sidebar li {
+        padding: 0.3rem 0;
+        color: #ccc;
+        font-size: 0.9rem;
+      }
+
+      .sidebar li:before {
+        content: "▸ ";
+        color: #00ff00;
+        font-weight: bold;
+      }
+
+      /* Keyboard key styling */
+      .key {
+        display: inline-block;
+        background: #333;
+        border: 2px solid #00ff00;
+        border-radius: 4px;
+        padding: 0.2rem 0.5rem;
+        margin: 0.2rem;
+        color: #00ff00;
+        font-weight: bold;
+      }
+
+      /* ========================================
+         LOADING SCREEN
+         ======================================== */
+      .loading {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        color: #00ff00;
+        font-size: 1.5rem;
+        z-index: 10;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* ========================================
+         FOOTER SECTION
+         ======================================== */
+      footer {
+        text-align: center;
+        padding: 1rem;
+        background: rgba(0, 0, 0, 0.3);
+        border-top: 2px solid #00ff00;
+        font-size: 0.9rem;
+        color: #aaa;
+      }
+
+      /* ========================================
+         RESPONSIVE DESIGN
+         ======================================== */
+      @media (max-width: 1024px) {
+        .game-wrapper {
+          flex-direction: column;
+        }
+
+        .sidebar {
+          width: 100%;
+        }
+
+        h1 {
+          font-size: 2rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 1.5rem;
+        }
+
+        .subtitle {
+          font-size: 1rem;
+        }
+
+        .sidebar {
+          padding: 1rem;
+        }
+
+        .sidebar h2 {
+          font-size: 1.1rem;
+        }
+      }
+
+      /* ========================================
+         ANIMATIONS
+         ======================================== */
+      .blink {
+        animation: blink 1.5s infinite;
+      }
+
+      @keyframes blink {
+        0%,
+        50%,
+        100% {
+          opacity: 1;
+        }
+        25%,
+        75% {
+          opacity: 0.5;
+        }
       }
     </style>
+
+    <!-- js-dos style sheet -->
+    <link rel="stylesheet" href="https://v8.js-dos.com/latest/js-dos.css" />
+
+    <!-- js-dos library -->
+    <script src="https://v8.js-dos.com/latest/js-dos.js"></script>
   </head>
   <body>
-    <canvas id="jsdos-canvas"></canvas>
+    <!-- ========================================
+         HEADER: Game title and subtitle
+         ======================================== -->
+    <header>
+      <h1>🌿 MIA'S HERBAL QUEST 🌿</h1>
+      <p class="subtitle">A Retro DOS Adventure Game</p>
+    </header>
 
-    <script src="https://js-dos.com/6.22/current/js-dos.js"></script>
+    <!-- ========================================
+         MAIN CONTAINER
+         ======================================== -->
+    <main class="container">
+      <div class="game-wrapper">
+        <!-- ========================================
+             GAME CONTAINER: DOS emulator area
+             ======================================== -->
+        <div class="game-container">
+          <!-- js-dos emulator will be injected here -->
+          <div id="dos"></div>
+        </div>
+
+        <!-- ========================================
+             SIDEBAR: Controls and information
+             ======================================== -->
+        <aside class="sidebar">
+          <!-- Game controls section -->
+          <h2>🎮 Controls</h2>
+          <ul>
+            <li>
+              <span class="key">↑</span> <span class="key">↓</span>
+              <span class="key">←</span> <span class="key">→</span> Movement
+            </li>
+            <li><span class="key">Space</span> Action / Interact</li>
+            <li><span class="key">Esc</span> Menu / Pause</li>
+          </ul>
+
+          <!-- About section -->
+          <h3>📜 About</h3>
+          <p style="color: #ccc; font-size: 0.9rem; line-height: 1.5">
+            Help Mia in her quest to collect medicinal herbs! Explore the world,
+            find rare plants and complete your mission.
+          </p>
+
+          <!-- Tips section -->
+          <h3>💡 Tips</h3>
+          <ul>
+            <li>Explore each area carefully</li>
+            <li>Talk to characters for clues</li>
+            <li>Some herbs are hidden</li>
+          </ul>
+
+          <!-- Technical info section -->
+          <h3>🔧 Technical</h3>
+          <ul>
+            <li>DOS assembly 16-bit game</li>
+            <li>VGA graphics mode</li>
+            <li>Emulated via js-dos v8</li>
+          </ul>
+        </aside>
+      </div>
+    </main>
+
+    <!-- ========================================
+         FOOTER: Credits and copyright
+         ======================================== -->
+    <footer>
+      <p>Developed in x86 16-bit assembly • DOS Mode • &copy; 2026</p>
+    </footer>
+
+    <!-- ========================================
+         GAME INITIALIZATION SCRIPT
+         ======================================== -->
     <script>
-      const canvas = document.getElementById("jsdos-canvas");
+      // Get reference to loading screen element
+      const loadingDiv = document.getElementById("loading");
 
-      // Initialize js-dos v6.22, providing the full path to the worker on the CDN
-      Dos(canvas, {
-        wdosboxUrl: "https://js-dos.com/6.22/current/wdosbox.js",
-        autolock: true,
-      }).ready(function (fs, main) {
-        // Extract the game archive (which is served locally from our server)
-        fs.extract("mquest.zip").then(function () {
-          // Run the main executable
-          main(["mquest.exe"]);
+      // Initialize js-dos emulator
+      Dos(document.getElementById("dos"), {
+        url: "mquest.jsdos", // Path to the .jsdos bundle file
+      })
+        .then((ci) => {
+          // Hide loading screen once the emulator is ready to run
+          ci.ready().then(() => {
+            if (loadingDiv) {
+              loadingDiv.style.display = "none";
+            }
+          });
+        })
+        .catch((error) => {
+          // Display error message if game fails to load
+          console.error("Game loading error:", error);
+          if (loadingDiv) {
+            loadingDiv.innerHTML =
+              '<p style="color: #ff0000;">❌ Game loading failed</p>';
+          }
         });
-      });
     </script>
   </body>
 </html>
