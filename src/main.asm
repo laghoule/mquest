@@ -61,12 +61,15 @@ INCLUDE defs/consts/consts.inc        ; Constants
   mia_l_anim_state      DB 0                  ; Mia left animation state (0, 1, 2 state)
   mia_u_anim_state      DB 0                  ; Mia up animation state (0, 1, 2 state)
   mia_d_anim_state      DB 0                  ; Mia down animation state (0, 1, 2 state)
+  
+  collision_result      DB 0                  ; TODO: testing for now
 
 .CODE
 INCLUDE game/player.asm       ; Player functions
+INCLUDE game/collis.asm       ; Collision functions
 INCLUDE sys/timer.asm         ; Timer functions
 INCLUDE sys/speaker.asm       ; Speaker functions
-INCLUDE sys/input.asm        ; Inputs functions
+INCLUDE sys/input.asm         ; Inputs functions
 INCLUDE gfx/char.asm          ; Caracters drawing functions
 INCLUDE gfx/tile.asm          ; Tiles drawing functions
 INCLUDE gfx/map.asm           ; Maps drawing functions
