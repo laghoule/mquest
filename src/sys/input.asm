@@ -6,7 +6,7 @@
 ;-----------------------------------------------------------
 ; HANDLE_KEYBOARD_INPUT
 ; Description: Handles keyboard input for the game
-; INPUT:  CX (number of ticks)
+; Input:  CX (number of ticks)
 ; Output: AL = 0 (nothing), 1 (mouvement), 2 (quit)
 ;-----------------------------------------------------------
 HANDLE_KEYBOARD_INPUT PROC
