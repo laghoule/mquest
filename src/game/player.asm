@@ -6,9 +6,20 @@
 MOVE_MIA_RIGHT PROC
   CALL RENDER_RESTORE_BACKGROUNG
 
+  MOV AX, mia_pos_x
+  MOV pos_x, AX
+  ADD pos_x, 15
+  MOV AX, mia_pos_y
+  MOV pos_y, AX
+  CALL CHECK_COLLISION
+  CMP collision_result, 1
+  JE @mmr_collision
+
   MOV AL, pending_tick
   XOR AH, AH
   ADD mia_pos_x, AX
+
+@mmr_collision:
 
   ; -- TODO: not optimal, but easier for now ---
   MOV curr_sprite_table, OFFSET mia_sprites_table_right
@@ -31,9 +42,19 @@ MOVE_MIA_RIGHT ENDP
 MOVE_MIA_LEFT PROC
   CALL RENDER_RESTORE_BACKGROUNG
 
+  MOV AX, mia_pos_x
+  MOV pos_x, AX
+  MOV AX, mia_pos_y
+  MOV pos_y, AX
+  CALL CHECK_COLLISION
+  CMP collision_result, 1
+  JE @mml_collision
+
   MOV AL, pending_tick
   XOR AH, AH
   SUB mia_pos_x, AX
+
+@mml_collision:
 
   ; -- TODO: not optimal, but easier for now ---
   MOV curr_sprite_table, OFFSET mia_sprites_table_left
@@ -55,9 +76,19 @@ MOVE_MIA_LEFT ENDP
 MOVE_MIA_UP PROC
   CALL RENDER_RESTORE_BACKGROUNG
 
+  MOV AX, mia_pos_x
+  MOV pos_x, AX
+  MOV AX, mia_pos_y
+  MOV pos_y, AX
+  CALL CHECK_COLLISION
+  CMP collision_result, 1
+  JE @mmu_collision
+
   MOV AL, pending_tick
   XOR AH, AH
   SUB mia_pos_y, AX
+
+@mmu_collision:
 
   ; -- TODO: not optimal, but easier for now ---
   MOV curr_sprite_table, OFFSET mia_sprites_table_up
@@ -80,9 +111,19 @@ MOVE_MIA_UP ENDP
 MOVE_MIA_DOWN PROC
   CALL RENDER_RESTORE_BACKGROUNG
 
+  MOV AX, mia_pos_x
+  MOV pos_x, AX
+  MOV AX, mia_pos_y
+  MOV pos_y, AX
+  CALL CHECK_COLLISION
+  CMP collision_result, 1
+  JE @mmd_collision
+
   MOV AL, pending_tick
   XOR AH, AH
   ADD mia_pos_y, AX
+
+@mmd_collision:
 
   ; -- TODO: not optimal, but easier for now ---
   MOV curr_sprite_table, OFFSET mia_sprites_table_down

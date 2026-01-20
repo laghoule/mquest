@@ -118,12 +118,12 @@ GET_TILE_PROP PROC
   XOR AH, AH                  ; Clear AH
 
   MOV BX, AX                  ; BX = Final Map Index (0-239)
-  
+
   MOV AL, [TILES_PROPS + BX]  ; Load tile properties via the index
   MOV AH, BL                  ; Save the tile type in AH
 
-  PUSH AX                     ; Save AX (AH: tile type, AL: properties)
+  MOV TX, AX                  ; Use a software register to temporary store AX
   RESTORE_REGS
-  POP AX                      ; Restore AX for returning properties in AL
+  MOV AX, TX                  ; Restore AX for returning properties in AL
   RET
 GET_TILE_PROP ENDP

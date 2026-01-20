@@ -10,7 +10,7 @@ DRAW_OPAQUE_MAP PROC
   MOV pos_y, 0
   MOV DX, TILE_ROWS   ; Lines
 
-  MOV SI, curr_map
+  MOV SI, curr_map_opq
 
   @dom_draw_line:
     MOV CX, TILE_COLS ; Columns
@@ -50,7 +50,7 @@ DRAW_TRANSPARENT_MAP PROC
   MOV pos_y, 0
   MOV DX, TILE_ROWS                    ; Rows counter
 
-  MOV SI, curr_map                     ; Load current map index
+  MOV SI, curr_map_trns                ; Load current map index
 
   @dtm_rows_loop:
     MOV CX, TILE_COLS
@@ -60,7 +60,7 @@ DRAW_TRANSPARENT_MAP PROC
       PUSH CX                          ; Save columns counter
       LODSB                            ; AL = ID of tile, SI++
 
-      MOV BL, VOID_0                    ; VOID is empty tile
+      MOV BL, VOID_0                   ; VOID is empty tile
       OR AL, BL                        ; Check if tile ID is VOID (empty)
       JZ @dtm_skip_tile                ; Skip if zero
 

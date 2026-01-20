@@ -61,8 +61,10 @@ INCLUDE defs/consts/consts.inc        ; Constants
   mia_l_anim_state      DB 0                  ; Mia left animation state (0, 1, 2 state)
   mia_u_anim_state      DB 0                  ; Mia up animation state (0, 1, 2 state)
   mia_d_anim_state      DB 0                  ; Mia down animation state (0, 1, 2 state)
-  
+
   collision_result      DB 0                  ; TODO: testing for now
+
+  TX                    DW 0                  ; Temporary software register
 
 .CODE
 INCLUDE game/player.asm       ; Player functions
@@ -86,11 +88,11 @@ MAIN PROC
   MOV ES, AX
 
   ; --- Draw background and caracter ---
-  MOV curr_map, OFFSET map_opq_0
+  MOV curr_map_opq, OFFSET map_opq_0
   CALL DRAW_OPAQUE_MAP                ; This is the base map layer
 
   MOV AX, OFFSET map_trns_0
-  MOV curr_map, AX
+  MOV curr_map_trns, AX
   CALL DRAW_TRANSPARENT_MAP           ; This is the transparent items on the map
 
   PREPARE_MIA_DRAW
