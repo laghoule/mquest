@@ -7,7 +7,6 @@
 CHECK_COLLISION PROC
   SAVE_REGS
 
-  ADD pos_y, 15 ; We test the foot (character are 16x17)
   MOV AX, curr_map_opq
   MOV curr_map, AX
   CALL GET_TILE_PROP

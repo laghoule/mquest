@@ -11,6 +11,17 @@ MOVE_MIA_RIGHT PROC
   ADD pos_x, 15
   MOV AX, mia_pos_y
   MOV pos_y, AX
+  ADD pos_y, 15
+  CALL CHECK_COLLISION
+  CMP collision_result, 1
+  JE @mmr_collision
+
+  MOV AX, mia_pos_x
+  MOV pos_x, AX
+  ADD pos_x, 5
+  MOV AX, mia_pos_y
+  MOV pos_y, AX
+  ADD pos_y, 15
   CALL CHECK_COLLISION
   CMP collision_result, 1
   JE @mmr_collision
@@ -20,7 +31,6 @@ MOVE_MIA_RIGHT PROC
   ADD mia_pos_x, AX
 
 @mmr_collision:
-
   ; -- TODO: not optimal, but easier for now ---
   MOV curr_sprite_table, OFFSET mia_sprites_table_right
   MOV AL, mia_r_anim_state
@@ -44,8 +54,20 @@ MOVE_MIA_LEFT PROC
 
   MOV AX, mia_pos_x
   MOV pos_x, AX
+  ADD pos_x, 1
   MOV AX, mia_pos_y
   MOV pos_y, AX
+  ADD pos_y, 15
+  CALL CHECK_COLLISION
+  CMP collision_result, 1
+  JE @mml_collision
+
+  MOV AX, mia_pos_x
+  MOV pos_x, AX
+  ADD pos_x, 10
+  MOV AX, mia_pos_y
+  MOV pos_y, AX
+  ADD pos_y, 15
   CALL CHECK_COLLISION
   CMP collision_result, 1
   JE @mml_collision
@@ -78,8 +100,20 @@ MOVE_MIA_UP PROC
 
   MOV AX, mia_pos_x
   MOV pos_x, AX
+  ADD pos_x, 12
   MOV AX, mia_pos_y
   MOV pos_y, AX
+  ADD pos_y, 12
+  CALL CHECK_COLLISION
+  CMP collision_result, 1
+  JE @mmu_collision
+
+  MOV AX, mia_pos_x
+  MOV pos_x, AX
+  ADD pos_x, 5
+  MOV AX, mia_pos_y
+  MOV pos_y, AX
+  ADD pos_y, 12
   CALL CHECK_COLLISION
   CMP collision_result, 1
   JE @mmu_collision
@@ -113,8 +147,20 @@ MOVE_MIA_DOWN PROC
 
   MOV AX, mia_pos_x
   MOV pos_x, AX
+  ADD pos_x, 5
   MOV AX, mia_pos_y
   MOV pos_y, AX
+  ADD pos_y, 16
+  CALL CHECK_COLLISION
+  CMP collision_result, 1
+  JE @mmd_collision
+
+  MOV AX, mia_pos_x
+  MOV pos_x, AX
+  ADD pos_x, 12
+  MOV AX, mia_pos_y
+  MOV pos_y, AX
+  ADD pos_y, 16
   CALL CHECK_COLLISION
   CMP collision_result, 1
   JE @mmd_collision

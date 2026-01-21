@@ -39,7 +39,7 @@ Mia is a young herbalist apprentice. Her grandmother has fallen ill, and the onl
 - [x] **Tiled Map Engine:** Create a dual-layer tile rendering system with transparency support.
 - [x] **PC Speaker Music:** Integrate background music using the Intel 8253 PIT.
 - [ ] **Multi-Screen Navigation:** Implement "Flip-Screen" world navigation system (Zelda-style).
-- [ ] **Collision Detection:** Implement tile-based collision sensing.
+- [x] **Collision Detection:** Implement tile-based collision sensing.
 - [ ] **OPL3 Sound:** Add sound effects using the Yamaha YMF262 chip (music already implemented via PC Speaker).
 - [ ] **Joystick Support:** Add support for analog game controllers via Port 201h.
 
