@@ -6,7 +6,7 @@ music_theme_speed_counter DB 0    ; Speed counter
 
 
 ; --- Greensleeves: Full Score ---
-; Format: Frequency, Duration (in ticks multiplied by your music_theme_speed_counter)
+; Format: Frequency, Duration (in ticks multiplied by music_theme_speed_counter)
 
 greensleeves_data LABEL WORD
   ; --- VERSE (Alas, my love...) ---

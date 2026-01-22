@@ -1,5 +1,7 @@
-; IDs must follow the definition here: defs/gfx/tiles.inc
+; Tiles data
+tile DW 0                           ; Tile data
 
+; IDs must follow the definition here: defs/gfx/tiles.inc
 tiles_table DW 10 DUP(0)            ; Place holder
   DW OFFSET grass_opq_0             ; ID 10
   DW 9 DUP(0)                       ; Place holder

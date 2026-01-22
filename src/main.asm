@@ -13,15 +13,20 @@ INCLUDE defs/macros/chars.inc            ; Character macros
 INCLUDE defs/macros/sys.inc              ; System macros
 INCLUDE defs/macros/vga.inc              ; VGA macros
 
-; --- Generic constants ---
-INCLUDE defs/consts/consts.inc           ; Constants
+; --- System ---
+INCLUDE defs/sys/key.inc                 ; Keyboard
+INCLUDE defs/sys/video.inc               ; Video
+
+; --- Characters ---
+INCLUDE defs/chars/chars.inc             ; Character
 
 ; --- Graphics ---
-INCLUDE defs/gfx/maps.inc                ; Maps tables data
-INCLUDE defs/gfx/tiles.inc               ; Tiles tables data
+INCLUDE defs/gfx/maps.inc                ; Maps
+INCLUDE defs/gfx/tiles.inc               ; Tiles
 
 ; --- Game ---
-INCLUDE defs/game/collis.inc
+INCLUDE defs/game/collis.inc             ; Collision
+INCLUDE defs/game/dir.inc                ; Directions
 
 ; --- Music ---
 INCLUDE defs/musics/notes.inc            ; Frequencies (PIT Dividers)
@@ -31,15 +36,15 @@ INCLUDE defs/musics/notes.inc            ; Frequencies (PIT Dividers)
   INCLUDE assets/musics/themes.inc       ; Music variables and songs
 
   ; --- Characters ---
-  INCLUDE assets/gfx/chars/mia.inc           ; Mia animations sprite data
+  INCLUDE assets/gfx/chars/mia.inc       ; Mia animations sprite data
 
   ; --- Sprites ---
   INCLUDE assets/gfx/sprites.inc         ; Sprites data
 
   ; --- Tiles ---
+  INCLUDE assets/gfx/tiles/tiles.inc     ; Tiles data and tables
   INCLUDE assets/gfx/tiles/grass.inc     ; Grass tiles data
   INCLUDE assets/gfx/tiles/flowers.inc   ; Items tiles data
-  INCLUDE assets/gfx/tiles/tables.inc    ; Tiles table data
   INCLUDE assets/gfx/tiles/rocks.inc     ; Rocks tiles data
   INCLUDE assets/gfx/tiles/plants.inc    ; Plants tiles data
   INCLUDE assets/gfx/tiles/objects.inc   ; Objects tiles data
@@ -49,24 +54,10 @@ INCLUDE defs/musics/notes.inc            ; Frequencies (PIT Dividers)
   INCLUDE assets/gfx/maps/map_o_0.inc    ; Map opaque
   INCLUDE assets/gfx/maps/map_t_0.inc    ; Map transparent
 
-  ; Tiles info
-  tile DW 0               ; Tile
+  ; --- System ---
+  INCLUDE assets/sys/tick.inc            ; Tick data
 
-  ; For smooth animation
-  game_tick             DB 0          ; Global metronome for smooth animation (TODO: name)
-  pending_tick          DB 0          ; Pending tick used for slow hardware
-
-  ; Mia sprite info
-  mia_pos_x             DW 150                ; Mia starting x position
-  mia_pos_y             DW 90                 ; Mia starting y position
-  mia_bg_sprite         DB 272 DUP(0)         ; Mia background sprite
-  mia_curr_sprite       DW OFFSET mia_down_0  ; Front / down animation for starting point
-  mia_r_anim_state      DB 0                  ; Mia right animation state (0, 1, 2 state)
-  mia_l_anim_state      DB 0                  ; Mia left animation state (0, 1, 2 state)
-  mia_u_anim_state      DB 0                  ; Mia up animation state (0, 1, 2 state)
-  mia_d_anim_state      DB 0                  ; Mia down animation state (0, 1, 2 state)
-
-  TX                    DW 0                  ; Temporary software register
+  TX DW 0                                ; Temporary software register
 
 .CODE
 INCLUDE game/player.asm       ; Player functions

@@ -1,26 +1,49 @@
 ; Tool for sprites creation: https://github.com/laghoule/png2asm
 
-; Ordre : SpriteTable (DW), StateVar (DW), P1X (DB), P1Y (DB), P2X (DB), P2Y (DB), Type (DB)
+; --- Mia movement data table ---
+; mia_dir_ : SpriteTable (DW), AnimState (DW), P1X (DB), P1Y (DB), P2X (DB), P2Y (DB), DirType (DB)
 
-; --- mia animation down table ---
-mia_sprites_table_down DW OFFSET mia_down_0
-  DW OFFSET mia_down_1
-  DW OFFSET mia_down_2
+mia_dir_rght DW OFFSET mia_sprites_table_right, OFFSET mia_r_anim_state
+             DB HIT_RX, HIT_WY, HIT_RX, HIT_BY, RIGHT_DIR
 
-; --- mia animation up table ---
-mia_sprites_table_up DW OFFSET mia_up_0
-  DW OFFSET mia_up_1
-  DW OFFSET mia_up_2
+mia_dir_left DW OFFSET mia_sprites_table_left,  OFFSET mia_l_anim_state
+             DB HIT_LX, HIT_WY, HIT_LX, HIT_BY, LEFT_DIR
 
-; --- mia animation left table ---
-mia_sprites_table_left DW OFFSET mia_left_0
-  DW OFFSET mia_left_1
-  DW OFFSET mia_left_2
+mia_dir_up   DW OFFSET mia_sprites_table_up,    OFFSET mia_u_anim_state
+             DB HIT_MX, HIT_TY, HIT_MX, HIT_TY, UP_DIR
+
+mia_dir_down DW OFFSET mia_sprites_table_down,  OFFSET mia_d_anim_state
+             DB HIT_MX, HIT_BY, HIT_MX, HIT_BY, DOWN_DIR
+
+; --- Mia sprite info ---
+mia_pos_x               DW 150                ; Mia starting x position
+mia_pos_y               DW 90                 ; Mia starting y position
+mia_bg_sprite           DB 272 DUP(0)         ; Mia background sprite
+mia_curr_sprite         DW OFFSET mia_down_0  ; Front / down animation for starting point
+mia_r_anim_state        DB 0                  ; Mia right animation state (0, 1, 2 state)
+mia_l_anim_state        DB 0                  ; Mia left animation state (0, 1, 2 state)
+mia_u_anim_state        DB 0                  ; Mia up animation state (0, 1, 2 state)
+mia_d_anim_state        DB 0                  ; Mia down animation state (0, 1, 2 state)
+
+; --- Mia animation down table ---
+mia_sprites_table_down  DW OFFSET mia_down_0
+                        DW OFFSET mia_down_1
+                        DW OFFSET mia_down_2
+
+; --- Mia animation up table ---
+mia_sprites_table_up    DW OFFSET mia_up_0
+                        DW OFFSET mia_up_1
+                        DW OFFSET mia_up_2
+
+; --- Mia animation left table ---
+mia_sprites_table_left  DW OFFSET mia_left_0
+                        DW OFFSET mia_left_1
+                        DW OFFSET mia_left_2
 
 ; --- mia animation right table ---
 mia_sprites_table_right DW OFFSET mia_right_0
-  DW OFFSET mia_right_1
-  DW OFFSET mia_right_2
+                        DW OFFSET mia_right_1
+                        DW OFFSET mia_right_2
 
 ; --- FRONT | DOWN direction ---
 mia_down_0 LABEL BYTE
