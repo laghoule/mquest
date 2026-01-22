@@ -5,4 +5,7 @@
 :8080 {
     root * /srv
     file_server
+    log {
+        output stdout
+    }
 }
