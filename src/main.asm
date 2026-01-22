@@ -8,45 +8,49 @@ TITLE Mia's Herbal Quest
 .8086
 .STACK 100h
 
-INCLUDE defs/macros/chars.inc         ; Character macros
-INCLUDE defs/macros/sys.inc           ; System macros
-INCLUDE defs/macros/vga.inc           ; VGA macros
-INCLUDE defs/consts/consts.inc        ; Constants
+; --- Macros ---
+INCLUDE defs/macros/chars.inc            ; Character macros
+INCLUDE defs/macros/sys.inc              ; System macros
+INCLUDE defs/macros/vga.inc              ; VGA macros
+
+; --- Generic constants ---
+INCLUDE defs/consts/consts.inc           ; Constants
+
+; --- Graphics ---
+INCLUDE defs/gfx/maps.inc                ; Maps tables data
+INCLUDE defs/gfx/tiles.inc               ; Tiles tables data
+
+; --- Game ---
+INCLUDE defs/game/collis.inc
+
+; --- Music ---
+INCLUDE defs/musics/notes.inc            ; Frequencies (PIT Dividers)
 
 .DATA
-
   ; --- Musics ---
-  INCLUDE defs/musics/notes.inc      ; Frequencies (PIT Dividers)
-  INCLUDE assets/musics/themes.inc   ; Music variables and songs
+  INCLUDE assets/musics/themes.inc       ; Music variables and songs
 
   ; --- Characters ---
-  INCLUDE assets/chars/mia.inc       ; Mia animations sprite data
+  INCLUDE assets/gfx/chars/mia.inc           ; Mia animations sprite data
+
+  ; --- Sprites ---
+  INCLUDE assets/gfx/sprites.inc         ; Sprites data
 
   ; --- Tiles ---
-  INCLUDE defs/gfx/tiles.inc         ; Tiles tables data
-  INCLUDE assets/tiles/grass.inc     ; Grass tiles data
-  INCLUDE assets/tiles/flowers.inc   ; Items tiles data
-  INCLUDE assets/tiles/tables.inc    ; Tiles table data
-  INCLUDE assets/tiles/rocks.inc     ; Rocks tiles data
-  INCLUDE assets/tiles/plants.inc    ; Plants tiles data
-  INCLUDE assets/tiles/objects.inc   ; Objects tiles data
+  INCLUDE assets/gfx/tiles/grass.inc     ; Grass tiles data
+  INCLUDE assets/gfx/tiles/flowers.inc   ; Items tiles data
+  INCLUDE assets/gfx/tiles/tables.inc    ; Tiles table data
+  INCLUDE assets/gfx/tiles/rocks.inc     ; Rocks tiles data
+  INCLUDE assets/gfx/tiles/plants.inc    ; Plants tiles data
+  INCLUDE assets/gfx/tiles/objects.inc   ; Objects tiles data
 
   ; --- Maps ---
-  INCLUDE defs/gfx/maps.inc          ; Maps tables data
-  INCLUDE assets/maps/map.inc        ; Map data
-  INCLUDE assets/maps/map_o_0.inc    ; Map opaque
-  INCLUDE assets/maps/map_t_0.inc    ; Map transparent
+  INCLUDE assets/gfx/maps/map.inc        ; Map data
+  INCLUDE assets/gfx/maps/map_o_0.inc    ; Map opaque
+  INCLUDE assets/gfx/maps/map_t_0.inc    ; Map transparent
 
   ; Tiles info
   tile DW 0               ; Tile
-
-  ; Generic sprite info
-  curr_sprite           DW 0          ; Current sprite to draw
-  curr_sprite_table     DW 0          ; Current sprite table
-  curr_anim_state       DB 0          ; Current animation state
-  bg_sprite             DB 272 DUP(0) ; Background sprite
-  pos_x                 DW 0          ; Sprite x position
-  pos_y                 DW 0          ; Sprite y position
 
   ; For smooth animation
   game_tick             DB 0          ; Global metronome for smooth animation (TODO: name)

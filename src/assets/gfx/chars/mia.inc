@@ -1,5 +1,7 @@
 ; Tool for sprites creation: https://github.com/laghoule/png2asm
 
+; Ordre : SpriteTable (DW), StateVar (DW), P1X (DB), P1Y (DB), P2X (DB), P2Y (DB), Type (DB)
+
 ; --- mia animation down table ---
 mia_sprites_table_down DW OFFSET mia_down_0
   DW OFFSET mia_down_1
