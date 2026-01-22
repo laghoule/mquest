@@ -62,8 +62,6 @@ INCLUDE defs/consts/consts.inc        ; Constants
   mia_u_anim_state      DB 0                  ; Mia up animation state (0, 1, 2 state)
   mia_d_anim_state      DB 0                  ; Mia down animation state (0, 1, 2 state)
 
-  collision_result      DB 0                  ; TODO: testing for now
-
   TX                    DW 0                  ; Temporary software register
 
 .CODE

@@ -13,7 +13,7 @@ MOVE_MIA_RIGHT PROC
   MOV pos_y, AX
   ADD pos_y, 15
   CALL CHECK_COLLISION
-  CMP collision_result, 1
+  CMP AL, 1
   JE @mmr_collision
 
   MOV AX, mia_pos_x
@@ -23,7 +23,7 @@ MOVE_MIA_RIGHT PROC
   MOV pos_y, AX
   ADD pos_y, 15
   CALL CHECK_COLLISION
-  CMP collision_result, 1
+  CMP AL, 1
   JE @mmr_collision
 
   MOV AL, pending_tick
@@ -59,7 +59,7 @@ MOVE_MIA_LEFT PROC
   MOV pos_y, AX
   ADD pos_y, 15
   CALL CHECK_COLLISION
-  CMP collision_result, 1
+  CMP AL, 1
   JE @mml_collision
 
   MOV AX, mia_pos_x
@@ -69,7 +69,7 @@ MOVE_MIA_LEFT PROC
   MOV pos_y, AX
   ADD pos_y, 15
   CALL CHECK_COLLISION
-  CMP collision_result, 1
+  CMP AL, 1
   JE @mml_collision
 
   MOV AL, pending_tick
@@ -105,7 +105,7 @@ MOVE_MIA_UP PROC
   MOV pos_y, AX
   ADD pos_y, 12
   CALL CHECK_COLLISION
-  CMP collision_result, 1
+  CMP AL, 1
   JE @mmu_collision
 
   MOV AX, mia_pos_x
@@ -115,7 +115,7 @@ MOVE_MIA_UP PROC
   MOV pos_y, AX
   ADD pos_y, 12
   CALL CHECK_COLLISION
-  CMP collision_result, 1
+  CMP AL, 1
   JE @mmu_collision
 
   MOV AL, pending_tick
@@ -152,7 +152,7 @@ MOVE_MIA_DOWN PROC
   MOV pos_y, AX
   ADD pos_y, 16
   CALL CHECK_COLLISION
-  CMP collision_result, 1
+  CMP AL, 1
   JE @mmd_collision
 
   MOV AX, mia_pos_x
@@ -162,7 +162,7 @@ MOVE_MIA_DOWN PROC
   MOV pos_y, AX
   ADD pos_y, 16
   CALL CHECK_COLLISION
-  CMP collision_result, 1
+  CMP AL, 1
   JE @mmd_collision
 
   MOV AL, pending_tick
