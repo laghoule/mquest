@@ -32,12 +32,9 @@ COPY docker/Caddyfile /etc/caddy/Caddyfile
 COPY --from=builder /app/mquest.jsdos /srv/mquest.jsdos
 COPY --from=builder /app/docker/index.html /srv/index.html
 
-# Create a non-root user and group
-RUN addgroup -S caddy && adduser -S caddy -G caddy
-
 # Change ownership of the static files and Caddy's data/config directories
-RUN chown -R caddy:caddy /srv /data /config
+RUN chown -R nobody:nobody /srv /data /config
 
 # Switch to the non-root user
-USER caddy
+USER 65534
 EXPOSE 8080
