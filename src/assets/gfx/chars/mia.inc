@@ -1,19 +1,30 @@
 ; Tool for sprites creation: https://github.com/laghoule/png2asm
 
 ; --- Mia movement data table ---
-; mia_dir_ : SpriteTable (DW), AnimState (DW), P1X (DB), P1Y (DB), P2X (DB), P2Y (DB), DirType (DB)
+; Must follow orders define in defs/game/dir.inc
+mia_dir_table DW OFFSET mia_dir_right
+  DW OFFSET mia_dir_left
+  DW OFFSET mia_dir_up
+  DW OFFSET mia_dir_down
 
-mia_dir_rght DW OFFSET mia_sprites_table_right, OFFSET mia_r_anim_state
-             DB HIT_RX, HIT_WY, HIT_RX, HIT_BY, RIGHT_DIR
+; definition
+; SpriteTable (DW), AnimState (DW), P1X (DB), P1Y (DB), P2X (DB), P2Y (DB), Dir
 
-mia_dir_left DW OFFSET mia_sprites_table_left,  OFFSET mia_l_anim_state
-             DB HIT_LX, HIT_WY, HIT_LX, HIT_BY, LEFT_DIR
+mia_dir_right DW OFFSET mia_sprites_table_right, OFFSET mia_r_anim_state
+              DB 15, 15, 5, 15
+              DB RIGHT_DIR
 
-mia_dir_up   DW OFFSET mia_sprites_table_up,    OFFSET mia_u_anim_state
-             DB HIT_MX, HIT_TY, HIT_MX, HIT_TY, UP_DIR
+mia_dir_left  DW OFFSET mia_sprites_table_left,  OFFSET mia_l_anim_state
+              DB HIT_LX, HIT_BY, HIT_LX, HIT_BY
+              DB LEFT_DIR
 
-mia_dir_down DW OFFSET mia_sprites_table_down,  OFFSET mia_d_anim_state
-             DB HIT_MX, HIT_BY, HIT_MX, HIT_BY, DOWN_DIR
+mia_dir_up    DW OFFSET mia_sprites_table_up,    OFFSET mia_u_anim_state
+              DB HIT_MX, HIT_TY, HIT_MX, HIT_TY
+              DB UP_DIR
+
+mia_dir_down  DW OFFSET mia_sprites_table_down,  OFFSET mia_d_anim_state
+              DB HIT_MX, HIT_BY, HIT_MX, HIT_BY
+              DB DOWN_DIR
 
 ; --- Mia sprite info ---
 mia_pos_x               DW 150                ; Mia starting x position

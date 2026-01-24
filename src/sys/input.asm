@@ -40,19 +40,23 @@ HANDLE_KEYBOARD_INPUT PROC
   RET
 
 @hki_move_right:
-  CALL MOVE_MIA_RIGHT
+  MOV AX, RIGHT_DIR
+  CALL MOVE_MIA
   JMP @hki_return
 
 @hki_move_left:
-  CALL MOVE_MIA_LEFT
+  MOV AX, LEFT_DIR
+  CALL MOVE_MIA
   JMP @hki_return
 
 @hki_move_up:
-  CALL MOVE_MIA_UP
+  MOV AX, UP_DIR
+  CALL MOVE_MIA
   JMP @hki_return
 
 @hki_move_down:
-  CALL MOVE_MIA_DOWN
+  MOV AX, DOWN_DIR
+  CALL MOVE_MIA
 
 @hki_return:
   MOV AL, 1

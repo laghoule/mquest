@@ -1,5 +1,5 @@
 ; --- Character directions ---
-DOWN_DIR   EQU 0
-UP_DIR     EQU 1
-LEFT_DIR   EQU 2
-RIGHT_DIR  EQU 3
+RIGHT_DIR  EQU 0
+LEFT_DIR   EQU 1
+UP_DIR     EQU 2
+DOWN_DIR   EQU 3
