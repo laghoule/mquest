@@ -19,7 +19,9 @@ RUN uasm -mz src/main.asm && \
   mv main.EXE mquest.exe
 
 # Create a simple zip archive for the game
-RUN zip mquest.jsdos mquest.exe docker/.jsdos/dosbox.conf docker/.jsdos/.json
+RUN mkdir .jsdos && \
+  cp docker/.jsdos/dosbox.conf .jsdos/dosbox.conf && \
+  zip mquest.jsdos mquest.exe .jsdos/dosbox.conf
 
 # Stage 2: Production
 FROM caddy:2-alpine
