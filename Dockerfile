@@ -33,6 +33,7 @@ COPY docker/Caddyfile /etc/caddy/Caddyfile
 # Copy only the necessary assets from the build stage
 COPY --from=builder /app/mquest.jsdos /srv/mquest.jsdos
 COPY --from=builder /app/docker/index.html /srv/index.html
+COPY --from=builder /app/title.png /srv/title.png
 
 # Change ownership of the static files and Caddy's data/config directories
 RUN chown -R nobody:nobody /srv /data /config

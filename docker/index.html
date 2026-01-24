@@ -34,6 +34,17 @@
         border-bottom: 3px solid #00ff00;
       }
 
+      .title-image {
+        max-width: 100%;
+        width: 100%;
+        height: auto;
+        margin: 0 0 1.5rem 0;
+        display: block;
+        image-rendering: pixelated;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: crisp-edges;
+      }
+
       h1 {
         font-size: 2.5rem;
         color: #00ff00;
@@ -265,6 +276,9 @@
              SIDEBAR: Controls and information
              ======================================== -->
         <aside class="sidebar">
+          <!-- Game logo -->
+          <img src="title.png" alt="Mia's Herbal Quest" class="title-image" />
+
           <!-- Game controls section -->
           <h2>🎮 Controls</h2>
           <ul>
@@ -272,8 +286,9 @@
               <span class="key">↑</span> <span class="key">↓</span>
               <span class="key">←</span> <span class="key">→</span> Movement
             </li>
-            <li><span class="key">Space</span> Action / Interact</li>
-            <li><span class="key">Esc</span> Menu / Pause</li>
+            <li>
+              <span class="key">M</span> Mute <span class="key">Esc</span> Quit
+            </li>
           </ul>
 
           <!-- About section -->
@@ -283,21 +298,12 @@
             find rare plants and complete your mission.
           </p>
 
-          <!-- Tips section -->
-          <h3>💡 Tips</h3>
-          <ul>
-            <li>Explore each area carefully</li>
-            <li>Talk to characters for clues</li>
-            <li>Some herbs are hidden</li>
-          </ul>
-
-          <!-- Technical info section -->
+          <!-- Technical section -->
           <h3>🔧 Technical</h3>
-          <ul>
-            <li>DOS assembly 16-bit game</li>
-            <li>VGA graphics mode</li>
-            <li>Emulated via js-dos v8</li>
-          </ul>
+          <p style="color: #ccc; font-size: 0.9rem; line-height: 1.5">
+            A retro adventure game developed in 8086 Assembly, designed
+            specifically for the IBM PC-XT architecture running MS-DOS.
+          </p>
         </aside>
       </div>
     </main>
