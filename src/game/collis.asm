@@ -33,5 +33,6 @@ CHECK_COLLISION PROC
   RESTORE_REGS
   XOR AX, AX                  ; Clear AX
   MOV AX, TX                  ; Copy the collision result in AX (AL containt the result)
+  MOV TX, 0                   ; Reset TX to 0
   RET
 CHECK_COLLISION ENDP
