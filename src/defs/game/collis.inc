@@ -1,7 +1,7 @@
 ; --- Mia hitbox coordinates ---
-HIT_LX EQU 0     ; Left X
-HIT_RX EQU 15    ; Right X
-HIT_TY EQU 4     ; Top Y (Head)
-HIT_WY EQU 12    ; Waist Y (3D Effect)
-HIT_BY EQU 15    ; Bottom Y (Feet)
-HIT_MX EQU 8     ; Mid X (Center)
+HIT_LEFT_X        EQU 1   ; Left X
+HIT_RIGHT_X       EQU 15  ; Right X
+HIT_HEAD_Y        EQU 10  ; Top Y (Head)
+HIT_BOTTOM_Y      EQU 15  ; Bottom Y (Feet)
+HIT_RIGHT_FOOT_X  EQU 11  ; Left Foot X
+HIT_LEFT_FOOT_X   EQU 5   ; Right Foot X

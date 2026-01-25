@@ -11,19 +11,19 @@ mia_dir_table DW OFFSET mia_dir_right
 ; SpriteTable (DW), AnimState (DW), P1X (DB), P1Y (DB), P2X (DB), P2Y (DB), Dir
 
 mia_dir_right DW OFFSET mia_sprites_table_right, OFFSET mia_r_anim_state
-              DB 15, 15, 5, 15
+              DB HIT_RIGHT_X, HIT_BOTTOM_Y, HIT_RIGHT_X, HIT_BOTTOM_Y
               DB RIGHT_DIR
 
 mia_dir_left  DW OFFSET mia_sprites_table_left,  OFFSET mia_l_anim_state
-              DB HIT_LX, HIT_BY, HIT_LX, HIT_BY
+              DB HIT_LEFT_X, HIT_BOTTOM_Y, HIT_LEFT_X, HIT_BOTTOM_Y
               DB LEFT_DIR
 
 mia_dir_up    DW OFFSET mia_sprites_table_up,    OFFSET mia_u_anim_state
-              DB HIT_MX, HIT_TY, HIT_MX, HIT_TY
+              DB HIT_LEFT_FOOT_X, HIT_HEAD_Y, HIT_RIGHT_FOOT_X, HIT_HEAD_Y
               DB UP_DIR
 
 mia_dir_down  DW OFFSET mia_sprites_table_down,  OFFSET mia_d_anim_state
-              DB HIT_MX, HIT_BY, HIT_MX, HIT_BY
+              DB HIT_LEFT_FOOT_X, HIT_BOTTOM_Y, HIT_RIGHT_FOOT_X, HIT_BOTTOM_Y
               DB DOWN_DIR
 
 ; --- Mia sprite info ---
