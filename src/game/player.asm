@@ -12,89 +12,98 @@
 MOVE_MIA PROC
   SAVE_REGS
 
-  MOV BX, AX
-  SHL BX, 1 ; Multiply by 2, because it's a word TODO: pas sur de comprendre, droite ca devrait pas etre 2??
-  MOV SI, [mia_dir_table + BX]
+  ; Calcul -> Test -> Action
 
-  CALL RENDER_RESTORE_BACKGROUNG
+  ; Definition of mia_dir_table and mia_dir-* in file assets/gfx/chars/mia.inc
+  MOV BX, AX                          ; Move the index in BX
+  SHL BX, 1                           ; Multiply by 2, to get the right index (word = 2)
+  MOV SI, [mia_dir_table + BX]        ; Mia direction information in SI
 
-  ; collision detection
-  XOR AX, AX
-  MOV AL, [SI + 4]
-  ADD AX, mia_pos_x ; P1X
-  MOV pos_x, AX
+  CALL RENDER_RESTORE_BACKGROUNG      ; We restore the background
 
-  XOR AX, AX
-  MOV AL, [SI + 5]
-  ADD AX, mia_pos_y ; P1Y
-  MOV pos_y, AX
-
-  CALL CHECK_COLLISION
-  CMP AL, 1
-  JE @mmg_to_anim
-
-  XOR AX, AX
-  MOV AL, [SI + 6]
-  ADD AX, mia_pos_x ; P2X
-  MOV pos_x, AX
-
-  XOR AX, AX
-  MOV AL, [SI + 7]
-  ADD AX, mia_pos_y ; P2Y
-  MOV pos_y, AX
-
-  CALL CHECK_COLLISION
-  CMP AL, 1
-  JE @mmg_to_anim
-
-  MOV AL, pending_tick
+  MOV CX, mia_pos_x                   ; CX : X position
+  MOV DX, mia_pos_y                   ; DX : Y position
+  MOV AL, pending_tick                ; Load pending_tick in AL
   XOR AH, AH
 
-  XOR CX, CX
-  MOV CL, [SI + 8]
+  MOV BL, [SI + 8]                    ; Get direction in the sprite table
 
-  CMP CX, RIGHT_DIR
-  JE @mmg_right
+  CMP BL, RIGHT_DIR                   ; If right direction
+  JE @mm_calc_right                   ; Goto right calculation
 
-  CMP CX, LEFT_DIR
-  JE @mmg_left
+  CMP BL, LEFT_DIR                    ; If left direction
+  JE @mm_calc_left                    ; Goto left calculation
 
-  CMP CX, UP_DIR
-  JE @mmg_up
+  CMP BL, UP_DIR                      ; If up direction
+  JE @mm_calc_up                      ; Goto up calculation
 
-  ; Down direction
-  ADD mia_pos_y, AX
-  JMP @mmg_to_anim
+  ; The down direction is the only one left
+  ; The calcul for down
+  ADD DX, AX                          ; Add pending_tick to Y position
+  JMP @mm_collision_detection         ; Goto collision detection
 
-@mmg_right:
-  ADD mia_pos_x, AX
-  JMP @mmg_to_anim
+@mm_calc_right:
+  ADD CX, AX                          ; Add pending_tick to X position
+  JMP @mm_collision_detection         ; Goto collision detection
 
-@mmg_left:
-  SUB mia_pos_x, AX
-  JMP @mmg_to_anim
+@mm_calc_left:
+  SUB CX, AX                          ; Subtract pending_tick from X position
+  JMP @mm_collision_detection         ; Goto collision detection
 
-@mmg_up:
-  SUB mia_pos_y, AX
+@mm_calc_up:
+  SUB DX, AX                          ; Subtract pending_tick from Y position
 
-@mmg_to_anim:
-  ; -- TODO: not optimal, but easier for now ---
+@mm_collision_detection:
+  ; Hitbox 1 position X
+  XOR AX, AX
+  MOV AL, [SI + 4]                    ; Load hitbox P1X
+  ADD AX, CX                          ; Add hitbox P1X to X position
+  MOV pos_x, AX                       ; Save X position
+
+  ; Hitbox 1 position Y
+  XOR AX, AX
+  MOV AL, [SI + 5]                    ; Load hitbox P1Y
+  ADD AX, DX                          ; Add hitbox P1Y to Y position
+  MOV pos_y, AX                       ; Save Y position
+
+  CALL CHECK_COLLISION                ; Check for collition via pos_x, pos_y
+  CMP AL, 1                           ; If collision detected
+  JE @mmg_skip_to_anim                ; Goto skip to animation
+
+  ; Hitbox 2 position X
+  XOR AX, AX
+  MOV AL, [SI + 6]                    ; Load hitbox P2X
+  ADD AX, CX                          ; Add hitbox P2X to X position
+  MOV pos_x, AX                       ; Save X position
+
+  ; Hitbox 2 position Y
+  XOR AX, AX
+  MOV AL, [SI + 7]                    ; Load hitbox P2Y
+  ADD AX, DX                          ; Add hitbox P2Y to Y position
+  MOV pos_y, AX                       ; Save Y position
+
+  CALL CHECK_COLLISION                ; Check for collition via pos_x, pos_y
+  CMP AL, 1                           ; If collision detected
+  JE @mmg_skip_to_anim                ; Goto skip to animation
+
+  ; No collision detected
+  MOV mia_pos_x, CX                   ; Save X position
+  MOV mia_pos_y, DX                   ; Save Y position
+
+@mmg_skip_to_anim:
   MOV AX, [SI]
-  MOV curr_sprite_table, AX
-  MOV BX, [SI + 2] ; 2 because its a  word
-  MOV AL, [BX]
-  MOV curr_anim_state, AL ; AniState
-  ; --------------------------------------------
+  MOV curr_sprite_table, AX           ; Load the sprite table
+  MOV BX, [SI + 2]                    ; Offset of mia_anim_state
+  MOV AL, [BX]                        ; Data of the anim_state in AL
+  MOV curr_anim_state, AL             ; Save in curr_anim_state
 
-  CALL UPDATE_CARACTER_ANIM_STATE
+  CALL UPDATE_CARACTER_ANIM_STATE     ; Update animation state
 
-  ; --- TODO: not optimal, but easier for now ---
-  MOV AL, curr_anim_state
-  MOV BX, [SI + 2] ; 2 because its a word
-  MOV [BX], AL
+  MOV AL, curr_anim_state             ; Save the anim_state in AL
+  MOV BX, [SI + 2]                    ; Offset of mia_anim_state
+  MOV [BX], AL                        ; Save the anim_state in the memory location of mia_dir_table
   MOV AX, curr_sprite
-  MOV mia_curr_sprite, AX
-  ;----------------------------------------------
+  MOV mia_curr_sprite, AX             ; Save the current sprite
 
   RESTORE_REGS
   RET
