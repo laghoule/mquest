@@ -252,14 +252,6 @@
   </head>
   <body>
     <!-- ========================================
-         HEADER: Game title and subtitle
-         ======================================== -->
-    <header>
-      <h1>🌿 MIA'S HERBAL QUEST 🌿</h1>
-      <p class="subtitle">A Retro DOS Adventure Game</p>
-    </header>
-
-    <!-- ========================================
          MAIN CONTAINER
          ======================================== -->
     <main class="container">
@@ -278,6 +270,25 @@
         <aside class="sidebar">
           <!-- Game logo -->
           <img src="title.png" alt="Mia's Herbal Quest" class="title-image" />
+
+          <!-- Development notice -->
+          <div
+            style="
+              background: rgba(255, 170, 0, 0.15);
+              border: 2px solid #ffaa00;
+              border-radius: 4px;
+              padding: 1rem;
+              margin-bottom: 1.5rem;
+              text-align: center;
+            "
+          >
+            <p style="color: #ffaa00; font-weight: bold; margin-bottom: 0.5rem">
+              ⚠️ Preview Version
+            </p>
+            <p style="color: #ccc; font-size: 0.85rem">
+              This game is currently in development
+            </p>
+          </div>
 
           <!-- Game controls section -->
           <h2>🎮 Controls</h2>
@@ -307,13 +318,6 @@
         </aside>
       </div>
     </main>
-
-    <!-- ========================================
-         FOOTER: Credits and copyright
-         ======================================== -->
-    <footer>
-      <p>Developed in x86 16-bit assembly • DOS Mode • &copy; 2026</p>
-    </footer>
 
     <!-- ========================================
          GAME INITIALIZATION SCRIPT
