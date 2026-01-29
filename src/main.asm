@@ -41,6 +41,9 @@ INCLUDE defs/musics/notes.inc            ; Frequencies (PIT Dividers)
   ; --- Sprites ---
   INCLUDE assets/gfx/sprites.inc         ; Sprites data
 
+  ; --- Palettes ---
+  INCLUDE assets/gfx/pals/pal.inc        ; Palette data
+
   ; --- Tiles ---
   INCLUDE assets/gfx/tiles/tiles.inc     ; Tiles data and tables
   INCLUDE assets/gfx/tiles/grass.inc     ; Grass tiles data
@@ -62,6 +65,7 @@ INCLUDE defs/musics/notes.inc            ; Frequencies (PIT Dividers)
 .CODE
 INCLUDE game/player.asm       ; Player functions
 INCLUDE game/collis.asm       ; Collision functions
+INCLUDE sys/vga.asm           ; VGA functions
 INCLUDE sys/timer.asm         ; Timer functions
 INCLUDE sys/speaker.asm       ; Speaker functions
 INCLUDE sys/input.asm         ; Inputs functions
@@ -79,6 +83,8 @@ MAIN PROC
   INT 10h
   MOV AX, VGA_ADDR
   MOV ES, AX
+  
+  ;CALL LOAD_GAME_PALETTE
 
   ; --- Draw background and caracter ---
   MOV curr_map_opq, OFFSET map_opq_0
