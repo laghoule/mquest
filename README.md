@@ -30,6 +30,7 @@ Mia is a young herbalist apprentice. Her grandmother has fallen ill, and the onl
 - **Non-Blocking Input:** Real-time keyboard sensing using BIOS interrupts (AH=01h).
 - **Background Restoration System:** Full "Save/Restore" buffer logic allowing Mia to walk over complex terrains without erasing them.
 - **Tiled Map Engine:** Dual-layer map system with opaque base tiles and transparent overlay items (rocks, flowers, objects).
+- **Custom VGA Palette:** Custom 256-color palette optimized for the game's visual aesthetic, loaded at startup.
 - **PC Speaker Music:** Background music playback using the Intel 8253 PIT (Programmable Interval Timer) - features "Greensleeves" theme with configurable tempo and mute/unmute functionality.
 - **Smooth Animation System:** Delta-tick based timing system ensuring consistent animation speed across different hardware configurations.
 
