@@ -1,3 +1,5 @@
+; Palette created via https://github.com/laghoule/gpl2asm
+
 game_palette_data LABEL BYTE
   DB 00,00,00 ; Index0
   DB 00,00,42 ; Index1

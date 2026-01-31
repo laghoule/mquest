@@ -1,8 +1,8 @@
 ; ------------------------------------------------------------------
 ; LOAD_GAME_PALETTE
 ; Description: Loads the game palette into the VGA palette registers
-; Input:
-; Output:
+; Input: None
+; Output: None
 ; ------------------------------------------------------------------
 LOAD_GAME_PALETTE PROC
   SAVE_REGS

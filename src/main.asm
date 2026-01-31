@@ -84,7 +84,8 @@ MAIN PROC
   MOV AX, VGA_ADDR
   MOV ES, AX
   
-  ;CALL LOAD_GAME_PALETTE
+  ; --- Loading custom VGA palette ---
+  CALL LOAD_GAME_PALETTE
 
   ; --- Draw background and caracter ---
   MOV curr_map_opq, OFFSET map_opq_0
