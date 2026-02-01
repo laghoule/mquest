@@ -1,3 +1,9 @@
+;  Copyright (C) 2025, 2026 Pascal Gauthier
+;  This program is free software: you can redistribute it and/or modify
+;  it under the terms of the GNU General Public License as published by
+;  the Free Software Foundation, either version 3 of the License.
+
+
 ; ------------------------------------------------------------------
 ; LOAD_GAME_PALETTE
 ; Description: Loads the game palette into the VGA palette registers
