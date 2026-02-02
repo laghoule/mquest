@@ -59,31 +59,40 @@ INCLUDE defs/musics/notes.inc            ; Frequencies (PIT Dividers)
 
   ; --- System ---
   INCLUDE assets/sys/tick.inc            ; Tick data
+  INCLUDE assets/sys/errors.inc          ; Error messages
 
   TX DW 0                                ; Temporary software register
 
 .CODE
-INCLUDE game/player.asm       ; Player functions
-INCLUDE game/collis.asm       ; Collision functions
-INCLUDE sys/vga.asm           ; VGA functions
-INCLUDE sys/timer.asm         ; Timer functions
-INCLUDE sys/speaker.asm       ; Speaker functions
-INCLUDE sys/input.asm         ; Inputs functions
-INCLUDE gfx/char.asm          ; Caracters drawing functions
-INCLUDE gfx/tile.asm          ; Tiles drawing functions
-INCLUDE gfx/map.asm           ; Maps drawing functions
+  INCLUDE game/player.asm       ; Player functions
+  INCLUDE game/collis.asm       ; Collision functions
+  INCLUDE sys/print.asm         ; Print functions
+  INCLUDE sys/file.asm          ; File functions
+  INCLUDE sys/string.asm        ; String functions
+  INCLUDE sys/vga.asm           ; VGA functions
+  INCLUDE sys/timer.asm         ; Timer functions
+  INCLUDE sys/speaker.asm       ; Speaker functions
+  INCLUDE sys/input.asm         ; Inputs functions
+  INCLUDE gfx/char.asm          ; Caracters drawing functions
+  INCLUDE gfx/tile.asm          ; Tiles drawing functions
+  INCLUDE gfx/map.asm           ; Maps drawing functions
 
 MAIN PROC
   ; ---Initialize data segment---
   MOV AX, @DATA
   MOV DS, AX
 
+  MOV DX, OFFSET FILE_MIA
+  LEA DI, MIA_BUFFER
+  CALL LOAD_FILE
+  JC @m_exit
+
   ; ---Initialize mode 13h with bios call / VGA---
   MOV AX, 13h
   INT 10h
   MOV AX, VGA_ADDR
   MOV ES, AX
-  
+
   ; --- Loading custom VGA palette ---
   CALL LOAD_GAME_PALETTE
 
@@ -110,6 +119,7 @@ MAIN PROC
   MOV AX, TEXT_MODE
   INT 10h
 
+@m_exit:
   ; ---Return to dos---
   MOV AX, 4C00h
   INT 21h

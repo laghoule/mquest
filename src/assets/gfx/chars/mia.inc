@@ -1,5 +1,8 @@
 ; Tool for sprites creation: https://github.com/laghoule/png2asm
 
+FILE_MIA DB "mia.dat", 0                      ; Mia tileset
+MIA_BUFFER DB 3500 DUP(0)                     ; Mia buffered tileset
+
 ; --- Mia movement data table ---
 ; Must follow orders define in defs/game/dir.inc
 mia_dir_table DW OFFSET mia_dir_right

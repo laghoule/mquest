@@ -1,0 +1,3 @@
+; TODO: Better error messages
+ERR_FILE_OPEN DB "ERROR: OPEN FILE ", 13, 10, 0
+ERR_FILE_READ DB "ERROR: READ FILE ", 13, 10, 0
