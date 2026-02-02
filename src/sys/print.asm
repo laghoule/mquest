@@ -12,12 +12,13 @@
 PRINT_ERR PROC
   SAVE_REGS
 
-  MOV SI, DX
-  CALL STR_LEN
+  MOV SI, DX    ; Offset of the error message to print
+  CALL STR_LEN  ; Calculate the length of the error message (IN: DI, OUT: CX)
 
-  MOV AH, 40h
-  MOV BX, 2
-  INT 21h
+  ; --- Write to file (stderr (BX:2) is console)
+  MOV AH, 40h   ; Write to file function
+  MOV BX, 2     ; File handle for STDERR
+  INT 21h       ; Call DOS
 
   RESTORE_REGS
   RET
