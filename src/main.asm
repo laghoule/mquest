@@ -14,6 +14,7 @@ INCLUDE defs/macros/sys.inc              ; System macros
 INCLUDE defs/macros/vga.inc              ; VGA macros
 
 ; --- System ---
+INCLUDE defs/sys/dat.inc                 ; .dat file header
 INCLUDE defs/sys/key.inc                 ; Keyboard
 INCLUDE defs/sys/video.inc               ; Video
 
@@ -96,7 +97,7 @@ MAIN PROC
   ; --- Loading custom VGA palette ---
   CALL LOAD_GAME_PALETTE
 
-  ; --- Draw background and caracter ---
+  ; --- Draw background and character ---
   MOV curr_map_opq, OFFSET map_opq_0
   CALL DRAW_OPAQUE_MAP                ; This is the base map layer
 
@@ -105,8 +106,8 @@ MAIN PROC
   CALL DRAW_TRANSPARENT_MAP           ; This is the transparent items on the map
 
   PREPARE_MIA_DRAW
-  CALL SAVE_CARACTER_BG               ; Save the background of the character
-  CALL DRAW_CARACTER                  ; Initial position of the character
+  CALL SAVE_CHARACTER_BG              ; Save the background of the character
+  CALL DRAW_CHARACTER                 ; Initial position of the character
 
   MOV SI, OFFSET greensleeves_data
   CALL INIT_MUSIC_THEME               ; Initialize music theme
@@ -150,7 +151,7 @@ GAME_LOOP PROC
   CMP AL, 2                   ; Check if quit game key was pressed
   JE @gl_exit_game
 
-  CALL RENDER_CARACTER        ; Render the Mia character
+  CALL RENDER_CHARACTER       ; Render the Mia character
   MOV pending_tick, 0         ; Reset pending ticks
   JMP @gl_get_next_key
 

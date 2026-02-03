@@ -97,7 +97,7 @@ MOVE_MIA PROC
   MOV AL, [BX]                        ; Data of the anim_state in AL
   MOV curr_anim_state, AL             ; Save in curr_anim_state
 
-  CALL UPDATE_CARACTER_ANIM_STATE     ; Update animation state
+  CALL UPDATE_CHARACTER_ANIM_STATE    ; Update animation state
 
   MOV AL, curr_anim_state             ; Save the anim_state in AL
   MOV BX, [SI + 2]                    ; Offset of mia_anim_state

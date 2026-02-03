@@ -4,118 +4,118 @@
 ;  the Free Software Foundation, either version 3 of the License.
 
 ;--------------------------------------------------------------------------------------
-; UPDATE_CARACTER_ANIM_STATE
+; UPDATE_CHARACTER_ANIM_STATE
 ; Description : Update the right sprite of the character based on the animation state.
 ; Input       : curr_anim_state, curr_sprite_table
 ; Output      : curr_anim_state, curr_sprite
 ;--------------------------------------------------------------------------------------
-UPDATE_CARACTER_ANIM_STATE PROC
+UPDATE_CHARACTER_ANIM_STATE PROC
   SAVE_REGS
 
   ; --- via the timer stored in game_tick ---
   MOV AL, game_tick
-  AND AL, 03h                   ; Mask the lower 2 bits of the time value
-  CMP AL, 3                     ; Check if the animation frequency is reached
-  JNE @F                        ; If not, skip the animation update
-  XOR AL, AL                    ; Reset the animation state to 0
+  AND AL, 03h                     ; Mask the lower 2 bits of the time value
+  CMP AL, 3                       ; Check if the animation frequency is reached
+  JNE @F                          ; If not, skip the animation update
+  XOR AL, AL                      ; Reset the animation state to 0
 @@:
   MOV curr_anim_state, AL
 
   ; --- we get the index of the sprite in the table ---
-  XOR AH, AH                    ; Clear AH
-  SHL AX, 1                     ; Multiply by 2 to get the offset of the sprite in the table
-  MOV BX, AX                    ; Move the offset into BX
+  XOR AH, AH                      ; Clear AH
+  SHL AX, 1                       ; Multiply by 2 to get the offset of the sprite in the table
+  MOV BX, AX                      ; Move the offset into BX
 
-  MOV SI, curr_sprite_table     ; Load the sprite table address into SI
-  MOV AX, [SI + BX]             ; [SI + BX] is the offset of the sprite in the table
+  MOV SI, curr_sprite_table       ; Load the sprite table address into SI
+  MOV AX, [SI + BX]               ; [SI + BX] is the offset of the sprite in the table
   MOV curr_sprite, AX
 
   RESTORE_REGS
   RET
-UPDATE_CARACTER_ANIM_STATE ENDP
+UPDATE_CHARACTER_ANIM_STATE ENDP
 
 ;-------------------------------------------------
-; RENDER_CARACTER
-; Description: Render the caracter on the screen
+; RENDER_CHARACTER
+; Description: Render the character on the screen
 ; Input:       none
 ; Output:      none
 ; ------------------------------------------------
-RENDER_CARACTER PROC
-  PREPARE_MIA_DRAW        ; TODO: comment
-  CALL SAVE_CARACTER_BG   ; Save the background of the caracter
-  CALL DRAW_CARACTER      ; Draw the caracter on the screen
+RENDER_CHARACTER PROC
+  PREPARE_MIA_DRAW                ; TODO: comment
+  CALL SAVE_CHARACTER_BG          ; Save the background of the character
+  CALL DRAW_CHARACTER             ; Draw the character on the screen
   RET
-RENDER_CARACTER ENDP
+RENDER_CHARACTER ENDP
 
 ;-------------------------------------------------
 ; RENDER_RESTORE_BACKGROUNG
-; Description: Restore the background of the caracter on the screen
+; Description: Restore the background of the character on the screen
 ; Input:       none
 ; Output:      none
 ; ------------------------------------------------
 RENDER_RESTORE_BACKGROUNG PROC
   SYNC_MIA_POSITION
-  CALL RESTORE_CARACTER_BG  ; Restore the background of the caracter
+  CALL RESTORE_CHARACTER_BG       ; Restore the background of the character
   RET
 RENDER_RESTORE_BACKGROUNG ENDP
 
-; --- Draw caracter ---
-DRAW_CARACTER PROC
+; --- Draw character ---
+DRAW_CHARACTER PROC
   SAVE_REGS
   CLD                             ; Clear direction flag
 
-  MOV SI, curr_sprite             ; Load main caracter current sprite
+  MOV SI, curr_sprite             ; Load main character current sprite
   CALC_VGA_POSITION pos_x, pos_y  ; Calculate VGA position in DI
 
-  MOV DX, CARACTER_HEIGHT         ; Height of the sprite (number of lines)
+  MOV DX, CHARACTER_HEIGHT        ; Height of the sprite (number of lines)
 
-  ; --- draw the caracter loop
+  ; --- draw the character loop
   @dc_draw_line:
-    MOV CX, CARACTER_WIDTH
+    MOV CX, CHARACTER_WIDTH
     PUSH DI                       ; Save current line start
     @dc_draw_pixel:
       LODSB                       ; Load pixel from SI in AL then SI++
       OR AL, AL                   ; Check if pixel color is 0 (transparent)
-      JZ @dc_skip_pixel            ; If pixel is transparent, skip pixel
+      JZ @dc_skip_pixel           ; If pixel is transparent, skip pixel
       MOV ES:[DI], AL             ; Draw pixel
       @dc_skip_pixel:
         INC DI                    ; Next pixel on sreen
         LOOP @dc_draw_pixel
 
-    POP DI                      ; Restore line start
-    ADD DI, SCREEN_WIDTH        ; Move DI to the next line
+    POP DI                        ; Restore line start
+    ADD DI, SCREEN_WIDTH          ; Move DI to the next line
     DEC DX
-    JNZ @dc_draw_line            ; Draw next line if caracter is not entirely draw
+    JNZ @dc_draw_line             ; Draw next line if character is not entirely draw
 
   RESTORE_REGS
   RET
-DRAW_CARACTER ENDP
+DRAW_CHARACTER ENDP
 
-; Save caracter background (with inversion of DS and ES for using MOVSB optimization)
-SAVE_CARACTER_BG PROC
+; Save character background (with inversion of DS and ES for using MOVSB optimization)
+SAVE_CHARACTER_BG PROC
   SAVE_REGS
   CLD
 
-  CALC_VGA_POSITION pos_x, pos_y    ; Calculate VGA position in DI
+  CALC_VGA_POSITION pos_x, pos_y  ; Calculate VGA position in DI
 
-  MOV SI, DI                        ; Save VGA position in SI
+  MOV SI, DI                      ; Save VGA position in SI
 
   ; Save and inverse DS and ES
   PUSH DS
   PUSH ES
 
-  MOV AX, DS                        ; Save DS in AX
-  MOV BX, ES                        ; Save ES in BX
-  MOV DS, BX                        ; Inverse DS and ES
-  MOV ES, AX                        ; Inverse ES and DS
+  MOV AX, DS                      ; Save DS in AX
+  MOV BX, ES                      ; Save ES in BX
+  MOV DS, BX                      ; Inverse DS and ES
+  MOV ES, AX                      ; Inverse ES and DS
   ; Now we have : DS:SI = VGA, ES:DI = RAM
 
-  MOV DI, OFFSET bg_sprite          ; Background buffer in DI
+  MOV DI, OFFSET bg_sprite        ; Background buffer in DI
 
-  MOV DX, CARACTER_HEIGHT           ; Number of lines to read
+  MOV DX, CHARACTER_HEIGHT        ; Number of lines to read
 
   @scb_read_line:
-    MOV CX, CARACTER_WIDTH          ; Number of pixels to read
+    MOV CX, CHARACTER_WIDTH       ; Number of pixels to read
     PUSH SI
     ; MOVSB is used to copy a byte from DS:SI to ES:DI
     ; REP is used to repeat the instruction CX times
@@ -133,21 +133,21 @@ SAVE_CARACTER_BG PROC
 
   RESTORE_REGS
   RET
-SAVE_CARACTER_BG ENDP
+SAVE_CHARACTER_BG ENDP
 
-; Restore caracter background (with MOVSB optimization)
-RESTORE_CARACTER_BG PROC
+; Restore character background (with MOVSB optimization)
+RESTORE_CHARACTER_BG PROC
   SAVE_REGS
   CLD
 
   CALC_VGA_POSITION pos_x, pos_y  ; Calculate VGA position in DI
   MOV SI, OFFSET bg_sprite        ; Background buffer
 
-  MOV DX, CARACTER_HEIGHT         ; Number of lines to draw
+  MOV DX, CHARACTER_HEIGHT        ; Number of lines to draw
 
 @rcb_restore_line:
   PUSH DI
-  MOV CX, CARACTER_WIDTH          ; Number of pixels to draw (line width)
+  MOV CX, CHARACTER_WIDTH         ; Number of pixels to draw (line width)
 
   ; MOVSB copies a byte from DS:SI to ES:DI and increments both pointers
   ; REP repeats the MOVSB instruction CX times (line width)
@@ -156,8 +156,8 @@ RESTORE_CARACTER_BG PROC
   POP DI                          ; Restore the initial position of the line
   ADD DI, SCREEN_WIDTH            ; Calcul the position of the next line
   DEC DX                          ; Decrement line counter
-  JNZ @rcb_restore_line              ; If not zero, repeat the process
+  JNZ @rcb_restore_line           ; If not zero, repeat the process
 
   RESTORE_REGS
   RET
-RESTORE_CARACTER_BG ENDP
+RESTORE_CHARACTER_BG ENDP
