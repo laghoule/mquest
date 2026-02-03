@@ -82,16 +82,16 @@ MAIN PROC
   MOV AX, @DATA
   MOV DS, AX
 
-  MOV DX, OFFSET FILE_MIA
-  LEA DI, MIA_BUFFER
-  CALL LOAD_FILE
-  JC @m_exit
+  MOV DX, OFFSET FILE_MIA             ; File name of mia tileset in DX
+  LEA DI, MIA_BUFFER                  ; Set destination buffer address
+  CALL LOAD_FILE                      ; Load file function
+  JC @m_exit                          ; Jump to exit if carry flag set (error)
 
   ; ---Initialize mode 13h with bios call / VGA---
-  MOV AX, 13h
-  INT 10h
-  MOV AX, VGA_ADDR
-  MOV ES, AX
+  MOV AX, 13h                         ; Mode 13h (320x200 256 colors)
+  INT 10h                             ; Call BIOS interrupt to set video mode
+  MOV AX, VGA_ADDR                    ; VGA address in AX
+  MOV ES, AX                          ; Set ES to VGA address
 
   ; --- Loading custom VGA palette ---
   CALL LOAD_GAME_PALETTE
