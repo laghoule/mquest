@@ -12,21 +12,21 @@
 STR_LEN PROC
   SAVE_REGS
 
-  XOR CX, CX
+  XOR CX, CX          ; Clear CX
 
 @sl_loop:
-  MOV AL, [SI]
-  CMP AL, 0
+  MOV AL, [SI]        ; Put character in AL
+  CMP AL, 0           ; Jump to end if AL is 0 (end of string)
   JE @sl_end_string
 
-  INC CX
-  INC SI
-  JMP @sl_loop
+  INC CX              ; Increment the CX counter
+  INC SI              ; Go to next character
+  JMP @sl_loop        ; Jump to next iteration
 
 @sl_end_string:
-  MOV TX, CX
+  MOV TX, CX          ; Temporary storage in TX
 
   RESTORE_REGS
-  MOV CX, TX
+  MOV CX, TX          ; String len in CX
   RET
 STR_LEN ENDP
