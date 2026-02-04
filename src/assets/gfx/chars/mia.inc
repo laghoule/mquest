@@ -10,8 +10,8 @@ mia_l_anim_state        DB 0                  ; Mia left animation state (0, 1, 
 mia_u_anim_state        DB 0                  ; Mia up animation state (0, 1, 2 state)
 mia_d_anim_state        DB 0                  ; Mia down animation state (0, 1, 2 state)
 
-FILE_MIA                DB "mia.dat", 0       ; Mia tileset
-MIA_BUFFER              DB 3500 DUP(0)        ; Mia buffered tileset
+file_mia                DB "mia.dat", 0       ; Mia tileset
+mia_buffer              DB 3500 DUP(0)        ; Mia buffered tileset
 
 ; --- Mia movement data table ---
 ; Must follow orders define in defs/game/dir.inc

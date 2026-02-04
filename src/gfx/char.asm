@@ -59,15 +59,20 @@ RENDER_RESTORE_BACKGROUNG PROC
   RET
 RENDER_RESTORE_BACKGROUNG ENDP
 
-; --- Draw character ---
+;----------------------------------------------
+; DRAW_CHARACTER
+; Description: Draw the character on the screen
+; Input:  curr_sprite, mia_buffer
+; Output: None
+; ---------------------------------------------
 DRAW_CHARACTER PROC
   SAVE_REGS
   CLD                             ; Clear direction flag
 
-  ; TODO: hardcoded with MIA_BUFFER
-  LEA SI, MIA_BUFFER              ; Load main character current sprite
-  ADD SI, TILESET_HDR_SIZE        ; Jump header size
-  ADD SI, AX                      ; Tile offset in the tileset
+  ; TODO: hardcoded with mia_buffer, change curr_sprite
+  MOV SI, OFFSET mia_buffer       ; Load main character current sprite
+  ADD SI, TILESET_HDR_SIZE        ; Jump above header size
+  ADD SI, curr_sprite             ; Tile offset in the tileset
 
   CALC_VGA_POSITION pos_x, pos_y  ; Calculate VGA position in DI
 
@@ -95,7 +100,13 @@ DRAW_CHARACTER PROC
   RET
 DRAW_CHARACTER ENDP
 
-; Save character background (with inversion of DS and ES for using MOVSB optimization)
+; ---------------------------------------------------------------------
+; SAVE_CHARACTER_BG
+; Description: Save character background in memory
+;              with inversion of DS and ES for using MOVSB optimization
+; Input:  pos_x, pos_y
+; Output: bg_sprite
+; ---------------------------------------------------------------------
 SAVE_CHARACTER_BG PROC
   SAVE_REGS
   CLD
@@ -138,7 +149,13 @@ SAVE_CHARACTER_BG PROC
   RET
 SAVE_CHARACTER_BG ENDP
 
-; Restore character background (with MOVSB optimization)
+; ------------------------------------------------------
+; RESTORE_CHARACTER_BG
+; Description: Restore character background from memory
+;              with MOVSB optimization
+; Input:  pos_x, pos_y, bg_sprite
+; Output: None
+; ------------------------------------------------------
 RESTORE_CHARACTER_BG PROC
   SAVE_REGS
   CLD

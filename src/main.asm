@@ -83,8 +83,8 @@ MAIN PROC
   MOV AX, @DATA
   MOV DS, AX
 
-  MOV DX, OFFSET FILE_MIA             ; File name of mia tileset in DX
-  LEA DI, MIA_BUFFER                  ; Set destination buffer address
+  MOV DX, OFFSET file_mia             ; File name of mia tileset in DX
+  LEA DI, mia_buffer                  ; Set destination buffer address
   CALL LOAD_FILE                      ; Load file function
   JC @m_exit                          ; Jump to exit if carry flag set (error)
 
