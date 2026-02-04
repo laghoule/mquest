@@ -329,6 +329,7 @@
       // Initialize js-dos emulator
       Dos(document.getElementById("dos"), {
         url: "mquest.jsdos", // Path to the .jsdos bundle file
+        kiosk: true, // Enable kiosk mode
       })
         .then((ci) => {
           // Hide loading screen once the emulator is ready to run
