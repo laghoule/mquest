@@ -64,7 +64,11 @@ DRAW_CHARACTER PROC
   SAVE_REGS
   CLD                             ; Clear direction flag
 
-  MOV SI, curr_sprite             ; Load main character current sprite
+  ; TODO: hardcoded with MIA_BUFFER
+  LEA SI, MIA_BUFFER              ; Load main character current sprite
+  ADD SI, TILESET_HDR_SIZE        ; Jump header size
+  ADD SI, AX                      ; Tile offset in the tileset
+
   CALC_VGA_POSITION pos_x, pos_y  ; Calculate VGA position in DI
 
   MOV DX, CHARACTER_HEIGHT        ; Height of the sprite (number of lines)
@@ -114,14 +118,13 @@ SAVE_CHARACTER_BG PROC
 
   MOV DX, CHARACTER_HEIGHT        ; Number of lines to read
 
-  @scb_read_line:
-    MOV CX, CHARACTER_WIDTH       ; Number of pixels to read
-    PUSH SI
-    ; MOVSB is used to copy a byte from DS:SI to ES:DI
-    ; REP is used to repeat the instruction CX times
-    REP MOVSB
-    POP SI
-
+@scb_read_line:
+  MOV CX, CHARACTER_WIDTH         ; Number of pixels to read
+  PUSH SI
+  ; MOVSB is used to copy a byte from DS:SI to ES:DI
+  ; REP is used to repeat the instruction CX times
+  REP MOVSB
+  POP SI
 
   ADD SI, SCREEN_WIDTH            ; Next line
   DEC DX                          ; Decrement line counter
