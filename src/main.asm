@@ -38,9 +38,8 @@ INCLUDE defs/musics/notes.inc            ; Frequencies (PIT Dividers)
 
   ; --- Characters ---
   INCLUDE assets/gfx/chars/mia.inc       ; Mia animations sprite data
-
-  ; --- Sprites ---
-  INCLUDE assets/gfx/sprites.inc         ; Sprites data
+  INCLUDE assets/gfx/chars/grandma.inc   ; Grandma animations sprite data
+  INCLUDE assets/gfx/chars/sprites.inc   ; Characters sprites tables and data
 
   ; --- Palettes ---
   INCLUDE assets/gfx/pals/pal.inc        ; Palette data
@@ -105,7 +104,7 @@ MAIN PROC
   MOV curr_map_trns, AX
   CALL DRAW_TRANSPARENT_MAP           ; This is the transparent items on the map
 
-  PREPARE_MIA_DRAW
+  SYNC_MIA_POSITION                   ; FIXME: get rid of this macro
   CALL SAVE_CHARACTER_BG              ; Save the background of the character
   CALL DRAW_CHARACTER                 ; Initial position of the character
 

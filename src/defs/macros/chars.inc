@@ -1,10 +1,4 @@
-; Prepare Mia position to use the draw generic position
-PREPARE_MIA_DRAW MACRO
-  SYNC_MIA_POSITION
-  MOV AX, mia_curr_sprite ; Save current sprite to generic sprite
-  MOV curr_sprite, AX
-ENDM
-
+; TODO: Get rid of this macro
 SYNC_MIA_POSITION MACRO
   MOV AX, mia_pos_x       ; Save X position to generic position
   MOV pos_x, AX

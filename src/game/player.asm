@@ -92,18 +92,16 @@ MOVE_MIA PROC
 
 @mmg_skip_to_anim:
   MOV AX, [SI]
-  MOV curr_sprite_table, AX           ; Load the sprite table
+  MOV char_sprite_table, AX           ; Set the generic sprite table
   MOV BX, [SI + 2]                    ; Offset of mia_anim_state
   MOV AL, [BX]                        ; Data of the anim_state in AL
-  MOV curr_anim_state, AL             ; Save in curr_anim_state
+  MOV char_anim_state, AL             ; Save in curr_anim_state
 
   CALL UPDATE_CHARACTER_ANIM_STATE    ; Update animation state
 
-  MOV AL, curr_anim_state             ; Save the anim_state in AL
+  MOV AL, char_anim_state             ; Save the anim_state in AL
   MOV BX, [SI + 2]                    ; Offset of mia_anim_state
   MOV [BX], AL                        ; Save the anim_state in the memory location of mia_dir_table
-  MOV AX, curr_sprite
-  MOV mia_curr_sprite, AX             ; Save the current sprite
 
   RESTORE_REGS
   RET

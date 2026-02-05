@@ -6,8 +6,8 @@
 ;--------------------------------------------------------------------------------------
 ; UPDATE_CHARACTER_ANIM_STATE
 ; Description : Update the right sprite of the character based on the animation state.
-; Input       : curr_anim_state, curr_sprite_table
-; Output      : curr_anim_state, curr_sprite
+; Input       : char_anim_state, char_sprite_table
+; Output      : char_anim_state, char_sprite_index
 ;--------------------------------------------------------------------------------------
 UPDATE_CHARACTER_ANIM_STATE PROC
   SAVE_REGS
@@ -19,16 +19,16 @@ UPDATE_CHARACTER_ANIM_STATE PROC
   JNE @F                          ; If not, skip the animation update
   XOR AL, AL                      ; Reset the animation state to 0
 @@:
-  MOV curr_anim_state, AL
+  MOV char_anim_state, AL
 
   ; --- we get the index of the sprite in the table ---
   XOR AH, AH                      ; Clear AH
   SHL AX, 1                       ; Multiply by 2 to get the offset of the sprite in the table
   MOV BX, AX                      ; Move the offset into BX
 
-  MOV SI, curr_sprite_table       ; Load the sprite table address into SI
+  MOV SI, char_sprite_table       ; Load the sprite table address into SI
   MOV AX, [SI + BX]               ; [SI + BX] is the offset of the sprite in the table
-  MOV curr_sprite, AX
+  MOV char_sprite_index, AX
 
   RESTORE_REGS
   RET
@@ -41,7 +41,7 @@ UPDATE_CHARACTER_ANIM_STATE ENDP
 ; Output:      none
 ; ------------------------------------------------
 RENDER_CHARACTER PROC
-  PREPARE_MIA_DRAW                ; TODO: comment
+  SYNC_MIA_POSITION               ; FIXME: not generic
   CALL SAVE_CHARACTER_BG          ; Save the background of the character
   CALL DRAW_CHARACTER             ; Draw the character on the screen
   RET
@@ -54,7 +54,7 @@ RENDER_CHARACTER ENDP
 ; Output:      none
 ; ------------------------------------------------
 RENDER_RESTORE_BACKGROUNG PROC
-  SYNC_MIA_POSITION
+  SYNC_MIA_POSITION               ; FIXME: not generic
   CALL RESTORE_CHARACTER_BG       ; Restore the background of the character
   RET
 RENDER_RESTORE_BACKGROUNG ENDP
@@ -62,39 +62,41 @@ RENDER_RESTORE_BACKGROUNG ENDP
 ;----------------------------------------------
 ; DRAW_CHARACTER
 ; Description: Draw the character on the screen
-; Input:  curr_sprite, mia_buffer
+; Input:  char_sprite_index, char_index
 ; Output: None
 ; ---------------------------------------------
 DRAW_CHARACTER PROC
   SAVE_REGS
-  CLD                             ; Clear direction flag
+  CLD                              ; Clear direction flag
 
-  ; TODO: hardcoded with mia_buffer, change curr_sprite
-  MOV SI, OFFSET mia_buffer       ; Load main character current sprite
-  ADD SI, TILESET_HDR_SIZE        ; Jump above header size
-  ADD SI, curr_sprite             ; Tile offset in the tileset
+  MOV BX, char_index               ; Which character to draw (0: Mia)
+  SHL BX, 1                        ; Multiply by 2 to get the offset in the table (word)
 
-  CALC_VGA_POSITION pos_x, pos_y  ; Calculate VGA position in DI
+  MOV SI, [char_buffer_table + BX] ; Load character offset buffer
+  ADD SI, TILESET_HDR_SIZE         ; Jump above header size
+  ADD SI, char_sprite_index        ; Tile index in the tileset buffet
 
-  MOV DX, CHARACTER_HEIGHT        ; Height of the sprite (number of lines)
+  CALC_VGA_POSITION pos_x, pos_y   ; Calculate VGA position in DI
+
+  MOV DX, CHARACTER_HEIGHT         ; Height of the sprite (number of lines)
 
   ; --- draw the character loop
   @dc_draw_line:
     MOV CX, CHARACTER_WIDTH
-    PUSH DI                       ; Save current line start
+    PUSH DI                        ; Save current line start
     @dc_draw_pixel:
-      LODSB                       ; Load pixel from SI in AL then SI++
-      OR AL, AL                   ; Check if pixel color is 0 (transparent)
-      JZ @dc_skip_pixel           ; If pixel is transparent, skip pixel
-      MOV ES:[DI], AL             ; Draw pixel
+      LODSB                        ; Load pixel from SI in AL then SI++
+      OR AL, AL                    ; Check if pixel color is 0 (transparent)
+      JZ @dc_skip_pixel            ; If pixel is transparent, skip pixel
+      MOV ES:[DI], AL              ; Draw pixel
       @dc_skip_pixel:
-        INC DI                    ; Next pixel on sreen
+        INC DI                     ; Next pixel on sreen
         LOOP @dc_draw_pixel
 
-    POP DI                        ; Restore line start
-    ADD DI, SCREEN_WIDTH          ; Move DI to the next line
+    POP DI                         ; Restore line start
+    ADD DI, SCREEN_WIDTH           ; Move DI to the next line
     DEC DX
-    JNZ @dc_draw_line             ; Draw next line if character is not entirely draw
+    JNZ @dc_draw_line              ; Draw next line if character is not entirely draw
 
   RESTORE_REGS
   RET

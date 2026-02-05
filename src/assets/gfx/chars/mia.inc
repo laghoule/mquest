@@ -5,7 +5,7 @@ mia_pos_x               DW 150                ; Mia starting x position
 mia_pos_y               DW 90                 ; Mia starting y position
 mia_bg_sprite           DB 272 DUP(0)         ; Mia background sprite
 mia_curr_sprite         DW 0                  ; Front / down animation for starting point
-mia_r_anim_state        DB 0                  ; Mia right animation state (0, 1, 2 state)
+mia_r_anim_state        DB 0                  ; Mia right animation state (0, 1, 2 state) # TODO: replace _state with _index
 mia_l_anim_state        DB 0                  ; Mia left animation state (0, 1, 2 state)
 mia_u_anim_state        DB 0                  ; Mia up animation state (0, 1, 2 state)
 mia_d_anim_state        DB 0                  ; Mia down animation state (0, 1, 2 state)
