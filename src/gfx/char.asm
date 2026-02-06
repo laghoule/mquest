@@ -76,7 +76,9 @@ DRAW_CHARACTER PROC
   ADD SI, TILESET_HDR_SIZE         ; Jump above header size
   ADD SI, char_sprite_index        ; Tile index in the tileset buffet
 
-  CALC_VGA_POSITION pos_x, pos_y   ; Calculate VGA position in DI
+  MOV AX, pos_x                    ; This will be gone when position refactor is complete
+  MOV BX, pos_y                    ; Idem
+  CALC_VGA_POSITION AX, BX         ; Calculate VGA position in DI
 
   MOV DX, CHARACTER_HEIGHT         ; Height of the sprite (number of lines)
 
@@ -113,7 +115,9 @@ SAVE_CHARACTER_BG PROC
   SAVE_REGS
   CLD
 
-  CALC_VGA_POSITION pos_x, pos_y  ; Calculate VGA position in DI
+  MOV AX, pos_x                   ; This will be gone when position refactor is complete
+  MOV BX, pos_y                   ; Idem
+  CALC_VGA_POSITION AX, BX        ; Calculate VGA position in DI
 
   MOV SI, DI                      ; Save VGA position in SI
 
@@ -162,7 +166,8 @@ RESTORE_CHARACTER_BG PROC
   SAVE_REGS
   CLD
 
-  CALC_VGA_POSITION pos_x, pos_y  ; Calculate VGA position in DI
+  SYNC_POS_REGS                   ; pos_x, pos_y
+  CALC_VGA_POSITION AX, BX        ; Calculate VGA position in DI
   MOV SI, OFFSET bg_sprite        ; Background buffer
 
   MOV DX, CHARACTER_HEIGHT        ; Number of lines to draw

@@ -6,7 +6,7 @@
 ; ---------------------------------------
 ; DRAW_TILE_OPAQUE
 ; Description: Draws a tile with opacity
-; Input:  tile, pos_x, pos_y
+; Input:  tile, AX: x pos, BX: y pos
 ; Output: None
 ; ---------------------------------------
 DRAW_TILE_OPAQUE PROC
@@ -14,7 +14,8 @@ DRAW_TILE_OPAQUE PROC
   CLD                             ; Clear direction flag
 
   MOV SI, tile                    ; Load tile
-  CALC_VGA_POSITION pos_x, pos_y  ; Calculate VGA position in DI
+  SYNC_POS_REGS                   ; pos_x, pos_y
+  CALC_VGA_POSITION AX, BX        ; Calculate VGA position in DI
 
   MOV DX, TILE_HEIGHT             ; Height of the sprite (number of lines)
 
@@ -47,7 +48,8 @@ DRAW_TILE_TRANSPARENT PROC
   CLD                             ; Clear direction flag
 
   MOV SI, tile                    ; Load tile
-  CALC_VGA_POSITION pos_x, pos_y  ; Calculate VGA position in DI
+  SYNC_POS_REGS                   ; pos_x, pos_y
+  CALC_VGA_POSITION AX, BX        ; Calculate VGA position in DI
 
   MOV DX, TILE_HEIGHT             ; Height of the sprite (number of lines)
 
@@ -77,7 +79,7 @@ DRAW_TILE_TRANSPARENT ENDP
 ;----------------------------------------------
 ; GET_TILE_PROP
 ; Description: Retrieves properties of a tile
-; Input:  AL = X, AH = Y
+; Input:  pos_x, pos_y
 ; Output: AH = tile type, AL = tile properties
 ; ---------------------------------------------
 GET_TILE_PROP PROC
