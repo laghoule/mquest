@@ -40,6 +40,7 @@ UPDATE_CHARACTER_ANIM_STATE ENDP
 ; Input:       none
 ; Output:      none
 ; ------------------------------------------------
+; TODO refactor for input character index (input)
 RENDER_CHARACTER PROC
   SYNC_MIA_POSITION               ; FIXME: not generic
   CALL SAVE_CHARACTER_BG          ; Save the background of the character
@@ -53,6 +54,7 @@ RENDER_CHARACTER ENDP
 ; Input:       none
 ; Output:      none
 ; ------------------------------------------------
+; TODO refactor for input character index (input)
 RENDER_RESTORE_BACKGROUNG PROC
   SYNC_MIA_POSITION               ; FIXME: not generic
   CALL RESTORE_CHARACTER_BG       ; Restore the background of the character
@@ -111,6 +113,7 @@ DRAW_CHARACTER ENDP
 ; Input:  pos_x, pos_y
 ; Output: bg_sprite
 ; ---------------------------------------------------------------------
+; TODO: refactor for generic usage
 SAVE_CHARACTER_BG PROC
   SAVE_REGS
   CLD
@@ -162,6 +165,7 @@ SAVE_CHARACTER_BG ENDP
 ; Input:  pos_x, pos_y, bg_sprite
 ; Output: None
 ; ------------------------------------------------------
+; TODO: refactor for generic usage
 RESTORE_CHARACTER_BG PROC
   SAVE_REGS
   CLD
