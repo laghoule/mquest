@@ -1,5 +1,10 @@
 ; Tool for sprites creation: https://github.com/laghoule/png2asm
 
+; --- definition ---------------------------------------------------------------
+; ch_x, ch_y, ch_dir, ch_dir_table_ptr, ch_anim_idx, ch_bg_save_ptr, ch_sprite_buffer_ptr
+; ------------------------------------------------------------------------------
+mia_data CHARACTER <150, 90, DOWN_DIR, OFFSET mia_dir_table, 0, OFFSET mia_bg_sprite, OFFSET mia_buffer>
+
 ; --- Mia sprite info ---
 mia_pos_x               DW 150                ; Mia starting x position
 mia_pos_y               DW 90                 ; Mia starting y position

@@ -37,6 +37,7 @@ INCLUDE defs/musics/notes.inc            ; Frequencies (PIT Dividers)
   INCLUDE assets/musics/themes.inc       ; Music variables and songs
 
   ; --- Characters ---
+  INCLUDE assets/gfx/chars/types.inc     ; Characters types definitions
   INCLUDE assets/gfx/chars/mia.inc       ; Mia animations sprite data
   INCLUDE assets/gfx/chars/grandma.inc   ; Grandma animations sprite data
   INCLUDE assets/gfx/chars/sprites.inc   ; Characters sprites tables and data

@@ -1,7 +1,8 @@
-CHARACTER_WIDTH  EQU 16
-CHARACTER_HEIGHT EQU 17
+CHAR_WIDTH     EQU 16     ; Width of a character sprite in pixels
+CHAR_HEIGHT    EQU 17     ; Height of a character sprite in pixels
+CHAR_SIZE      EQU 272    ; Size of a character sprite in bytes
 
-; Character sprite index in the tileset
+; Character sprite index in the tileset data
 CHAR_SPRT_IDX_0 EQU 0     ; Down
 CHAR_SPRT_IDX_1 EQU 272   ; Right
 CHAR_SPRT_IDX_2 EQU 544   ; Up

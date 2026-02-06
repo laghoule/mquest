@@ -82,11 +82,11 @@ DRAW_CHARACTER PROC
   MOV BX, pos_y                    ; Idem
   CALC_VGA_POSITION AX, BX         ; Calculate VGA position in DI
 
-  MOV DX, CHARACTER_HEIGHT         ; Height of the sprite (number of lines)
+  MOV DX, CHAR_HEIGHT         ; Height of the sprite (number of lines)
 
   ; --- draw the character loop
   @dc_draw_line:
-    MOV CX, CHARACTER_WIDTH
+    MOV CX, CHAR_WIDTH
     PUSH DI                        ; Save current line start
     @dc_draw_pixel:
       LODSB                        ; Load pixel from SI in AL then SI++
@@ -136,10 +136,10 @@ SAVE_CHARACTER_BG PROC
 
   MOV DI, OFFSET bg_sprite        ; Background buffer in DI
 
-  MOV DX, CHARACTER_HEIGHT        ; Number of lines to read
+  MOV DX, CHAR_HEIGHT        ; Number of lines to read
 
 @scb_read_line:
-  MOV CX, CHARACTER_WIDTH         ; Number of pixels to read
+  MOV CX, CHAR_WIDTH         ; Number of pixels to read
   PUSH SI
   ; MOVSB is used to copy a byte from DS:SI to ES:DI
   ; REP is used to repeat the instruction CX times
@@ -174,11 +174,11 @@ RESTORE_CHARACTER_BG PROC
   CALC_VGA_POSITION AX, BX        ; Calculate VGA position in DI
   MOV SI, OFFSET bg_sprite        ; Background buffer
 
-  MOV DX, CHARACTER_HEIGHT        ; Number of lines to draw
+  MOV DX, CHAR_HEIGHT        ; Number of lines to draw
 
 @rcb_restore_line:
   PUSH DI
-  MOV CX, CHARACTER_WIDTH         ; Number of pixels to draw (line width)
+  MOV CX, CHAR_WIDTH         ; Number of pixels to draw (line width)
 
   ; MOVSB copies a byte from DS:SI to ES:DI and increments both pointers
   ; REP repeats the MOVSB instruction CX times (line width)
