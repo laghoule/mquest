@@ -4,6 +4,7 @@
 ; Input:  pos_x, pos_y
 ; Output: AH = 0, AL = 0 (free), AH = 0, AL = 1 (collision)
 ;----------------------------------------------------------------
+; TODO: use control flag instean (carry or zero)
 CHECK_COLLISION PROC
   SAVE_REGS
 

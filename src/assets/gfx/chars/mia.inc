@@ -1,20 +1,13 @@
 ; Tool for sprites creation: https://github.com/laghoule/png2asm
 
 ; --- definition ---------------------------------------------------------------
-; ch_x, ch_y, ch_dir, ch_dir_table_ptr, ch_anim_idx, ch_bg_save_ptr, ch_sprite_buffer_ptr
+; ch_x, ch_y, ch_dir, ch_dir_table_ptr, ch_anim_idx, ch_bg_ptr, ch_buf_ptr
 ; ------------------------------------------------------------------------------
 mia_data CHARACTER <150, 90, DOWN_DIR, OFFSET mia_dir_table, 0, OFFSET mia_bg_sprite, OFFSET mia_buffer>
 
-; --- Mia sprite info ---
-mia_pos_x               DW 150                ; Mia starting x position
-mia_pos_y               DW 90                 ; Mia starting y position
-mia_bg_sprite           DB 272 DUP(0)         ; Mia background sprite
-mia_r_anim_state        DB 0                  ; Mia right animation state (0, 1, 2 state) # TODO: replace _state with _index
-mia_l_anim_state        DB 0                  ; Mia left animation state (0, 1, 2 state)
-mia_u_anim_state        DB 0                  ; Mia up animation state (0, 1, 2 state)
-mia_d_anim_state        DB 0                  ; Mia down animation state (0, 1, 2 state)
-
 file_mia                DB "mia.dat", 0       ; Mia tileset
+mia_anim_state          DB 0                  ; Mia animation state
+mia_bg_sprite           DB CHAR_SIZE DUP(0)   ; Mia background sprite
 mia_buffer              DB 3500 DUP(0)        ; Mia buffered tileset
 
 ; --- Mia movement data table ---
@@ -27,19 +20,19 @@ mia_dir_table DW OFFSET mia_dir_right
 ; --- definition ---------------------------------------------------------------
 ; SpriteTable (DW), AnimState (DW), P1X (DB), P1Y (DB), P2X (DB), P2Y (DB), Dir
 ; ------------------------------------------------------------------------------
-mia_dir_right DW OFFSET mia_sprites_table_right, OFFSET mia_r_anim_state
+mia_dir_right DW OFFSET mia_sprites_table_right, OFFSET mia_anim_state
               DB HIT_RIGHT_X, HIT_HEAD_Y, HIT_RIGHT_X, HIT_BOTTOM_Y
               DB RIGHT_DIR
 
-mia_dir_left  DW OFFSET mia_sprites_table_left,  OFFSET mia_l_anim_state
+mia_dir_left  DW OFFSET mia_sprites_table_left,  OFFSET mia_anim_state
               DB HIT_LEFT_X, HIT_HEAD_Y, HIT_LEFT_X, HIT_BOTTOM_Y
               DB LEFT_DIR
 
-mia_dir_up    DW OFFSET mia_sprites_table_up,    OFFSET mia_u_anim_state
+mia_dir_up    DW OFFSET mia_sprites_table_up,    OFFSET mia_anim_state
               DB HIT_LEFT_FOOT_X, HIT_HEAD_Y, HIT_RIGHT_FOOT_X, HIT_HEAD_Y
               DB UP_DIR
 
-mia_dir_down  DW OFFSET mia_sprites_table_down,  OFFSET mia_d_anim_state
+mia_dir_down  DW OFFSET mia_sprites_table_down,  OFFSET mia_anim_state
               DB HIT_LEFT_FOOT_X, HIT_BOTTOM_Y, HIT_RIGHT_FOOT_X, HIT_BOTTOM_Y
               DB DOWN_DIR
 

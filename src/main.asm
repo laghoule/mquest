@@ -105,7 +105,7 @@ MAIN PROC
   MOV curr_map_trns, AX
   CALL DRAW_TRANSPARENT_MAP           ; This is the transparent items on the map
 
-  SYNC_MIA_POSITION                   ; FIXME: get rid of this macro
+  XOR AX, AX                          ; Mia charater index
   CALL SAVE_CHARACTER_BG              ; Save the background of the character
   CALL DRAW_CHARACTER                 ; Initial position of the character
 
@@ -151,6 +151,7 @@ GAME_LOOP PROC
   CMP AL, 2                   ; Check if quit game key was pressed
   JE @gl_exit_game
 
+  XOR AX, AX                  ; Mia character
   CALL RENDER_CHARACTER       ; Render the Mia character
   MOV pending_tick, 0         ; Reset pending ticks
   JMP @gl_get_next_key

@@ -39,24 +39,30 @@ HANDLE_KEYBOARD_INPUT PROC
   MOV AL, 0
   RET
 
+; TODO: a lot of duplicated code here, optimize
+  
 @hki_move_right:
-  MOV AX, RIGHT_DIR
-  CALL MOVE_MIA
+  MOV DX, RIGHT_DIR
+  XOR AX, AX              ; Mia character index
+  CALL MOVE_CHAR
   JMP @hki_return
 
 @hki_move_left:
-  MOV AX, LEFT_DIR
-  CALL MOVE_MIA
+  MOV DX, LEFT_DIR
+  XOR AX, AX              ; Mia character index
+  CALL MOVE_CHAR
   JMP @hki_return
 
 @hki_move_up:
-  MOV AX, UP_DIR
-  CALL MOVE_MIA
+  MOV DX, UP_DIR
+  XOR AX, AX              ; Mia character index
+  CALL MOVE_CHAR
   JMP @hki_return
 
 @hki_move_down:
-  MOV AX, DOWN_DIR
-  CALL MOVE_MIA
+  MOV DX, DOWN_DIR
+  XOR AX, AX              ; Mia character index
+  CALL MOVE_CHAR
 
 @hki_return:
   MOV AL, 1
