@@ -82,6 +82,13 @@ MAIN PROC
   ; ---Initialize data segment---
   MOV AX, @DATA
   MOV DS, AX
+  
+  ; TODO: add a load file asser proc
+  
+  MOV DX, OFFSET file_grandma         ; File name of grandma tileset in DX
+  LEA DI, grandma_buffer              ; Set destination buffer address
+  CALL LOAD_FILE                      ; Load file function
+  JC @m_exit                          ; Jump to exit if carry flag set (error)
 
   MOV DX, OFFSET file_mia             ; File name of mia tileset in DX
   LEA DI, mia_buffer                  ; Set destination buffer address
@@ -105,7 +112,13 @@ MAIN PROC
   MOV curr_map_trns, AX
   CALL DRAW_TRANSPARENT_MAP           ; This is the transparent items on the map
 
-  XOR AX, AX                          ; Mia charater index
+  ; Grandma
+  MOV AX, 1                           ; Charater index
+  CALL SAVE_CHARACTER_BG              ; Save the background of the character
+  CALL DRAW_CHARACTER                 ; Initial position of the character
+  
+  ; Mia
+  XOR AX, AX                          ; Charater index
   CALL SAVE_CHARACTER_BG              ; Save the background of the character
   CALL DRAW_CHARACTER                 ; Initial position of the character
 

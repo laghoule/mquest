@@ -12,29 +12,29 @@ mia_buffer              DB 3500 DUP(0)        ; Mia buffered tileset
 
 ; --- Mia movement data table ---
 ; Must follow orders define in defs/game/dir.inc
-mia_dir_table DW OFFSET mia_dir_right
-              DW OFFSET mia_dir_left
-              DW OFFSET mia_dir_up
-              DW OFFSET mia_dir_down
+mia_dir_table           DW OFFSET mia_dir_right
+                        DW OFFSET mia_dir_left
+                        DW OFFSET mia_dir_up
+                        DW OFFSET mia_dir_down
 
 ; --- definition ---------------------------------------------------------------
 ; SpriteTable (DW), AnimState (DW), P1X (DB), P1Y (DB), P2X (DB), P2Y (DB), Dir
 ; ------------------------------------------------------------------------------
-mia_dir_right DW OFFSET mia_sprites_table_right, OFFSET mia_anim_state
-              DB HIT_RIGHT_X, HIT_HEAD_Y, HIT_RIGHT_X, HIT_BOTTOM_Y
-              DB RIGHT_DIR
+mia_dir_right           DW OFFSET mia_sprites_table_right, OFFSET mia_anim_state
+                        DB HIT_RIGHT_X, HIT_HEAD_Y, HIT_RIGHT_X, HIT_BOTTOM_Y
+                        DB RIGHT_DIR
 
-mia_dir_left  DW OFFSET mia_sprites_table_left,  OFFSET mia_anim_state
-              DB HIT_LEFT_X, HIT_HEAD_Y, HIT_LEFT_X, HIT_BOTTOM_Y
-              DB LEFT_DIR
+mia_dir_left            DW OFFSET mia_sprites_table_left,  OFFSET mia_anim_state
+                        DB HIT_LEFT_X, HIT_HEAD_Y, HIT_LEFT_X, HIT_BOTTOM_Y
+                        DB LEFT_DIR
 
-mia_dir_up    DW OFFSET mia_sprites_table_up,    OFFSET mia_anim_state
-              DB HIT_LEFT_FOOT_X, HIT_HEAD_Y, HIT_RIGHT_FOOT_X, HIT_HEAD_Y
-              DB UP_DIR
+mia_dir_up              DW OFFSET mia_sprites_table_up,    OFFSET mia_anim_state
+                        DB HIT_LEFT_FOOT_X, HIT_HEAD_Y, HIT_RIGHT_FOOT_X, HIT_HEAD_Y
+                        DB UP_DIR
 
-mia_dir_down  DW OFFSET mia_sprites_table_down,  OFFSET mia_anim_state
-              DB HIT_LEFT_FOOT_X, HIT_BOTTOM_Y, HIT_RIGHT_FOOT_X, HIT_BOTTOM_Y
-              DB DOWN_DIR
+mia_dir_down            DW OFFSET mia_sprites_table_down,  OFFSET mia_anim_state
+                        DB HIT_LEFT_FOOT_X, HIT_BOTTOM_Y, HIT_RIGHT_FOOT_X, HIT_BOTTOM_Y
+                        DB DOWN_DIR
 
 ; --- Mia animation down table ---
 mia_sprites_table_down  DW CHAR_SPRT_IDX_0  ; tile 0
