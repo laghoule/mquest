@@ -17,7 +17,10 @@ Mia is a young herbalist apprentice. Her grandmother has fallen ill, and the onl
 - **Development Environment:**
   - **OS:** Linux (Cross-development).
   - **IDE:** Zed.
-  - **Tools:** [Custom Go script for PNG-to-ASM conversion](https://github.com/laghoule/png2asm).
+  - **Tools:** 
+    - [png2asm](https://github.com/laghoule/png2asm) - PNG-to-ASM sprite conversion
+    - [png2pic](https://github.com/laghoule/png2pic) - PNG-to-PIC background conversion
+    - [gpl2asm](https://github.com/laghoule/gpl2asm) - GPL palette-to-ASM conversion
   - **Emulator:** DOSBox-X for rapid testing.
 
 ## Current Features

@@ -3,7 +3,7 @@
 ; ------------------------------------------------------------------------------
 grandma_data CHARACTER <280, 45, DOWN_DIR, OFFSET grandma_dir_table, 0, OFFSET grandma_bg_sprite, OFFSET grandma_buffer>
 
-file_grandma                DB "grandma.dat", 0   ; Grandma tileset
+file_grandma                DB "grandma.pic", 0   ; Grandma tileset
 grandma_anim_state          DB 0                  ; Grandma animation state
 grandma_bg_sprite           DB CHAR_SIZE DUP(0)   ; Grandma background sprite
 grandma_buffer              DB 3500 DUP(0)        ; Grandma buffered tileset

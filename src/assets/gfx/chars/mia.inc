@@ -5,7 +5,7 @@
 ; ------------------------------------------------------------------------------
 mia_data CHARACTER <150, 90, DOWN_DIR, OFFSET mia_dir_table, 0, OFFSET mia_bg_sprite, OFFSET mia_buffer>
 
-file_mia                DB "mia.dat", 0       ; Mia tileset
+file_mia                DB "mia.pic", 0       ; Mia tileset
 mia_anim_state          DB 0                  ; Mia animation state
 mia_bg_sprite           DB CHAR_SIZE DUP(0)   ; Mia background sprite
 mia_buffer              DB 3500 DUP(0)        ; Mia buffered tileset
