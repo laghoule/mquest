@@ -8,102 +8,108 @@
 ; Description: Handles movement and collision for all directions
 ; Input:  AX: char_index, DX: direction
 ; Output: None
+; Modify: Character data table of char_index
+;         pos_x, pos_y
 ;---------------------------------------------------------
 MOVE_CHAR PROC
   SAVE_REGS
 
   ; Calcul -> Test -> Action
 
-  MOV char_index, AX
+  MOV char_index, AX                        ; We save the character index for later use
 
-  SHL AX, 1                           ; Multiply by 2, to get the right index (word = 2)
-  MOV BX, AX                          ; Move the index in BX
+  SHL AX, 1                                 ; Multiply by 2, to get the right index (word = 2)
+  MOV BX, AX
 
-  MOV BX, [char_data_table + BX]
+  MOV BX, [char_data_table + BX]            ; Load character data table
 
-  XOR DH, DH
-  MOV [BX].CHARACTER.ch_dir, DL
+  XOR DH, DH                                ; ch_dir is a byte, so we clear DH
+  MOV [BX].CHARACTER.ch_dir, DL             ; Set character direction
 
-  MOV SI, [BX].CHARACTER.ch_dir_table_ptr
-  SHL DX, 1
-  ADD SI, DX
-  MOV SI, [SI]                          ; Char direction information in SI
+  ;Resolve the direction indirection: Master table -> direction data block
+  MOV SI, [BX].CHARACTER.ch_dir_table_ptr   ; Address of the 4-directions table
+  SHL DX, 1                                 ; Index * 2 (DW pointer)
+  ADD SI, DX                                ; Poiter to the chosen direction
+  MOV SI, [SI]                              ; Dereference the direction data (hitbox, sprites, ...)
 
   MOV AX, char_index
-  CALL RENDER_RESTORE_BACKGROUND      ; We restore the background
+  CALL RENDER_RESTORE_BACKGROUND            ; We restore the background
 
-  MOV CX, [BX].CHARACTER.ch_x         ; CX : X position
-  MOV DX, [BX].CHARACTER.ch_y         ; DX : Y position
+  ; We retrieve the x,y coordinates of the character
+  MOV CX, [BX].CHARACTER.ch_x
+  MOV DX, [BX].CHARACTER.ch_y
+
+  ; Load pending_tick in AL
   XOR AH, AH
-  MOV AL, pending_tick                ; Load pending_tick in AL
+  MOV AL, pending_tick
 
-  CMP [BX].CHARACTER.ch_dir, RIGHT_DIR ; If right direction
-  JE @mm_calc_right                   ; Goto right calculation
+  ; Check for which direction to go
+  CMP [BX].CHARACTER.ch_dir, RIGHT_DIR      ; Check for right
+  JE @mm_calc_right
 
-  CMP [BX].CHARACTER.ch_dir, LEFT_DIR                    ; If left direction
-  JE @mm_calc_left                    ; Goto left calculation
+  CMP [BX].CHARACTER.ch_dir, LEFT_DIR       ; Check for left
+  JE @mm_calc_left
 
-  CMP [BX].CHARACTER.ch_dir, UP_DIR   ; If up direction
-  JE @mm_calc_up                      ; Goto up calculation
+  CMP [BX].CHARACTER.ch_dir, UP_DIR         ; Check for up
+  JE @mm_calc_up
 
-  ; The down direction is the only one left
-  ; The calcul for down
-  ADD DX, AX                          ; Add pending_tick to Y position
-  JMP @mm_collision_detection         ; Goto collision detection
+  ; If we are here, it's down direction
+  ADD DX, AX                                ; Add pending_tick to Y position
+  JMP @mm_collision_detection               ; Goto collision detection
 
 @mm_calc_right:
-  ADD CX, AX                          ; Add pending_tick to X position
-  JMP @mm_collision_detection         ; Goto collision detection
+  ADD CX, AX                                ; Add pending_tick to X position
+  JMP @mm_collision_detection               ; Goto collision detection
 
 @mm_calc_left:
-  SUB CX, AX                          ; Subtract pending_tick from X position
-  JMP @mm_collision_detection         ; Goto collision detection
+  SUB CX, AX                                ; Subtract pending_tick from X position
+  JMP @mm_collision_detection               ; Goto collision detection
 
 @mm_calc_up:
-  SUB DX, AX                          ; Subtract pending_tick from Y position
+  SUB DX, AX                                ; Subtract pending_tick from Y position
 
 @mm_collision_detection:
   ; Hitbox 1 position X
   XOR AX, AX
-  MOV AL, [SI + 2]                    ; Load hitbox P1X
-  ADD AX, CX                          ; Add hitbox P1X to X position
-  MOV pos_x, AX                       ; Save X position
+  MOV AL, [SI + 2]                          ; Load hitbox P1X
+  ADD AX, CX                                ; Add hitbox P1X to X position
+  MOV pos_x, AX                             ; Save X position
 
   ; Hitbox 1 position Y
   XOR AX, AX
-  MOV AL, [SI + 3]                    ; Load hitbox P1Y
-  ADD AX, DX                          ; Add hitbox P1Y to Y position
-  MOV pos_y, AX                       ; Save Y position
+  MOV AL, [SI + 3]                          ; Load hitbox P1Y
+  ADD AX, DX                                ; Add hitbox P1Y to Y position
+  MOV pos_y, AX                             ; Save Y position
 
   ; TODO: get rid of pos_x, pos_y
-  CALL CHECK_COLLISION                ; Check for collition via pos_x, pos_y
-  CMP AL, 1                           ; If collision detected
-  JE @mmg_skip_to_anim                ; Goto skip to animation
+  CALL CHECK_COLLISION                      ; Check for collition via pos_x, pos_y
+  CMP AL, 1                                 ; If collision detected
+  JE @mmg_skip_to_anim                      ; Goto skip to animation
 
   ; Hitbox 2 position X
   XOR AX, AX
-  MOV AL, [SI + 4]                    ; Load hitbox P2X
-  ADD AX, CX                          ; Add hitbox P2X to X position
-  MOV pos_x, AX                       ; Save X position
+  MOV AL, [SI + 4]                          ; Load hitbox P2X
+  ADD AX, CX                                ; Add hitbox P2X to X position
+  MOV pos_x, AX                             ; Save X position
 
   ; Hitbox 2 position Y
   XOR AX, AX
-  MOV AL, [SI + 5]                    ; Load hitbox P2Y
-  ADD AX, DX                          ; Add hitbox P2Y to Y position
-  MOV pos_y, AX                       ; Save Y position
+  MOV AL, [SI + 5]                          ; Load hitbox P2Y
+  ADD AX, DX                                ; Add hitbox P2Y to Y position
+  MOV pos_y, AX                             ; Save Y position
 
   ; TODO: get rid of pos_x, pos_y
-  CALL CHECK_COLLISION                ; Check for collition via pos_x, pos_y
-  CMP AL, 1                           ; If collision detected
-  JE @mmg_skip_to_anim                ; Goto skip to animation
+  CALL CHECK_COLLISION                      ; Check for collition via pos_x, pos_y
+  CMP AL, 1                                 ; If collision detected
+  JE @mmg_skip_to_anim                      ; Goto skip to animation
 
   ; No collision detected
-  MOV [BX].CHARACTER.ch_x, CX         ; Save X position
-  MOV [BX].CHARACTER.ch_y, DX         ; Save Y position
+  MOV [BX].CHARACTER.ch_x, CX               ; We save the x,y in the character struct
+  MOV [BX].CHARACTER.ch_y, DX
 
 @mmg_skip_to_anim:
   MOV AX, char_index
-  CALL UPDATE_CHARACTER_ANIM_STATE    ; Update animation state
+  CALL UPDATE_CHARACTER_ANIM_INDEX          ; Update animation index
 
   RESTORE_REGS
   RET

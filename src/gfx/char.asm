@@ -3,13 +3,13 @@
 ;  it under the terms of the GNU General Public License as published by
 ;  the Free Software Foundation, either version 3 of the License.
 
-;--------------------------------------------------------------------------------------
-; UPDATE_CHARACTER_ANIM_STATE
-; Description : Update the right sprite of the character based on the animation state.
+;------------------------------------------------------------------------------------
+; UPDATE_CHARACTER_ANIM_INDEX
+; Description : Update the right sprite of the character based on the animation index
 ; Input:  AX: char_index
 ; Output: None
-;--------------------------------------------------------------------------------------
-UPDATE_CHARACTER_ANIM_STATE PROC
+;------------------------------------------------------------------------------------
+UPDATE_CHARACTER_ANIM_INDEX PROC
   SAVE_REGS
 
   SHL AX, 1                           ; Multiply by 2 to get the offset of the character
@@ -26,18 +26,9 @@ UPDATE_CHARACTER_ANIM_STATE PROC
 @@:
   MOV [BX].CHARACTER.ch_anim_idx, AL  ; Save the animation index
 
-  ; --- we get the index of the sprite in the table ---
-  ;XOR AH, AH                          ; Clear AH
-  ;SHL AX, 1                           ; Multiply by 2 to get the offset of the sprite in the table
-  ;MOV BX, AX                          ; Move the offset into BX
-
-  ;MOV SI, char_sprite_table           ; Load the sprite table address into SI
-  ;MOV AX, [SI + BX]                   ; [SI + BX] is the offset of the sprite in the table
-  ;MOV char_sprite_index, AX
-
   RESTORE_REGS
   RET
-UPDATE_CHARACTER_ANIM_STATE ENDP
+UPDATE_CHARACTER_ANIM_INDEX ENDP
 
 ;-------------------------------------------------
 ; RENDER_CHARACTER
