@@ -4,7 +4,6 @@
 grandma_data CHARACTER <280, 45, DOWN_DIR, OFFSET grandma_dir_table, 0, OFFSET grandma_bg_buffer, OFFSET grandma_buffer>
 
 file_grandma                DB "grandma.pic", 0   ; Grandma tileset
-grandma_anim_idx            DB 0                  ; Grandma animation index
 grandma_bg_buffer           DB CHAR_SIZE DUP(0)   ; Grandma background buffered sprite
 grandma_buffer              DB 3500 DUP(0)        ; Grandma buffered sprite
 
@@ -18,19 +17,19 @@ grandma_dir_table           DW OFFSET grandma_right_data
 ; --- definition ---------------------------------------------------------------
 ; SpriteTable (DW), AnimState (DW), P1X (DB), P1Y (DB), P2X (DB), P2Y (DB), Dir
 ; ------------------------------------------------------------------------------
-grandma_right_data          DW OFFSET grandma_sprt_right_table, OFFSET grandma_anim_idx
+grandma_right_data          DW OFFSET grandma_sprt_right_table
                             DB HIT_RIGHT_X, HIT_HEAD_Y, HIT_RIGHT_X, HIT_BOTTOM_Y
                             DB RIGHT_DIR
 
-grandma_left_data           DW OFFSET grandma_sprt_left_table, OFFSET grandma_anim_idx
+grandma_left_data           DW OFFSET grandma_sprt_left_table
                             DB HIT_LEFT_X, HIT_HEAD_Y, HIT_LEFT_X, HIT_BOTTOM_Y
                             DB LEFT_DIR
 
-grandma_up_data             DW OFFSET grandma_sprt_up_table, OFFSET grandma_anim_idx
+grandma_up_data             DW OFFSET grandma_sprt_up_table
                             DB HIT_LEFT_FOOT_X, HIT_HEAD_Y, HIT_RIGHT_FOOT_X, HIT_HEAD_Y
                             DB UP_DIR
 
-grandma_down_data           DW OFFSET grandma_sprt_down_table, OFFSET grandma_anim_idx
+grandma_down_data           DW OFFSET grandma_sprt_down_table
                             DB HIT_LEFT_FOOT_X, HIT_BOTTOM_Y, HIT_RIGHT_FOOT_X, HIT_BOTTOM_Y
                             DB DOWN_DIR
 

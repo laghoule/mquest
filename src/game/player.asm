@@ -65,13 +65,13 @@ MOVE_CHAR PROC
 @mm_collision_detection:
   ; Hitbox 1 position X
   XOR AX, AX
-  MOV AL, [SI + 4]                    ; Load hitbox P1X
+  MOV AL, [SI + 2]                    ; Load hitbox P1X
   ADD AX, CX                          ; Add hitbox P1X to X position
   MOV pos_x, AX                       ; Save X position
 
   ; Hitbox 1 position Y
   XOR AX, AX
-  MOV AL, [SI + 5]                    ; Load hitbox P1Y
+  MOV AL, [SI + 3]                    ; Load hitbox P1Y
   ADD AX, DX                          ; Add hitbox P1Y to Y position
   MOV pos_y, AX                       ; Save Y position
 
@@ -82,13 +82,13 @@ MOVE_CHAR PROC
 
   ; Hitbox 2 position X
   XOR AX, AX
-  MOV AL, [SI + 6]                    ; Load hitbox P2X
+  MOV AL, [SI + 4]                    ; Load hitbox P2X
   ADD AX, CX                          ; Add hitbox P2X to X position
   MOV pos_x, AX                       ; Save X position
 
   ; Hitbox 2 position Y
   XOR AX, AX
-  MOV AL, [SI + 7]                    ; Load hitbox P2Y
+  MOV AL, [SI + 5]                    ; Load hitbox P2Y
   ADD AX, DX                          ; Add hitbox P2Y to Y position
   MOV pos_y, AX                       ; Save Y position
 

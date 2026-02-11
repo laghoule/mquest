@@ -6,7 +6,6 @@
 mia_data CHARACTER <150, 90, DOWN_DIR, OFFSET mia_dir_table, 0, OFFSET mia_bg_buffer, OFFSET mia_buffer>
 
 file_mia                DB "mia.pic", 0       ; Mia tileset
-mia_anim_idx            DB 0                  ; Mia animation index
 mia_bg_buffer           DB CHAR_SIZE DUP(0)   ; Mia background buffered sprite
 mia_buffer              DB 3500 DUP(0)        ; Mia buffered sprite
 
@@ -20,19 +19,19 @@ mia_dir_table           DW OFFSET mia_right_data
 ; --- definition ---------------------------------------------------------------
 ; SpriteTable (DW), AnimState (DW), P1X (DB), P1Y (DB), P2X (DB), P2Y (DB), Dir
 ; ------------------------------------------------------------------------------
-mia_right_data          DW OFFSET mia_sprt_right_table, OFFSET mia_anim_idx
+mia_right_data          DW OFFSET mia_sprt_right_table
                         DB HIT_RIGHT_X, HIT_HEAD_Y, HIT_RIGHT_X, HIT_BOTTOM_Y
                         DB RIGHT_DIR
 
-mia_left_data           DW OFFSET mia_sprt_left_table, OFFSET mia_anim_idx
+mia_left_data           DW OFFSET mia_sprt_left_table
                         DB HIT_LEFT_X, HIT_HEAD_Y, HIT_LEFT_X, HIT_BOTTOM_Y
                         DB LEFT_DIR
 
-mia_up_data             DW OFFSET mia_sprt_up_table, OFFSET mia_anim_idx
+mia_up_data             DW OFFSET mia_sprt_up_table
                         DB HIT_LEFT_FOOT_X, HIT_HEAD_Y, HIT_RIGHT_FOOT_X, HIT_HEAD_Y
                         DB UP_DIR
 
-mia_down_data           DW OFFSET mia_sprt_down_table, OFFSET mia_anim_idx
+mia_down_data           DW OFFSET mia_sprt_down_table
                         DB HIT_LEFT_FOOT_X, HIT_BOTTOM_Y, HIT_RIGHT_FOOT_X, HIT_BOTTOM_Y
                         DB DOWN_DIR
 
