@@ -5,3 +5,4 @@
 - Open file error need to be more accurate (add specific details)
 - Change var name of var using OFFSET to \_ptr suffix
 - Comments are not descriptive of what we do, review ALL comments
+- Add collision detection between character
