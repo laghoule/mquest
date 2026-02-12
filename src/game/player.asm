@@ -18,18 +18,18 @@ MOVE_CHAR PROC
 
   MOV char_index, AX                        ; We save the character index for later use
 
-  SHL AX, 1                                 ; Multiply by 2, to get the right index (word = 2)
+  SHL AX, 1                                 ; Conversion characted index -> offset (DW)
   MOV BX, AX
 
-  MOV BX, [char_data_table + BX]            ; Load character data table
+  MOV BX, [char_data_table + BX]            ; BX = Address of the character data structure
 
   XOR DH, DH                                ; ch_dir is a byte, so we clear DH
-  MOV [BX].CHARACTER.ch_dir, DL             ; Set character direction
+  MOV [BX].CHARACTER.ch_dir, DL             ; Set character direction from input DX
 
   ;Resolve the direction indirection: Master table -> direction data block
-  MOV SI, [BX].CHARACTER.ch_dir_table_ptr   ; Address of the 4-directions table
-  SHL DX, 1                                 ; Index * 2 (DW pointer)
-  ADD SI, DX                                ; Poiter to the chosen direction
+  MOV SI, [BX].CHARACTER.ch_dir_table_ptr   ; SI = Address of the 4-directions table
+  SHL DX, 1                                 ; Conversion direction index -> offset (DW)
+  ADD SI, DX                                ; SI = Address of the direction data
   MOV SI, [SI]                              ; Dereference the direction data (hitbox, sprites, ...)
 
   MOV AX, char_index
@@ -82,9 +82,8 @@ MOVE_CHAR PROC
   MOV pos_y, AX                             ; Save Y position
 
   ; TODO: get rid of pos_x, pos_y
-  CALL CHECK_COLLISION                      ; Check for collition via pos_x, pos_y
-  CMP AL, 1                                 ; If collision detected
-  JE @mmg_skip_to_anim                      ; Goto skip to animation
+  CALL CHECK_COLLISION                      ; Check for collition via pos_x, pos_y                              ; If collision detected
+  JC @mmg_skip_to_anim                      ; Goto skip to animation
 
   ; Hitbox 2 position X
   XOR AX, AX
@@ -100,8 +99,7 @@ MOVE_CHAR PROC
 
   ; TODO: get rid of pos_x, pos_y
   CALL CHECK_COLLISION                      ; Check for collition via pos_x, pos_y
-  CMP AL, 1                                 ; If collision detected
-  JE @mmg_skip_to_anim                      ; Goto skip to animation
+  JC @mmg_skip_to_anim                      ; Goto skip to animation
 
   ; No collision detected
   MOV [BX].CHARACTER.ch_x, CX               ; We save the x,y in the character struct

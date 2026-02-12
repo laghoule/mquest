@@ -6,3 +6,4 @@
 - Change var name of var using OFFSET to \_ptr suffix
 - Comments are not descriptive of what we do, review ALL comments
 - Add collision detection between character
+- Rename var with \_ptr to \_addr
