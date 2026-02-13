@@ -82,9 +82,9 @@ MAIN PROC
   ; ---Initialize data segment---
   MOV AX, @DATA
   MOV DS, AX
-  
+
   ; TODO: add a load file asser proc
-  
+
   MOV DX, OFFSET file_grandma         ; File name of grandma tileset in DX
   LEA DI, grandma_buffer              ; Set destination buffer address
   CALL LOAD_FILE                      ; Load file function
@@ -114,13 +114,11 @@ MAIN PROC
 
   ; Grandma
   MOV AX, 1                           ; Charater index
-  CALL SAVE_CHARACTER_BG              ; Save the background of the character
-  CALL DRAW_CHARACTER                 ; Initial position of the character
-  
+  RENDER_CHARACTER                    ; Render character macro
+
   ; Mia
   XOR AX, AX                          ; Charater index
-  CALL SAVE_CHARACTER_BG              ; Save the background of the character
-  CALL DRAW_CHARACTER                 ; Initial position of the character
+  RENDER_CHARACTER                    ; Render character macro
 
   MOV SI, OFFSET greensleeves_data
   CALL INIT_MUSIC_THEME               ; Initialize music theme
@@ -165,7 +163,7 @@ GAME_LOOP PROC
   JE @gl_exit_game
 
   XOR AX, AX                  ; Mia character
-  CALL RENDER_CHARACTER       ; Render the Mia character
+  RENDER_CHARACTER            ; Render character macro
   MOV pending_tick, 0         ; Reset pending ticks
   JMP @gl_get_next_key
 

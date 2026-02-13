@@ -33,7 +33,7 @@ MOVE_CHAR PROC
   MOV SI, [SI]                              ; Dereference the direction data (hitbox, sprites, ...)
 
   MOV AX, char_index
-  CALL RENDER_RESTORE_BACKGROUND            ; We restore the background
+  CALL RESTORE_CHARACTER_BG                 ; We restore the background
 
   ; We retrieve the x,y coordinates of the character
   MOV CX, [BX].CHARACTER.ch_x

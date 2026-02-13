@@ -5,55 +5,31 @@
 
 ;------------------------------------------------------------------------------------
 ; UPDATE_CHARACTER_ANIM_INDEX
-; Description : Update the right sprite of the character based on the animation index
-; Input:  AX: char_index
-; Output: None
+; Description : Update the sprite of the character based on the animation index
+; Input:    AX: char_index
+; Output:   None
+; Modified: Character data struct
 ;------------------------------------------------------------------------------------
 UPDATE_CHARACTER_ANIM_INDEX PROC
   SAVE_REGS
 
-  SHL AX, 1                           ; Multiply by 2 to get the offset of the character
+  SHL AX, 1                           ; Conversion index -> offset (DW)
   MOV BX, AX                          ; Move the offset into BX
 
-  MOV BX, [char_data_table + bx]      ; Load the character data into BX
+  MOV BX, [char_data_table + bx]      ; BX = character data struct
 
-  ; --- via the timer stored in game_tick ---
+  ; We use the game tick to update the animation index
   MOV AL, game_tick
   AND AL, 03h                         ; Mask the lower 2 bits of the time value
   CMP AL, 3                           ; Check if the animation frequency is reached
   JNE @F                              ; If not, skip the animation update
   XOR AL, AL                          ; Reset the animation state to 0
 @@:
-  MOV [BX].CHARACTER.ch_anim_idx, AL  ; Save the animation index
+  MOV [BX].CHARACTER.ch_anim_idx, AL  ; Save the animation index in the character struct
 
   RESTORE_REGS
   RET
 UPDATE_CHARACTER_ANIM_INDEX ENDP
-
-;-------------------------------------------------
-; RENDER_CHARACTER
-; Description: Render the character on the screen
-; Input:       none
-; Output:      none
-; ------------------------------------------------
-; TODO refactor for input character index (input)
-RENDER_CHARACTER PROC
-  CALL SAVE_CHARACTER_BG          ; Save the background of the character
-  CALL DRAW_CHARACTER             ; Draw the character on the screen
-  RET
-RENDER_CHARACTER ENDP
-
-;-------------------------------------------------
-; RENDER_RESTORE_BACKGROUND
-; Description: Restore the background of the character on the screen
-; Input:       none
-; Output:      none
-; ------------------------------------------------
-; TODO refactor for input character index (input)
-RENDER_RESTORE_BACKGROUND PROC
-  CALL RESTORE_CHARACTER_BG       ; Restore the background of the character
-  RET
-RENDER_RESTORE_BACKGROUND ENDP
 
 ;----------------------------------------------
 ; DRAW_CHARACTER
