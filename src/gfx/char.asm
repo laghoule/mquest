@@ -63,63 +63,63 @@ RENDER_RESTORE_BACKGROUND ENDP
 ; ---------------------------------------------
 DRAW_CHARACTER PROC
   SAVE_REGS
-  CLD                                     ; Clear direction flag
+  CLD                                      ; Clear direction flag
 
-  SHL AX, 1                               ; char_index, multiply by 2
+  SHL AX, 1                                ; char_index, multiply by 2
   MOV BX, AX
 
-  MOV BX, [char_data_table + BX]          ; Character data
+  MOV BX, [char_data_table + BX]           ; Character data
 
   ; --- Direction ---
-  MOV SI, [BX].CHARACTER.ch_dir_table_ptr ; Load direcion table pointer
+  MOV SI, [BX].CHARACTER.ch_dir_table_addr ; Load direcion table pointer
   XOR AH, AH
-  MOV AL, [BX].CHARACTER.ch_dir           ; Load direction
-  SHL AX, 1                               ; Multiply by 2
-  ADD SI, AX                              ; Add offset of the direction to the direction table pointer
+  MOV AL, [BX].CHARACTER.ch_dir            ; Load direction
+  SHL AX, 1                                ; Multiply by 2
+  ADD SI, AX                               ; Add offset of the direction to the direction table pointer
 
   ; --- Resolve pointer ---
-  MOV SI, [SI]                            ; Direction table offset
-  MOV SI, [SI]                            ; Sprite table offset
+  MOV SI, [SI]                             ; Direction table offset
+  MOV SI, [SI]                             ; Sprite table offset
 
   ; --- Animation sprite ---
-  XOR AH, AH                              ; Clear AH
-  MOV AL, [BX].CHARACTER.ch_anim_idx      ; Load animation index
-  SHL AX, 1                               ; Multiply by 2
+  XOR AH, AH                               ; Clear AH
+  MOV AL, [BX].CHARACTER.ch_anim_idx       ; Load animation index
+  SHL AX, 1                                ; Multiply by 2
 
-  ADD SI, AX                              ; Add offset of the animation index to the sprite table pointer
-  MOV AX, [SI]                            ; Load the sprite index
+  ADD SI, AX                               ; Add offset of the animation index to the sprite table pointer
+  MOV AX, [SI]                             ; Load the sprite index
 
   ; --- Sprite buffered data ---
-  MOV SI, [BX].CHARACTER.ch_buf_ptr       ; Load character offset buffer
-  ADD SI, TILESET_HDR_SIZE                ; Jump above header size
-  ADD SI, AX                              ; Tile index in the tileset buffef
+  MOV SI, [BX].CHARACTER.ch_buf_addr       ; Load character offset buffer
+  ADD SI, TILESET_HDR_SIZE                 ; Jump above header size
+  ADD SI, AX                               ; Tile index in the tileset buffef
 
   ; --- Position ---
-  MOV AX, [BX].CHARACTER.ch_x             ; This will be gone when position refactor is complete
-  PUSH BX                                 ; Save BX
-  MOV BX, [BX].CHARACTER.ch_y             ; Idem
-  CALC_VGA_POSITION AX, BX                ; Calculate VGA position in DI
+  MOV AX, [BX].CHARACTER.ch_x              ; This will be gone when position refactor is complete
+  PUSH BX                                  ; Save BX
+  MOV BX, [BX].CHARACTER.ch_y              ; Idem
+  CALC_VGA_POSITION AX, BX                 ; Calculate VGA position in DI
   POP BX
 
-  MOV DX, CHAR_HEIGHT                     ; Height of the sprite (number of lines)
+  MOV DX, CHAR_HEIGHT                      ; Height of the sprite (number of lines)
 
   ; --- draw the character loop ---
   @dc_draw_line:
     MOV CX, CHAR_WIDTH
-    PUSH DI                               ; Save current line start
+    PUSH DI                                ; Save current line start
     @dc_draw_pixel:
-      LODSB                               ; Load pixel from SI in AL then SI++
-      OR AL, AL                           ; Check if pixel color is 0 (transparent)
-      JZ @dc_skip_pixel                   ; If pixel is transparent, skip pixel
-      MOV ES:[DI], AL                     ; Draw pixel
+      LODSB                                ; Load pixel from SI in AL then SI++
+      OR AL, AL                            ; Check if pixel color is 0 (transparent)
+      JZ @dc_skip_pixel                    ; If pixel is transparent, skip pixel
+      MOV ES:[DI], AL                      ; Draw pixel
       @dc_skip_pixel:
-        INC DI                            ; Next pixel on sreen
+        INC DI                             ; Next pixel on sreen
         LOOP @dc_draw_pixel
 
-    POP DI                                ; Restore line start
-    ADD DI, SCREEN_WIDTH                  ; Move DI to the next line
+    POP DI                                 ; Restore line start
+    ADD DI, SCREEN_WIDTH                   ; Move DI to the next line
     DEC DX
-    JNZ @dc_draw_line                     ; Draw next line if character is not entirely draw
+    JNZ @dc_draw_line                      ; Draw next line if character is not entirely draw
 
   RESTORE_REGS
   RET
@@ -131,7 +131,7 @@ DRAW_CHARACTER ENDP
 ;              with inversion of DS and ES for using MOVSB optimization
 ; Input:  AX: char_index
 ; Output: None
-; Modified: char_data_table.ch_bg_ptr
+; Modified: char_data_table.ch_bg_addr
 ; ---------------------------------------------------------------------
 SAVE_CHARACTER_BG PROC
   SAVE_REGS
@@ -148,7 +148,7 @@ SAVE_CHARACTER_BG PROC
   POP BX
 
   MOV SI, DI                          ; Save VGA position in SI
-  MOV DI, [BX].CHARACTER.ch_bg_ptr    ; Background buffer in DI
+  MOV DI, [BX].CHARACTER.ch_bg_addr   ; Background buffer in DI
 
   ; Save and inverse DS and ES
   PUSH DS
@@ -204,7 +204,7 @@ RESTORE_CHARACTER_BG PROC
   CALC_VGA_POSITION AX, BX            ; Calculate VGA position in DI
   POP BX
 
-  MOV SI, [BX].CHARACTER.ch_bg_ptr    ; Background save buffer
+  MOV SI, [BX].CHARACTER.ch_bg_addr   ; Background save buffer
   MOV DX, CHAR_HEIGHT                 ; Number of lines to draw
 
 @rcb_restore_line:

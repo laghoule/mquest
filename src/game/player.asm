@@ -27,7 +27,7 @@ MOVE_CHAR PROC
   MOV [BX].CHARACTER.ch_dir, DL             ; Set character direction from input DX
 
   ;Resolve the direction indirection: Master table -> direction data block
-  MOV SI, [BX].CHARACTER.ch_dir_table_ptr   ; SI = Address of the 4-directions table
+  MOV SI, [BX].CHARACTER.ch_dir_table_addr  ; SI = Address of the 4-directions table
   SHL DX, 1                                 ; Conversion direction index -> offset (DW)
   ADD SI, DX                                ; SI = Address of the direction data
   MOV SI, [SI]                              ; Dereference the direction data (hitbox, sprites, ...)
@@ -82,8 +82,8 @@ MOVE_CHAR PROC
   MOV pos_y, AX                             ; Save Y position
 
   ; TODO: get rid of pos_x, pos_y
-  CALL CHECK_COLLISION                      ; Check for collition via pos_x, pos_y                              ; If collision detected
-  JC @mmg_skip_to_anim                      ; Goto skip to animation
+  CALL CHECK_COLLISION                      ; Check for collition via pos_x, pos_y
+  JC @mmg_skip_to_anim                      ; Goto skip to animation if carry flag set
 
   ; Hitbox 2 position X
   XOR AX, AX
@@ -99,7 +99,7 @@ MOVE_CHAR PROC
 
   ; TODO: get rid of pos_x, pos_y
   CALL CHECK_COLLISION                      ; Check for collition via pos_x, pos_y
-  JC @mmg_skip_to_anim                      ; Goto skip to animation
+  JC @mmg_skip_to_anim                      ; Goto skip to animation if carry flag set
 
   ; No collision detected
   MOV [BX].CHARACTER.ch_x, CX               ; We save the x,y in the character struct

@@ -1,5 +1,5 @@
 ; --- definition ---------------------------------------------------------------
-; ch_x, ch_y, ch_dir, ch_dir_table_ptr, ch_anim_idx, ch_bg_ptr, ch_buf_ptr
+; ch_x, ch_y, ch_dir, ch_dir_table_addr, ch_anim_idx, ch_bg_addr, ch_buf_addr
 ; ------------------------------------------------------------------------------
 grandma_data CHARACTER <280, 45, DOWN_DIR, OFFSET grandma_dir_table, 0, OFFSET grandma_bg_buffer, OFFSET grandma_buffer>
 
