@@ -108,7 +108,7 @@ DRAW_CHARACTER ENDP
 ; SAVE_CHARACTER_BG
 ; Description: Save character background in memory
 ;              with inversion of DS and ES for using MOVSB optimization
-; Input:  AX: char_index
+; Input: AX: char_index
 ; Output: None
 ; Modified: char_data_table.ch_bg_addr
 ; ---------------------------------------------------------------------
@@ -120,9 +120,10 @@ SAVE_CHARACTER_BG PROC
   MOV BX, AX
   MOV BX, [char_data_table + BX]      ; Pointer to the character data
 
+  ; Calculate the VGA position of the character
   PUSH BX
-  MOV AX, [BX].CHARACTER.ch_x         ; This will be gone when position refactor is complete
-  MOV BX, [BX].CHARACTER.ch_y         ; Idem
+  MOV AX, [BX].CHARACTER.ch_x
+  MOV BX, [BX].CHARACTER.ch_y
   CALC_VGA_POSITION AX, BX            ; Calculate VGA position in DI
   POP BX
 
@@ -173,9 +174,9 @@ RESTORE_CHARACTER_BG PROC
   SAVE_REGS
   CLD
 
-  SHL AX, 1                           ; Character index is a word, so * 2
+  SHL AX, 1                           ; Convert character index to offset (DW)
   MOV BX, AX
-  MOV BX, [char_data_table + BX]      ; Pointer to the character data
+  MOV BX, [char_data_table + BX]      ; Address to the character data
 
   PUSH BX
   MOV AX, [BX].CHARACTER.ch_x
@@ -183,12 +184,12 @@ RESTORE_CHARACTER_BG PROC
   CALC_VGA_POSITION AX, BX            ; Calculate VGA position in DI
   POP BX
 
-  MOV SI, [BX].CHARACTER.ch_bg_addr   ; Background save buffer
+  MOV SI, [BX].CHARACTER.ch_bg_addr   ; SI = Address of the background buffer
   MOV DX, CHAR_HEIGHT                 ; Number of lines to draw
 
 @rcb_restore_line:
   PUSH DI
-  MOV CX, CHAR_WIDTH                  ; Number of pixels to draw (line width)
+  MOV CX, CHAR_WIDTH                  ; Counter of number of pixels to draw (line width)
 
   ; MOVSB copies a byte from DS:SI to ES:DI and increments both pointers
   ; REP repeats the MOVSB instruction CX times (line width)
