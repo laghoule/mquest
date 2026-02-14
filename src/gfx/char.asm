@@ -34,36 +34,39 @@ UPDATE_CHARACTER_ANIM_INDEX ENDP
 ;----------------------------------------------
 ; DRAW_CHARACTER
 ; Description: Draw the character on the screen
-; Input: AX: char_index
-; Output: None
+; Input:    AX: char_index
+; Output:   None
+; Modified:
 ; ---------------------------------------------
 DRAW_CHARACTER PROC
   SAVE_REGS
   CLD                                      ; Clear direction flag
 
-  SHL AX, 1                                ; char_index, multiply by 2
+  SHL AX, 1                                ; Convert index -> offset (DW)
   MOV BX, AX
 
-  MOV BX, [char_data_table + BX]           ; Character data
+  MOV BX, [char_data_table + BX]           ; BX = character data struct
 
   ; --- Direction ---
-  MOV SI, [BX].CHARACTER.ch_dir_table_addr ; Load direcion table pointer
   XOR AH, AH
-  MOV AL, [BX].CHARACTER.ch_dir            ; Load direction
-  SHL AX, 1                                ; Multiply by 2
-  ADD SI, AX                               ; Add offset of the direction to the direction table pointer
+  MOV AL, [BX].CHARACTER.ch_dir            ; AL = direction index
+  SHL AX, 1                                ; Convert index -> offset (DW)
 
-  ; --- Resolve pointer ---
-  MOV SI, [SI]                             ; Direction table offset
-  MOV SI, [SI]                             ; Sprite table offset
+  MOV SI, [BX].CHARACTER.ch_dir_table_addr ; SI = Address of the character direction table
+  ADD SI, AX                               ; SI = Address of the direction data
+
+  ; --- Resolve double indirection to sprite table ---
+  ; dir_table[dir_offset] -> direction_data -> sprite_table
+  MOV SI, [SI]                             ; Follow pointer to direction_data
+  MOV SI, [SI]                             ; Follow pointer to sprite_table
 
   ; --- Animation sprite ---
-  XOR AH, AH                               ; Clear AH
-  MOV AL, [BX].CHARACTER.ch_anim_idx       ; Load animation index
-  SHL AX, 1                                ; Multiply by 2
+  XOR AH, AH
+  MOV AL, [BX].CHARACTER.ch_anim_idx       ; AL = animation index
+  SHL AX, 1                                ; Convert index -> offset (DW)
 
-  ADD SI, AX                               ; Add offset of the animation index to the sprite table pointer
-  MOV AX, [SI]                             ; Load the sprite index
+  ADD SI, AX                               ; SI = Address of the sprite data for the current animation index
+  MOV AX, [SI]                             ; AX = Dereference sprite offset to get the right tile
 
   ; --- Sprite buffered data ---
   MOV SI, [BX].CHARACTER.ch_buf_addr       ; Load character offset buffer
