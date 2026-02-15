@@ -54,6 +54,7 @@ INCLUDE defs/musics/notes.inc            ; Frequencies (PIT Dividers)
   INCLUDE assets/gfx/tiles/objects.inc   ; Objects tiles data
 
   ; --- Maps ---
+  INCLUDE assets/gfx/maps/types.inc      ; Map types definitions
   INCLUDE assets/gfx/maps/map.inc        ; Map data
   INCLUDE assets/gfx/maps/map_o_0.inc    ; Map opaque
   INCLUDE assets/gfx/maps/map_t_0.inc    ; Map transparent

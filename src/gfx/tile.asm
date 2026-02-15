@@ -13,7 +13,7 @@ DRAW_TILE_OPAQUE PROC
   SAVE_REGS
   CLD                             ; Clear direction flag
 
-  MOV SI, tile                    ; Load tile
+  MOV SI, tile_addr               ; Load tile
   SYNC_POS_REGS                   ; pos_x, pos_y
   CALC_VGA_POSITION AX, BX        ; Calculate VGA position in DI
 
@@ -47,7 +47,7 @@ DRAW_TILE_TRANSPARENT PROC
   SAVE_REGS
   CLD                             ; Clear direction flag
 
-  MOV SI, tile                    ; Load tile
+  MOV SI, tile_addr               ; Load tile
   SYNC_POS_REGS                   ; pos_x, pos_y
   CALC_VGA_POSITION AX, BX        ; Calculate VGA position in DI
 

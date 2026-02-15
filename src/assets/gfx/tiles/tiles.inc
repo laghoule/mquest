@@ -1,5 +1,5 @@
 ; Tiles data
-tile DW 0                           ; Tile data
+tile_addr DW 0                      ; Tile data
 
 ; IDs must follow the definition here: defs/gfx/tiles.inc
 tiles_table DW 10 DUP(0)            ; Place holder

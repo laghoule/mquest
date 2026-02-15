@@ -3,7 +3,13 @@
 ;  it under the terms of the GNU General Public License as published by
 ;  the Free Software Foundation, either version 3 of the License.
 
-; --- Base map layer ---
+; ------------------------------------------------------
+; DRAW_OPAQUE_MAP
+; Description: Draw the base map layer with opaque tiles
+; Input: AX: map address (pointer to the map data in memory) *** in progress ***
+; Output: None
+; Modified: VGA memory
+; ------------------------------------------------------
 DRAW_OPAQUE_MAP PROC
   SAVE_REGS
 
@@ -22,11 +28,11 @@ DRAW_OPAQUE_MAP PROC
       ; and is used in DRAW_TILE_OPAQUE
       LODSB
 
-      XOR AH, AH                      ; Clear AH register
-      SHL AX, 1                       ; Shift left by 1 bit (multiply by 2)
+      XOR AH, AH
+      SHL AX, 1                       ; Convert tile index to offset (DW)
       MOV BX, AX
-      MOV AX, [tiles_table + BX]      ; Load tile index from table
-      MOV tile, AX
+      MOV AX, [tiles_table + BX]      ; Address of the tile in the tiles table
+      MOV tile_addr, AX
 
       CALL DRAW_TILE_OPAQUE           ; Draw opaque tile
 
@@ -42,7 +48,13 @@ DRAW_OPAQUE_MAP PROC
   RET
 DRAW_OPAQUE_MAP ENDP
 
-; --- Draw items with transparency on the map ---
+; --------------------------------------------------------------
+; DRAW_TRANSPARENT_MAP
+; Description: Draw the map layer with transparent tiles (items)
+; Input: AX: map address (pointer to the map data in memory) *** in progress ***
+; Output: None
+; Modified: VGA memory
+; --------------------------------------------------------------
 DRAW_TRANSPARENT_MAP PROC
   SAVE_REGS
   CLD
@@ -69,7 +81,7 @@ DRAW_TRANSPARENT_MAP PROC
       SHL AX, 1                        ; Shift left by 1 bit (multiply by 2)
       MOV BX, AX
       MOV AX, [tiles_table + BX]       ; Load tile index from table
-      MOV tile, AX
+      MOV tile_addr, AX
 
       CALL DRAW_TILE_TRANSPARENT       ; Draw tile with transparency
 
