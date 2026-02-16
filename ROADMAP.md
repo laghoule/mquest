@@ -20,6 +20,7 @@ Define standard Layer naming convention:
 
 Set export format to JSON.
 
+```mermaid
 graph LR
     subgraph "Design (Tiled)"
     A[Source Assets] --> B[Tiled Editor]
@@ -35,7 +36,7 @@ graph LR
     D -- Pack --> F[master_tileset.pic]
     E & F -- Load --> G[RAM Buffers]
     end
-
+```
 
 ### 1.2 Go Tooling (The "Packer")
 
