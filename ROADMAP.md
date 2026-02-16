@@ -20,6 +20,23 @@ Define standard Layer naming convention:
 
 Set export format to JSON.
 
+graph LR
+    subgraph "Design (Tiled)"
+    A[Source Assets] --> B[Tiled Editor]
+    end
+
+    subgraph "Synthesis (Go Tool)"
+    B -- JSON --> C(Go Packer)
+    C -- "Extract & Remap" --> D[Linear ID Map]
+    end
+
+    subgraph "Engine (ASM)"
+    D -- Pack --> E[world.map]
+    D -- Pack --> F[master_tileset.pic]
+    E & F -- Load --> G[RAM Buffers]
+    end
+
+
 ### 1.2 Go Tooling (The "Packer")
 
 Develop a Go utility to:
