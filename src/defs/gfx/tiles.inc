@@ -1,7 +1,7 @@
 TILE_WIDTH  EQU 16
 TILE_HEIGHT EQU 16
 TILE_COLS   EQU 20
-TILE_ROWS   EQU 12
+TILE_ROWS   EQU 11
 
 ; --- Tiles IDs ---
 VOID_0      EQU 0     ; Empty

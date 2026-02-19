@@ -70,6 +70,9 @@ HANDLE_KEYBOARD_INPUT PROC
 
 ; Mute / Unmute the music
 @hki_mute_music:
+  CMP mute_flag, 1        ; Don't mute music if the mute flag is set (e.g. from command-line arguments)
+  JE @hki_no_input
+  
   CMP music_theme_active, 1
   JE @F
   MOV music_theme_active, 1

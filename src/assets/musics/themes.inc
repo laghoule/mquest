@@ -1,4 +1,5 @@
 ; --- Theme vars ---
+mute_flag                 DB 0    ; Cmdline args /m
 music_theme_idx           DW 0    ; Which note we are playing
 music_theme_tempo         DB 0    ; Duration counter
 music_theme_active        DB 1    ; Mute flag (0 = mute, 1 = active)

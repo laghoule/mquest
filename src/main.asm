@@ -68,6 +68,7 @@ INCLUDE defs/musics/notes.inc            ; Frequencies (PIT Dividers)
 .CODE
   INCLUDE game/player.asm       ; Player functions
   INCLUDE game/collis.asm       ; Collision functions
+  INCLUDE sys/args.asm          ; Command-line functions
   INCLUDE sys/print.asm         ; Print functions
   INCLUDE sys/file.asm          ; File functions
   INCLUDE sys/string.asm        ; String functions
@@ -83,6 +84,8 @@ MAIN PROC
   ; ---Initialize data segment---
   MOV AX, @DATA
   MOV DS, AX
+
+  CALL PARSE_CMDLINE_ARGS             ; Process command-line arguments
 
   ; TODO: add a load file asser proc
 
@@ -121,9 +124,12 @@ MAIN PROC
   XOR AX, AX                          ; Charater index
   RENDER_CHARACTER                    ; Render character macro
 
+  CMP mute_flag, 1
+  JE @m_no_music
   MOV SI, OFFSET greensleeves_data
   CALL INIT_MUSIC_THEME               ; Initialize music theme
 
+@m_no_music:
   ; --- Game loop ---
   CALL INIT_TICKS                     ; Initialise the game_tick & pending_tick
   CALL GAME_LOOP                      ; Start the game loop
@@ -150,6 +156,8 @@ GAME_LOOP PROC
   ADD pending_tick, CL        ; Ticks count
 
   ; Mute / Unmute music theme
+  CMP mute_flag, 1
+  JE @F
   CMP music_theme_active, 0
   JE @F
   CALL UPDATE_MUSIC_THEME     ; Update theme music
