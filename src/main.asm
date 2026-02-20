@@ -60,6 +60,7 @@ INCLUDE defs/musics/notes.inc            ; Frequencies (PIT Dividers)
   INCLUDE assets/gfx/maps/map_t_0.inc    ; Map transparent
 
   ; --- System ---
+  INCLUDE assets/sys/speaker.inc         ; Speaker vars
   INCLUDE assets/sys/tick.inc            ; Tick data
   INCLUDE assets/sys/errors.inc          ; Error messages
 

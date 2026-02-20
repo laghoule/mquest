@@ -14,7 +14,7 @@ PARSE_CMDLINE_ARGS PROC
   SAVE_REGS
 
   XOR CH, CH
-  MOV CL, ES:[80h]          ; Lenght of the cmdline arguments
+  MOV CL, ES:[80h]          ; CX = Lenght of the cmdline arguments
   JCXZ @pa_done
 
   ; Supported arguments: /m (mute music)
@@ -32,7 +32,7 @@ PARSE_CMDLINE_ARGS PROC
   CMP AL, 'm'
   JNE @pa_next_char
 
-  MOV mute_flag, 1          ; Mute music
+  MOV mute_flag, 1          ; Muting music
 
 @pa_next_char:
   INC SI                    ; Move to the next character

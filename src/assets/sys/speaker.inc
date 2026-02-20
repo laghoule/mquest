@@ -1,0 +1,1 @@
+mute_flag                 DB 0    ; Cmdline args /m for muting music
