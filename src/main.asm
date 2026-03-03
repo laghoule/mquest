@@ -25,10 +25,10 @@ INCLUDE defs/musics/consts.inc           ; Musics constants
   INCLUDE defs/musics/themes.inc         ; Music variables and songs
 
   ; --- Characters ---
-  INCLUDE defs/chars/types.inc       ; Characters types definitions
-  INCLUDE defs/chars/mia.inc         ; Mia animations sprite data
-  INCLUDE defs/chars/grandma.inc     ; Grandma animations sprite data
-  INCLUDE defs/chars/sprites.inc     ; Characters sprites tables and data
+  INCLUDE defs/chars/types.inc           ; Characters types definitions
+  INCLUDE defs/chars/mia.inc             ; Mia animations sprite data
+  INCLUDE defs/chars/grandma.inc         ; Grandma animations sprite data
+  INCLUDE defs/chars/sprites.inc         ; Characters sprites tables and data
 
   ; --- Palettes ---
   INCLUDE defs/gfx/pals/pal.inc          ; Palette data
