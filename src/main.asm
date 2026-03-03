@@ -13,73 +13,61 @@ INCLUDE defs/macros/chars.inc            ; Character macros
 INCLUDE defs/macros/sys.inc              ; System macros
 INCLUDE defs/macros/vga.inc              ; VGA macros
 
-; --- System ---
-INCLUDE defs/sys/headers.inc             ; files headers size
-INCLUDE defs/sys/key.inc                 ; Keyboard
-INCLUDE defs/sys/video.inc               ; Video
-
-; --- Characters ---
-INCLUDE defs/chars/chars.inc             ; Character
-
-; --- Graphics ---
-INCLUDE defs/gfx/maps.inc                ; Maps
-INCLUDE defs/gfx/tiles.inc               ; Tiles
-
-; --- Game ---
-INCLUDE defs/game/collis.inc             ; Collision
-INCLUDE defs/game/dir.inc                ; Directions
-
-; --- Music ---
-INCLUDE defs/musics/notes.inc            ; Frequencies (PIT Dividers)
+; --- Constants ---
+INCLUDE defs/sys/consts.inc              ; System constants
+INCLUDE defs/chars/consts.inc            ; Character constants
+INCLUDE defs/gfx/consts.inc              ; Graphics constants
+INCLUDE defs/game/consts.inc             ; Game constants
+INCLUDE defs/musics/consts.inc           ; Musics constants
 
 .DATA
   ; --- Musics ---
-  INCLUDE assets/musics/themes.inc       ; Music variables and songs
+  INCLUDE defs/musics/themes.inc         ; Music variables and songs
 
   ; --- Characters ---
-  INCLUDE assets/gfx/chars/types.inc     ; Characters types definitions
-  INCLUDE assets/gfx/chars/mia.inc       ; Mia animations sprite data
-  INCLUDE assets/gfx/chars/grandma.inc   ; Grandma animations sprite data
-  INCLUDE assets/gfx/chars/sprites.inc   ; Characters sprites tables and data
+  INCLUDE defs/chars/types.inc       ; Characters types definitions
+  INCLUDE defs/chars/mia.inc         ; Mia animations sprite data
+  INCLUDE defs/chars/grandma.inc     ; Grandma animations sprite data
+  INCLUDE defs/chars/sprites.inc     ; Characters sprites tables and data
 
   ; --- Palettes ---
-  INCLUDE assets/gfx/pals/pal.inc        ; Palette data
+  INCLUDE defs/gfx/pals/pal.inc          ; Palette data
 
   ; --- Tiles ---
-  INCLUDE assets/gfx/tiles/tiles.inc     ; Tiles data and tables
-  INCLUDE assets/gfx/tiles/grass.inc     ; Grass tiles data
-  INCLUDE assets/gfx/tiles/flowers.inc   ; Items tiles data
-  INCLUDE assets/gfx/tiles/rocks.inc     ; Rocks tiles data
-  INCLUDE assets/gfx/tiles/plants.inc    ; Plants tiles data
-  INCLUDE assets/gfx/tiles/objects.inc   ; Objects tiles data
+  INCLUDE defs/gfx/tiles/tiles.inc       ; Tiles data and tables
+  INCLUDE defs/gfx/tiles/grass.inc       ; Grass tiles data
+  INCLUDE defs/gfx/tiles/flowers.inc     ; Items tiles data
+  INCLUDE defs/gfx/tiles/rocks.inc       ; Rocks tiles data
+  INCLUDE defs/gfx/tiles/plants.inc      ; Plants tiles data
+  INCLUDE defs/gfx/tiles/objects.inc     ; Objects tiles data
 
   ; --- Maps ---
-  INCLUDE assets/gfx/maps/types.inc      ; Map types definitions
-  INCLUDE assets/gfx/maps/map.inc        ; Map data
-  INCLUDE assets/gfx/maps/map_o_0.inc    ; Map opaque
-  INCLUDE assets/gfx/maps/map_t_0.inc    ; Map transparent
+  INCLUDE defs/gfx/maps/types.inc        ; Map types definitions
+  INCLUDE defs/gfx/maps/map.inc          ; Map data
+  INCLUDE defs/gfx/maps/map_o_0.inc      ; Map opaque
+  INCLUDE defs/gfx/maps/map_t_0.inc      ; Map transparent
 
   ; --- System ---
-  INCLUDE assets/sys/speaker.inc         ; Speaker vars
-  INCLUDE assets/sys/tick.inc            ; Tick data
-  INCLUDE assets/sys/errors.inc          ; Error messages
+  INCLUDE defs/sys/speaker.inc           ; Speaker vars
+  INCLUDE defs/sys/tick.inc              ; Tick data
+  INCLUDE defs/sys/errors.inc            ; Error messages
 
   TX DW 0                                ; Temporary software register
 
 .CODE
-  INCLUDE game/player.asm       ; Player functions
-  INCLUDE game/collis.asm       ; Collision functions
-  INCLUDE sys/args.asm          ; Command-line functions
-  INCLUDE sys/print.asm         ; Print functions
-  INCLUDE sys/file.asm          ; File functions
-  INCLUDE sys/string.asm        ; String functions
-  INCLUDE sys/vga.asm           ; VGA functions
-  INCLUDE sys/timer.asm         ; Timer functions
-  INCLUDE sys/speaker.asm       ; Speaker functions
-  INCLUDE sys/input.asm         ; Inputs functions
-  INCLUDE gfx/char.asm          ; Caracters drawing functions
-  INCLUDE gfx/tile.asm          ; Tiles drawing functions
-  INCLUDE gfx/map.asm           ; Maps drawing functions
+  INCLUDE game/player.asm                ; Player functions
+  INCLUDE game/collis.asm                ; Collision functions
+  INCLUDE sys/args.asm                   ; Command-line functions
+  INCLUDE sys/print.asm                  ; Print functions
+  INCLUDE sys/file.asm                   ; File functions
+  INCLUDE sys/string.asm                 ; String functions
+  INCLUDE sys/vga.asm                    ; VGA functions
+  INCLUDE sys/timer.asm                  ; Timer functions
+  INCLUDE sys/speaker.asm                ; Speaker functions
+  INCLUDE sys/input.asm                  ; Inputs functions
+  INCLUDE gfx/char.asm                   ; Caracters drawing functions
+  INCLUDE gfx/tile.asm                   ; Tiles drawing functions
+  INCLUDE gfx/map.asm                    ; Maps drawing functions
 
 MAIN PROC
   ; ---Initialize data segment---
@@ -90,12 +78,12 @@ MAIN PROC
 
   ; TODO: add a load file asser proc
 
-  MOV DX, OFFSET file_grandma         ; File name of grandma tileset in DX
+  MOV DX, OFFSET grandma_tile_file    ; File name of grandma tileset in DX
   LEA DI, grandma_buffer              ; Set destination buffer address
   CALL LOAD_FILE                      ; Load file function
   JC @m_exit                          ; Jump to exit if carry flag set (error)
 
-  MOV DX, OFFSET file_mia             ; File name of mia tileset in DX
+  MOV DX, OFFSET mia_tile_file             ; File name of mia tileset in DX
   LEA DI, mia_buffer                  ; Set destination buffer address
   CALL LOAD_FILE                      ; Load file function
   JC @m_exit                          ; Jump to exit if carry flag set (error)

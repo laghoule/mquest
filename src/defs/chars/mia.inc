@@ -5,9 +5,9 @@
 ; ------------------------------------------------------------------------------
 mia_data CHARACTER <150, 90, DOWN_DIR, OFFSET mia_dir_table, 0, OFFSET mia_bg_buffer, OFFSET mia_buffer>
 
-file_mia                DB "mia.pic", 0       ; Mia tileset
-mia_bg_buffer           DB CHAR_SIZE DUP(0)   ; Mia background buffered sprite
-mia_buffer              DB 3500 DUP(0)        ; Mia buffered sprite
+mia_tile_file           DB "assets/mia.pic", 0  ; Mia tileset
+mia_bg_buffer           DB CHAR_SIZE DUP(0)     ; Mia background buffered sprite
+mia_buffer              DB 3500 DUP(0)          ; Mia buffered sprite
 
 ; --- Mia movement data table ---
 ; Must follow orders define in defs/game/dir.inc

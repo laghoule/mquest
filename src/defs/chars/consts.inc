@@ -24,3 +24,11 @@ CH_DIR_TABLE_PTR     EQU 6    ; Pointer to the direction table
 CH_ANIM_IDX          EQU 8    ; Index of the current animation frame
 CH_BG_SAVE_PTR       EQU 10   ; Pointer to the background save buffer
 CH_SPRITE_BUFFER_PTR EQU 12   ; Pointer to the sprite buffer
+
+; --- Mia hitbox coordinates ---
+HIT_LEFT_X        EQU 1   ; Left X
+HIT_RIGHT_X       EQU 15  ; Right X
+HIT_HEAD_Y        EQU 10  ; Top Y (Head)
+HIT_BOTTOM_Y      EQU 15  ; Bottom Y (Feet)
+HIT_RIGHT_FOOT_X  EQU 11  ; Left Foot X
+HIT_LEFT_FOOT_X   EQU 5   ; Right Foot X

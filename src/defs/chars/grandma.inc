@@ -3,9 +3,9 @@
 ; ------------------------------------------------------------------------------
 grandma_data CHARACTER <280, 45, DOWN_DIR, OFFSET grandma_dir_table, 0, OFFSET grandma_bg_buffer, OFFSET grandma_buffer>
 
-file_grandma                DB "grandma.pic", 0   ; Grandma tileset
-grandma_bg_buffer           DB CHAR_SIZE DUP(0)   ; Grandma background buffered sprite
-grandma_buffer              DB 3500 DUP(0)        ; Grandma buffered sprite
+grandma_tile_file           DB "assets/grandma.pic", 0  ; Grandma tileset
+grandma_bg_buffer           DB CHAR_SIZE DUP(0)         ; Grandma background buffered sprite
+grandma_buffer              DB 3500 DUP(0)              ; Grandma buffered sprite
 
 ; --- Grandma movement data table ---
 ; Must follow orders define in defs/game/dir.inc
