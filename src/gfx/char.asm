@@ -70,7 +70,7 @@ DRAW_CHARACTER PROC
 
   ; --- Sprite buffered data ---
   MOV SI, [BX].CHARACTER.ch_buf_addr       ; Load character offset buffer
-  ADD SI, TILESET_HDR_SIZE                 ; Jump above header size
+  ADD SI, PIC_HDR_SIZE                     ; Jump above .pic header size
   ADD SI, AX                               ; Tile index in the tileset buffef
 
   ; --- Position ---

@@ -14,7 +14,7 @@ INCLUDE defs/macros/sys.inc              ; System macros
 INCLUDE defs/macros/vga.inc              ; VGA macros
 
 ; --- System ---
-INCLUDE defs/sys/dat.inc                 ; .dat file header
+INCLUDE defs/sys/headers.inc             ; files headers size
 INCLUDE defs/sys/key.inc                 ; Keyboard
 INCLUDE defs/sys/video.inc               ; Video
 

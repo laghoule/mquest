@@ -1,1 +1,0 @@
-TILESET_HDR_SIZE EQU 5  ; .dat for tileset header size
