@@ -1,7 +1,8 @@
 ; Tile width: 1 byte
 ; Tile height: 1 byte
-; Number of pixel total: 1 byte
-PIC_HDR_SIZE EQU 3      ; .pic file format
+; Number of pixel total: 2 bytes
+; Number of tiles total: 1 byte
+PIC_HDR_SIZE EQU 5      ; .pic file format
 
 ; Tile width: 1 byte
 ; Tile height: 1 byte
