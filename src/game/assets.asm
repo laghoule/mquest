@@ -6,14 +6,13 @@
 ;----------------------------------------------------------------
 ; LOAD_ASSETS
 ; Description: Loads all assets from the assets table
-; Input: AX : Offset of assets table
+; Input: AX : Offset of assets table, CX : Number of assets
 ; Output: None
 ; Modifed: Carry flag (set: error, cleared: success)
 ;----------------------------------------------------------------
 LOAD_ASSETS PROC
   SAVE_REGS
 
-  MOV CX, 2                           ; assets count (TODO, precalculate len of assets array)
   MOV SI, AX                          ; Load address of first asset into BX
 
 @la_next_assets:

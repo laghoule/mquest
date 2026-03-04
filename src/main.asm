@@ -82,6 +82,7 @@ MAIN PROC
   CALL PARSE_CMDLINE_ARGS             ; Process command-line arguments
 
   MOV AX, OFFSET assets_table         ; Load address of assets table into AX
+  MOV CX, assets_count                ; Load the count of assets in CX for loop counter
   CALL LOAD_ASSETS                    ; Load all assets
   JC @m_exit                          ; If error, exit
 
