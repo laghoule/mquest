@@ -1,3 +1,8 @@
+;  Copyright (C) 2025, 2026 Pascal Gauthier
+;  This program is free software: you can redistribute it and/or modify
+;  it under the terms of the GNU General Public License as published by
+;  the Free Software Foundation, either version 3 of the License.
+
 ;----------------------------------------------------------------
 ; CHECK_COLLISION
 ; Description: Checks if a position is colliding with an object

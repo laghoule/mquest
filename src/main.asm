@@ -21,6 +21,10 @@ INCLUDE defs/game/consts.inc             ; Game constants
 INCLUDE defs/musics/consts.inc           ; Musics constants
 
 .DATA
+  ; --- game ---
+  INCLUDE defs/game/types.inc            ; Game types
+  INCLUDE defs/game/assets.inc           ; Game assets
+
   ; --- Musics ---
   INCLUDE defs/musics/themes.inc         ; Music variables and songs
 
@@ -55,6 +59,7 @@ INCLUDE defs/musics/consts.inc           ; Musics constants
   TX DW 0                                ; Temporary software register
 
 .CODE
+  INCLUDE game/assets.asm                ; Assets functions
   INCLUDE game/player.asm                ; Player functions
   INCLUDE game/collis.asm                ; Collision functions
   INCLUDE sys/args.asm                   ; Command-line functions
@@ -76,17 +81,9 @@ MAIN PROC
 
   CALL PARSE_CMDLINE_ARGS             ; Process command-line arguments
 
-  ; TODO: add a load file asser proc
-
-  MOV DX, OFFSET grandma_tile_file    ; File name of grandma tileset in DX
-  LEA DI, grandma_buffer              ; Set destination buffer address
-  CALL LOAD_FILE                      ; Load file function
-  JC @m_exit                          ; Jump to exit if carry flag set (error)
-
-  MOV DX, OFFSET mia_tile_file             ; File name of mia tileset in DX
-  LEA DI, mia_buffer                  ; Set destination buffer address
-  CALL LOAD_FILE                      ; Load file function
-  JC @m_exit                          ; Jump to exit if carry flag set (error)
+  MOV AX, OFFSET assets_table         ; Load address of assets table into AX
+  CALL LOAD_ASSETS                    ; Load all assets
+  JC @m_exit                          ; If error, exit
 
   ; ---Initialize mode 13h with bios call / VGA---
   MOV AX, 13h                         ; Mode 13h (320x200 256 colors)
