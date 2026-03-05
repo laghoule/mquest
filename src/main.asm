@@ -24,6 +24,8 @@ INCLUDE defs/musics/consts.inc           ; Musics constants
   ; --- game ---
   INCLUDE defs/game/types.inc            ; Game types
   INCLUDE defs/game/assets.inc           ; Game assets
+  INCLUDE defs/game/map-refs.inc         ; Map references
+  INCLUDE defs/game/map-scne.inc        ; Map scene data
 
   ; --- Musics ---
   INCLUDE defs/musics/themes.inc         ; Music variables and songs
@@ -46,7 +48,6 @@ INCLUDE defs/musics/consts.inc           ; Musics constants
   INCLUDE defs/gfx/tiles/objects.inc     ; Objects tiles data
 
   ; --- Maps ---
-  INCLUDE defs/gfx/maps/types.inc        ; Map types definitions
   INCLUDE defs/gfx/maps/map.inc          ; Map data
   INCLUDE defs/gfx/maps/map_o_0.inc      ; Map opaque
   INCLUDE defs/gfx/maps/map_t_0.inc      ; Map transparent

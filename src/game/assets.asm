@@ -18,8 +18,8 @@ LOAD_ASSETS PROC
 @la_next_assets:
   MOV BX, [SI]                        ; Load address of asset into BX
   
-  MOV DX, [BX].ASSETS.file_addr       ; File name in DX
-  MOV DI, [BX].ASSETS.buffer_addr     ; Set destination buffer address
+  MOV DX, [BX].ASSET.file_addr        ; File name in DX
+  MOV DI, [BX].ASSET.buffer_addr      ; Set destination buffer address
   CALL LOAD_FILE                      ; Load file function
   JC @la_error                        ; Jump to exit if carry flag set (error)
 
