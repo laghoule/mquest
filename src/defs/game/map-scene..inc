@@ -11,48 +11,50 @@
 ;   West scene
 ; >
 
+world_bg_buffer DB 882 DUP(0)
+world_fg_buffer DB 882 DUP(0)
 
 ; --- Scene # 0 ---
 SCENE_0_0 SCENE < \
-  <OFFSET world_bg_buffer + 2, 0>, \
-  <OFFSET world_fg_buffer + 2, 1>, \
+  OFFSET world_bg_buffer + 2, \
+  OFFSET world_fg_buffer + 2, \
   OFFSET MUSIC_0_0, \
   0, \
   OFFSET SCENE_0_1, \
   OFFSET SCENE_1_0, \
-  0  \
+  0 \
 >
 
 ; --- Scene # 1 ---
 SCENE_1_0 SCENE < \
-  <OFFSET world_bg_buffer + 222, 0>, \
-  <OFFSET world_fg_buffer + 222, 1>, \
+  OFFSET world_bg_buffer + 222, \
+  OFFSET world_fg_buffer + 222, \
   OFFSET MUSIC_1_0, \
   0, \
   OFFSET SCENE_1_1, \
   0, \
-  OFFSET SCENE_0_0  \
+  OFFSET SCENE_0_0 \
 >
 
 ; --- Scene # 2 ---
 SCENE_0_1 SCENE < \
-  <OFFSET world_bg_buffer + 442, 0>, \
-  <OFFSET world_fg_buffer + 442, 1>, \
+  OFFSET world_bg_buffer + 442, \
+  OFFSET world_fg_buffer + 442, \
   OFFSET MUSIC_0_1, \
   OFFSET SCENE_0_0, \
   0, \
   OFFSET SCENE_1_1, \
-  0  \
+  0 \
 >
 
 ; --- Scene # 3 ---
 SCENE_1_1 SCENE < \
-  <OFFSET world_bg_buffer + 662, 0>, \
-  <OFFSET world_fg_buffer + 662, 1>, \
+  OFFSET world_bg_buffer + 662, \
+  OFFSET world_fg_buffer + 662, \
   OFFSET MUSIC_1_1, \
   OFFSET SCENE_1_0, \
   0, \
   0, \
-  OFFSET SCENE_0_1  \
+  OFFSET SCENE_0_1 \
 >
 
