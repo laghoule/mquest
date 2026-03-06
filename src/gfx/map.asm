@@ -13,33 +13,43 @@
 DRAW_OPAQUE_MAP PROC
   SAVE_REGS
 
-  MOV SI, AX
-  
+    MOV BX, AX
+    MOV SI, [BX].SCENE.bg_buffer
+
+  ; til header
+  ; ----------
+  ; offset 0 tile width
+  ; offset 1 tile height
+  ; offset 2 tile count
+
+  ; map header
+  ; ----------
+  ; offset 0 scene width
+  ; offset 1 scene height
+
   MOV pos_y, 0
-  MOV DX, TILE_ROWS   ; Lines
+  MOV DX, TILE_ROWS   ; Lines (TODO: TILE_ROWS should be dynamic)
 
   @dom_draw_line:
-    MOV CX, TILE_COLS ; Columns
+    MOV CX, TILE_COLS ; Columns (TODO: TILE_COLS should be dynamic)
     MOV pos_x, 0
 
     @dom_draw_tile:
       PUSH CX
-      ; 'tile' is loaded outside of this proc (before)
-      ; and is used in DRAW_TILE_OPAQUE
       LODSB
 
-      XOR AH, AH
-      SHL AX, 1                       ; Convert tile index to offset (DW)
-      MOV BX, AX
-      MOV AX, [tiles_table + BX]      ; Address of the tile in the tiles table
+      ; Tile size is 256
+      MOV AH, AL                      ; Bit shift of 8 = multiply by 256
+      XOR AL, AL
 
+      ADD AX, OFFSET map_tileset_buffer
       CALL DRAW_TILE_OPAQUE           ; Draw opaque tile
 
       POP CX                          ; Restore columns counter
-      ADD pos_x, TILE_WIDTH           ; Increment position by tile width
+      ADD pos_x, TILE_WIDTH           ; Increment position by tile width (TODO: TILE_WIDTH should be dynamic)
       LOOP @dom_draw_tile             ; Loop until all columns are drawn
 
-    ADD pos_y, TILE_HEIGHT            ; Increment position by tile height
+    ADD pos_y, TILE_HEIGHT            ; Increment position by tile height (TODO: TILE_HEIGHT should be dynamic)
     DEC DX                            ; Decrement rows counter
     JNZ @dom_draw_line                ; Loop until all lines are drawn
 

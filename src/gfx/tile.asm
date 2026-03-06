@@ -13,7 +13,8 @@ DRAW_TILE_OPAQUE PROC
   SAVE_REGS
   CLD                             ; Clear direction flag
 
-  MOV SI, AX                      ; Tileset offset
+  MOV BX, AX
+  LEA SI, [BX + 3]                ; Tileset offset + 3 header = tiles data (TODO: 3 should be a const)
   SYNC_POS_REGS                   ; AX=pos_x, BX=pos_y
   CALC_VGA_POSITION AX, BX        ; Calculate VGA position in DI
 

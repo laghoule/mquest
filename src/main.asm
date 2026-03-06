@@ -97,8 +97,7 @@ MAIN PROC
   CALL LOAD_GAME_PALETTE
 
   ; --- Draw background and character ---
-  MOV AX, OFFSET map_opq_0
-  ;MOV AX, map_scene_0_0
+  MOV AX, OFFSET map_scene_0_0
   CALL DRAW_OPAQUE_MAP                ; This is the base map layer
 
   MOV AX, OFFSET map_trns_0
