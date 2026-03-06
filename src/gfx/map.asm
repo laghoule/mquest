@@ -13,10 +13,10 @@
 DRAW_OPAQUE_MAP PROC
   SAVE_REGS
 
+  MOV SI, AX
+  
   MOV pos_y, 0
   MOV DX, TILE_ROWS   ; Lines
-
-  MOV SI, curr_map_opq
 
   @dom_draw_line:
     MOV CX, TILE_COLS ; Columns
