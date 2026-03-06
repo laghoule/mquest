@@ -32,7 +32,6 @@ DRAW_OPAQUE_MAP PROC
       SHL AX, 1                       ; Convert tile index to offset (DW)
       MOV BX, AX
       MOV AX, [tiles_table + BX]      ; Address of the tile in the tiles table
-      MOV tile_addr, AX
 
       CALL DRAW_TILE_OPAQUE           ; Draw opaque tile
 

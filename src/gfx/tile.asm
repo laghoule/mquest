@@ -6,15 +6,15 @@
 ; ---------------------------------------
 ; DRAW_TILE_OPAQUE
 ; Description: Draws a tile with opacity
-; Input:  tile, AX: x pos, BX: y pos
+; Input:  AX = tileset offset
 ; Output: None
 ; ---------------------------------------
 DRAW_TILE_OPAQUE PROC
   SAVE_REGS
   CLD                             ; Clear direction flag
 
-  MOV SI, tile_addr               ; Load tile
-  SYNC_POS_REGS                   ; pos_x, pos_y
+  MOV SI, AX                      ; Tileset offset
+  SYNC_POS_REGS                   ; AX=pos_x, BX=pos_y
   CALC_VGA_POSITION AX, BX        ; Calculate VGA position in DI
 
   MOV DX, TILE_HEIGHT             ; Height of the sprite (number of lines)
