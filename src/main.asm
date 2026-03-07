@@ -39,10 +39,8 @@ INCLUDE defs/musics/consts.inc           ; Musics constants
   ; --- Palettes ---
   INCLUDE defs/gfx/pals/pal.inc          ; Palette data
 
-  ; --- Maps ---
-  INCLUDE defs/gfx/maps/map.inc          ; Map data
-  INCLUDE defs/gfx/maps/map_o_0.inc      ; Map opaque
-  INCLUDE defs/gfx/maps/map_t_0.inc      ; Map transparent
+  ; --- Scenes ---
+  INCLUDE defs/gfx/scene/scene.inc       ; Scene data
 
   ; --- System ---
   INCLUDE defs/sys/speaker.inc           ; Speaker vars
@@ -91,11 +89,13 @@ MAIN PROC
   ; --- Draw background and character ---
   MOV BX, OFFSET map_scene_0_0
   MOV AX, [BX].SCENE.bg_buffer
+  MOV curr_scne_bg, AX
   XOR BX, BX
   CALL DRAW_SCENE                     ; This is the base map layer
 
   MOV BX, OFFSET map_scene_0_0
   MOV AX, [BX].SCENE.fg_buffer
+  MOV curr_scne_fg, AX
   MOV BX, 1
   CALL DRAW_SCENE                     ; This is the base map layer
 
