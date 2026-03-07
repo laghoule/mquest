@@ -39,14 +39,6 @@ INCLUDE defs/musics/consts.inc           ; Musics constants
   ; --- Palettes ---
   INCLUDE defs/gfx/pals/pal.inc          ; Palette data
 
-  ; --- Tiles ---
-  INCLUDE defs/gfx/tiles/tiles.inc       ; Tiles data and tables
-  INCLUDE defs/gfx/tiles/grass.inc       ; Grass tiles data
-  INCLUDE defs/gfx/tiles/flowers.inc     ; Items tiles data
-  INCLUDE defs/gfx/tiles/rocks.inc       ; Rocks tiles data
-  INCLUDE defs/gfx/tiles/plants.inc      ; Plants tiles data
-  INCLUDE defs/gfx/tiles/objects.inc     ; Objects tiles data
-
   ; --- Maps ---
   INCLUDE defs/gfx/maps/map.inc          ; Map data
   INCLUDE defs/gfx/maps/map_o_0.inc      ; Map opaque

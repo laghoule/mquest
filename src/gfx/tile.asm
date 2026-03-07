@@ -101,7 +101,7 @@ GET_TILE_PROP PROC
 
   MOV BX, AX                  ; BX = Final Map Index (0-239)
 
-  MOV AL, [TILES_PROPS + BX]  ; Load tile properties via the index
+  MOV AL, [map_tiles_props + BX]  ; Load tile properties via the index
   MOV AH, BL                  ; Save the tile type in AH
 
   MOV TX, AX                  ; Use a software register to temporary store AX
