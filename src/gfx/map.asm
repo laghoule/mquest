@@ -39,11 +39,15 @@ DRAW_OPAQUE_MAP PROC
       LODSB
 
       ; Tile size is 256
+      ; AL = index of tile in tileset
+      ; AX = index of tile in tileset * 256
       MOV AH, AL                      ; Bit shift of 8 = multiply by 256
       XOR AL, AL
 
+      ; AX = offset of tile in tileset buffer
       ADD AX, OFFSET map_tileset_buffer
-      CALL DRAW_TILE_OPAQUE           ; Draw opaque tile
+      MOV BX, 1                       ; Opaque tile
+      CALL DRAW_TILE                  ; Draw opaque tile
 
       POP CX                          ; Restore columns counter
       ADD pos_x, TILE_WIDTH           ; Increment position by tile width (TODO: TILE_WIDTH should be dynamic)

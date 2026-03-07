@@ -4,12 +4,13 @@
 ;  the Free Software Foundation, either version 3 of the License.
 
 ; ---------------------------------------
-; DRAW_TILE_OPAQUE
-; Description: Draws a tile with opacity
-; Input:  AX = tileset offset
+; DRAW_TILE
+; Description: Draws a tile with or without transparency
+; Input:  AX = tileset offset, BX = map type (bg || fg)
 ; Output: None
+; Modified: None
 ; ---------------------------------------
-DRAW_TILE_OPAQUE PROC
+DRAW_TILE PROC
   SAVE_REGS
   CLD                             ; Clear direction flag
 
@@ -21,22 +22,40 @@ DRAW_TILE_OPAQUE PROC
   MOV DX, TILE_HEIGHT             ; Height of the sprite (number of lines)
 
   ; --- draw the tile loop
-  @dto_draw_line:
+  @dt_draw_line:
     MOV CX, TILE_WIDTH
     PUSH DI                       ; Save current line start
+
+    ; BX determine the map type
+    ; 0 = bg (opaque)
+    ; 1 = fg (transparent)
+    AND BX, BX
+    TEST BX, 1
+    JNZ @dt_draw_pixel
 
     ; MOVSB copies a byte from DS:SI to ES:DI and increments both pointers
     ; REP repeats the MOVSB instruction CX times (line width)
     REP MOVSB
+    JMP @dt_next_line
 
-    POP DI                        ; Restore line start
-    ADD DI, SCREEN_WIDTH          ; Move DI to the next line
-    DEC DX
-    JNZ @dto_draw_line            ; Draw next line if tile is not entirely draw
+    @dt_draw_pixel:
+      LODSB                       ; Load from SI in AL then increment SI
+      OR AL, AL                   ; Check if pixel is transparent
+      JZ @dt_skip_pixel          ; Skip pixel if transparent
+      MOV ES:[DI], AL             ; Draw pixel
+      @dt_skip_pixel:
+        INC DI                    ;  Next pixel on screen
+        LOOP @dt_draw_pixel
+
+    @dt_next_line:
+      POP DI                        ; Restore line start
+      ADD DI, SCREEN_WIDTH          ; Move DI to the next line
+      DEC DX
+      JNZ @dt_draw_line            ; Draw next line if tile is not entirely draw
 
   RESTORE_REGS
   RET
-DRAW_TILE_OPAQUE ENDP
+DRAW_TILE ENDP
 
 ; --------------------------------------------
 ; DRAW_TILE_TRANSPARENT
