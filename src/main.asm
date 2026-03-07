@@ -73,7 +73,7 @@ INCLUDE defs/musics/consts.inc           ; Musics constants
   INCLUDE sys/input.asm                  ; Inputs functions
   INCLUDE gfx/char.asm                   ; Caracters drawing functions
   INCLUDE gfx/tile.asm                   ; Tiles drawing functions
-  INCLUDE gfx/map.asm                    ; Maps drawing functions
+  INCLUDE gfx/scene.asm                  ; Scene drawing functions
 
 MAIN PROC
   ; ---Initialize data segment---
@@ -97,12 +97,15 @@ MAIN PROC
   CALL LOAD_GAME_PALETTE
 
   ; --- Draw background and character ---
-  MOV AX, OFFSET map_scene_0_0
-  CALL DRAW_OPAQUE_MAP                ; This is the base map layer
+  MOV BX, OFFSET map_scene_0_0
+  MOV AX, [BX].SCENE.bg_buffer
+  XOR BX, BX
+  CALL DRAW_SCENE                     ; This is the base map layer
 
-  MOV AX, OFFSET map_trns_0
-  MOV curr_map_trns, AX
-  CALL DRAW_TRANSPARENT_MAP           ; This is the transparent items on the map
+  MOV BX, OFFSET map_scene_0_0
+  MOV AX, [BX].SCENE.fg_buffer
+  MOV BX, 1
+  CALL DRAW_SCENE                     ; This is the base map layer
 
   ; Grandma
   MOV AX, 1                           ; Charater index

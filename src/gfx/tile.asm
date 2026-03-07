@@ -29,8 +29,7 @@ DRAW_TILE PROC
     ; BX determine the map type
     ; 0 = bg (opaque)
     ; 1 = fg (transparent)
-    AND BX, BX
-    TEST BX, 1
+    TEST BX, BX
     JNZ @dt_draw_pixel
 
     ; MOVSB copies a byte from DS:SI to ES:DI and increments both pointers
@@ -56,45 +55,6 @@ DRAW_TILE PROC
   RESTORE_REGS
   RET
 DRAW_TILE ENDP
-
-; --------------------------------------------
-; DRAW_TILE_TRANSPARENT
-; Description: Draws a tile with transparency
-; Input:  tile, pos_x, pos_y
-; Output: None
-; --------------------------------------------
-DRAW_TILE_TRANSPARENT PROC
-  SAVE_REGS
-  CLD                             ; Clear direction flag
-
-  MOV SI, tile_addr               ; Load tile
-  SYNC_POS_REGS                   ; pos_x, pos_y
-  CALC_VGA_POSITION AX, BX        ; Calculate VGA position in DI
-
-  MOV DX, TILE_HEIGHT             ; Height of the sprite (number of lines)
-
-  ; --- draw the tile loop
-  @dtt_draw_line:
-    MOV CX, TILE_WIDTH
-    PUSH DI                       ; Save current line start
-
-    @dtt_draw_pixel:
-      LODSB                       ; Load from SI in AL then increment SI
-      OR AL, AL                   ; Check if pixel is transparent
-      JZ @dtt_skip_pixel          ; Skip pixel if transparent
-      MOV ES:[DI], AL             ; Draw pixel
-      @dtt_skip_pixel:
-        INC DI                    ;  Next pixel on screen
-        LOOP @dtt_draw_pixel
-
-    POP DI                        ; Restore line start
-    ADD DI, SCREEN_WIDTH          ; Move DI to the next line
-    DEC DX                        ; Decrement line counter
-    JNZ @dtt_draw_line            ; Draw next line if tile is not entirely draw
-
-  RESTORE_REGS
-  RET
-DRAW_TILE_TRANSPARENT ENDP
 
 ;----------------------------------------------
 ; GET_TILE_PROP
