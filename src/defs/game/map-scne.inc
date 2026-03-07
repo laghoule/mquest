@@ -15,15 +15,15 @@ map_bg_buffer DB 882 DUP(0)
 map_fg_buffer DB 882 DUP(0)
 
 ; --- Scene # 0 ---
-map_scene_0_0 SCENE <OFFSET map_bg_buffer + 2, OFFSET map_fg_buffer + 2, 0, OFFSET map_scene_0_1, OFFSET map_scene_1_0, 0>
+map_scene_0_0 SCENE <OFFSET map_bg_buffer + 0, OFFSET map_fg_buffer + 0, 0, OFFSET map_scene_0_1, OFFSET map_scene_1_0, 0>
 
 ; --- Scene # 1 ---
-map_scene_1_0 SCENE <OFFSET map_bg_buffer + 222, OFFSET map_fg_buffer + 222, 0, OFFSET map_scene_1_1, 0, OFFSET map_scene_0_0>
+map_scene_1_0 SCENE <OFFSET map_bg_buffer + 220, OFFSET map_fg_buffer + 220, 0, OFFSET map_scene_1_1, 0, OFFSET map_scene_0_0>
 
 ; --- Scene # 2 ---
-map_scene_0_1 SCENE <OFFSET map_bg_buffer + 442, OFFSET map_fg_buffer + 442, OFFSET map_scene_0_0, 0, OFFSET map_scene_1_1, 0>
+map_scene_0_1 SCENE <OFFSET map_bg_buffer + 440, OFFSET map_fg_buffer + 440, OFFSET map_scene_0_0, 0, OFFSET map_scene_1_1, 0>
 
 ; --- Scene # 3 ---
-map_scene_1_1 SCENE <OFFSET map_bg_buffer + 662, OFFSET map_fg_buffer + 662, OFFSET map_scene_1_0, 0, 0, OFFSET map_scene_0_1>
+map_scene_1_1 SCENE <OFFSET map_bg_buffer + 660, OFFSET map_fg_buffer + 660, OFFSET map_scene_1_0, 0, 0, OFFSET map_scene_0_1>
 
 

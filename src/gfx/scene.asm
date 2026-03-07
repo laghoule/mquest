@@ -14,6 +14,7 @@ DRAW_SCENE PROC
   SAVE_REGS
 
     MOV SI, AX
+    ADD SI, 2                          ; Add map header size (TODO: should be a const)
 
   ; til header
   ; ----------
@@ -27,10 +28,10 @@ DRAW_SCENE PROC
   ; offset 1 scene height
 
   MOV pos_y, 0
-  MOV DX, TILE_ROWS   ; Lines (TODO: TILE_ROWS should be dynamic)
+  MOV DX, TILE_ROWS                    ; Lines (TODO: TILE_ROWS should be dynamic)
 
   @dom_draw_line:
-    MOV CX, TILE_COLS ; Columns (TODO: TILE_COLS should be dynamic)
+    MOV CX, TILE_COLS                  ; Columns (TODO: TILE_COLS should be dynamic)
     MOV pos_x, 0
 
     @dom_draw_tile:
@@ -41,7 +42,7 @@ DRAW_SCENE PROC
       ; 0 = bg (opaque)
       ; 1 = fg (transparent)
       TEST BX, BX
-      JZ @dom_draw_tile_opaque       ; TODO: Fix bad label
+      JZ @dom_draw_tile_opaque         ; TODO: Fix bad label
 
       TEST AL, AL                      ; Check if tile ID is VOID (0)
       JZ @dom_skip_tile                ; Skip if zero
