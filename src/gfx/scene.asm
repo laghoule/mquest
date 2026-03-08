@@ -13,18 +13,7 @@
 DRAW_SCENE PROC
   SAVE_REGS
 
-    MOV SI, AX
-
-  ; til header
-  ; ----------
-  ; offset 0 tile width
-  ; offset 1 tile height
-  ; offset 2 tile count
-
-  ; map header
-  ; ----------
-  ; offset 0 scene width
-  ; offset 1 scene height
+  MOV SI, AX
 
   MOV pos_y, 0
   MOV DX, MAP_SCENE_HEIGHT             ; Lines / height
