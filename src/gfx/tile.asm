@@ -15,7 +15,7 @@ DRAW_TILE PROC
   CLD                             ; Clear direction flag
 
   MOV BX, AX
-  LEA SI, [BX + 3]                ; Tileset offset + 3 header = tiles data (TODO: 3 should be a const)
+  LEA SI, [BX]                    ; Tileset offset + 3 header = tiles data (TODO: 3 should be a const)
   SYNC_POS_REGS                   ; AX=pos_x, BX=pos_y
   CALC_VGA_POSITION AX, BX        ; Calculate VGA position in DI
 
@@ -96,7 +96,6 @@ GET_TILE_PROP PROC
   ADD BX, AX                  ; We now have our index in BX
 
   MOV SI, [curr_scne]         ; curr_scne must be in SI for retriving the tile
-  ADD SI, 2                   ; Jump map header
   MOV AL, [SI + BX]           ; Offset of curr_scne + index is the tile type
   XOR AH, AH                  ; Clear AH
 

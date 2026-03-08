@@ -10,8 +10,12 @@
 ;   West scene
 ; >
 
-map_buffer DB 1762 DUP(0)
+map_buffer DB 1760 DUP(0)
 MAP_LAYER_SIZE EQU 880
+MAP_LAYER_WIDTH EQU 40
+MAP_LAYER_HEIGHT EQU 22
+MAP_SCENE_WIDTH EQU 20
+MAP_SCENE_HEIGHT EQU 11
 
 ; --- Scene # 0 ---
 map_scene_0_0 SCENE <OFFSET map_buffer + 0, 0, OFFSET map_scene_0_1, OFFSET map_scene_1_0, 0>

@@ -14,7 +14,6 @@ DRAW_SCENE PROC
   SAVE_REGS
 
     MOV SI, AX
-    ADD SI, 2                          ; Add map header size (TODO: should be a const)
 
   ; til header
   ; ----------
@@ -28,10 +27,10 @@ DRAW_SCENE PROC
   ; offset 1 scene height
 
   MOV pos_y, 0
-  MOV DX, TILE_ROWS                    ; Lines (TODO: TILE_ROWS should be dynamic)
+  MOV DX, MAP_SCENE_HEIGHT             ; Lines / height
 
   @dom_draw_line:
-    MOV CX, TILE_COLS                  ; Columns (TODO: TILE_COLS should be dynamic)
+    MOV CX, MAP_SCENE_WIDTH            ; Columns / width
     MOV pos_x, 0
 
     @dom_draw_tile:
@@ -63,10 +62,10 @@ DRAW_SCENE PROC
 
       @dom_skip_tile:
       POP CX                          ; Restore columns counter
-      ADD pos_x, TILE_WIDTH           ; Increment position by tile width (TODO: TILE_WIDTH should be dynamic)
+      ADD pos_x, MAP_TILE_WIDTH       ; Increment position by tile width
       LOOP @dom_draw_tile             ; Loop until all columns are drawn
 
-    ADD pos_y, TILE_HEIGHT            ; Increment position by tile height (TODO: TILE_HEIGHT should be dynamic)
+    ADD pos_y, MAP_TILE_HEIGHT        ; Increment position by tile height
     DEC DX                            ; Decrement rows counter
     JNZ @dom_draw_line                ; Loop until all lines are drawn
 
