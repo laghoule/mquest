@@ -89,17 +89,9 @@ MAIN PROC
   ; --- Draw background and character ---
   MOV BX, OFFSET map_scene_0_0
   MOV AX, [BX].SCENE.map_buffer_addr
-  MOV curr_scne_bg, AX
+  MOV curr_scne_bg, AX                ; TODO: This is now broken
   XOR BX, BX
   CALL DRAW_SCENE                     ; This is the background layer
-  
-  MOV BX, OFFSET map_scene_0_0
-  MOV SI, [BX].SCENE.map_buffer_addr
-  ADD SI, MAP_LAYER_SIZE
-  MOV AX, SI
-  MOV curr_scne_fg, AX
-  MOV BX, 1
-  CALL DRAW_SCENE                     ; This is the foreground layer
 
   ; Grandma
   MOV AX, 1                           ; Charater index

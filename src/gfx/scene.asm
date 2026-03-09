@@ -5,24 +5,40 @@
 
 ; ------------------------------------------------------
 ; DRAW_SCENE
-; Description: Draw the scene on the screen
-; Input: AX: scene buffer, BX: type (bg || fg)
+; Description: Draw the scene on the screen, 2 layers (bg, fg)
+; Input: AX: scene buffer
 ; Output: None
 ; Modified: VGA memory
 ; ------------------------------------------------------
 DRAW_SCENE PROC
   SAVE_REGS
 
-  MOV SI, AX
+  MOV SI, AX                           ; Load offset of scene buffer
+  MOV CX, 2                            ; 2 layer (bg, fg)
 
+@ds_next_layer:
+  PUSH SI                              ; Save the scene buffer for the next layer (loop)
+  PUSH CX                              ; Save the CX counter
+
+  CMP CX, 1                            ; Is this the foreground layer?
+  JNE @ds_is_bg                        ; If not, it's the backgrounf layer, jump to @ds_is_bg
+
+  ADD SI, MAP_LAYER_SIZE               ; Point to the foreground layer
+  MOV BX, 1                            ; Set BX to 1 (foreground layer)
+  JMP @ds_start_draw
+
+@ds_is_bg:
+  MOV BX, 0                            ; Set BX to the background layer
+
+@ds_start_draw:
   MOV pos_y, 0
   MOV DX, MAP_SCENE_HEIGHT             ; Lines / height
 
-  @dom_draw_line:
+  @ds_draw_line:
     MOV CX, MAP_SCENE_WIDTH            ; Columns / width
     MOV pos_x, 0
 
-    @dom_draw_tile:
+    @ds_draw_tile:
       PUSH CX
       LODSB
 
@@ -30,33 +46,34 @@ DRAW_SCENE PROC
       ; 0 = bg (opaque)
       ; 1 = fg (transparent)
       TEST BX, BX
-      JZ @dom_draw_tile_opaque         ; TODO: Fix bad label
+      JE @ds_do_draw_tile              ; Background, jump to @ds_do_draw_tile
 
       TEST AL, AL                      ; Check if tile ID is VOID (0)
-      JZ @dom_skip_tile                ; Skip if zero
+      JZ @ds_skip_tile                 ; Skip to next tile if zero
 
-      @dom_draw_tile_opaque:           ; TODO: fix bal label
+    @ds_do_draw_tile
       ; Tile size is 256
       ; AL = index of tile in tileset
       ; AX = index of tile in tileset * 256
-      MOV AH, AL                      ; Bit shift of 8 = multiply by 256
-      XOR AL, AL
+      MOV AH, AL                       ; Bit shift of 8 = multiply by 256
+      XOR AL, AL                       ; Reset AL, for AX recomposition
 
       ; AX = offset of tile in tileset buffer
-      PUSH BX
       ADD AX, OFFSET map_tileset_buffer
-      MOV BX, 1                       ; Opaque tile
-      CALL DRAW_TILE                  ; Draw opaque tile
-      POP BX
+      CALL DRAW_TILE                   ; Draw opaque tile
 
-      @dom_skip_tile:
-      POP CX                          ; Restore columns counter
-      ADD pos_x, MAP_TILE_WIDTH       ; Increment position by tile width
-      LOOP @dom_draw_tile             ; Loop until all columns are drawn
+    @ds_skip_tile:
+      POP CX                           ; Restore columns counter
+      ADD pos_x, MAP_TILE_WIDTH        ; Increment position by tile width
+      LOOP @ds_draw_tile               ; Loop until all columns are drawn
 
-    ADD pos_y, MAP_TILE_HEIGHT        ; Increment position by tile height
-    DEC DX                            ; Decrement rows counter
-    JNZ @dom_draw_line                ; Loop until all lines are drawn
+    ADD pos_y, MAP_TILE_HEIGHT         ; Increment position by tile height
+    DEC DX                             ; Decrement rows counter
+    JNZ @ds_draw_line                  ; Loop until all lines are drawn
+
+    POP CX
+    POP SI
+    LOOP @ds_next_layer
 
   RESTORE_REGS
   RET
