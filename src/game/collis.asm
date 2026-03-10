@@ -10,20 +10,17 @@
 ; Output: Carry flag set if collision, clear otherwise
 ; Modifed: curr_scne
 ;----------------------------------------------------------------
-; TODO: curr_map not efficent
 CHECK_COLLISION PROC
   SAVE_REGS
   CLC                         ; Clear carry flag
 
-  MOV AX, curr_scne_bg        ; We get the current tile map opaque
-  MOV curr_scne, AX
+  XOR DX, DX                  ; DX = offset of the map (bg = 0)
   CALL GET_TILE_PROP          ; We then get the tile properties in AL
 
   TEST AL, B_CL               ; We test if the tile is collidable
   JNZ @cc_is_collision
 
-  MOV AX, curr_scne_fg        ; We get the current tile map transparent
-  MOV curr_scne, AX
+  MOV DX, MAP_LAYER_SIZE      ; DX = offset of the scene (fg = 1, last part of the map)
   CALL GET_TILE_PROP          ; We then get the tile properties in AL
 
   TEST AL, B_CL               ; We test if the tile is collidable

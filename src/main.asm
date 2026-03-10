@@ -89,8 +89,7 @@ MAIN PROC
   ; --- Draw background and character ---
   MOV BX, OFFSET map_scene_0_0
   MOV AX, [BX].SCENE.map_buffer_addr
-  MOV curr_scne_bg, AX                ; TODO: This is now broken
-  XOR BX, BX
+  MOV curr_scne, AX                   ; curr_scne is used to store the current scene buffer address
   CALL DRAW_SCENE                     ; This is the background layer
 
   ; Grandma

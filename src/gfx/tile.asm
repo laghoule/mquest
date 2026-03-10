@@ -59,7 +59,7 @@ DRAW_TILE ENDP
 ;----------------------------------------------
 ; GET_TILE_PROP
 ; Description: Retrieves properties of a tile
-; Input:  pos_x, pos_y
+; Input:  DX = offset of the scene to check, pos_x, pos_y
 ; Output: AH = tile type, AL = tile properties
 ; ---------------------------------------------
 GET_TILE_PROP PROC
@@ -96,6 +96,7 @@ GET_TILE_PROP PROC
   ADD BX, AX                  ; We now have our index in BX
 
   MOV SI, [curr_scne]         ; curr_scne must be in SI for retriving the tile
+  ADD SI, DX                  ; SI now point the the offset of the scene (bg or fg)
   MOV AL, [SI + BX]           ; Offset of curr_scne + index is the tile type
   XOR AH, AH                  ; Clear AH
 

@@ -51,7 +51,7 @@ DRAW_SCENE PROC
       TEST AL, AL                      ; Check if tile ID is VOID (0)
       JZ @ds_skip_tile                 ; Skip to next tile if zero
 
-    @ds_do_draw_tile
+    @ds_do_draw_tile:
       ; Tile size is 256
       ; AL = index of tile in tileset
       ; AX = index of tile in tileset * 256
