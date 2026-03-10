@@ -16,7 +16,6 @@ INCLUDE defs/macros/vga.inc              ; VGA macros
 ; --- Constants ---
 INCLUDE defs/sys/consts.inc              ; System constants
 INCLUDE defs/chars/consts.inc            ; Character constants
-INCLUDE defs/gfx/consts.inc              ; Graphics constants
 INCLUDE defs/game/consts.inc             ; Game constants
 INCLUDE defs/musics/consts.inc           ; Musics constants
 

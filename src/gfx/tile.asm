@@ -19,11 +19,11 @@ DRAW_TILE PROC
   SYNC_POS_REGS                   ; AX=pos_x, BX=pos_y
   CALC_VGA_POSITION AX, BX        ; Calculate VGA position in DI
 
-  MOV DX, TILE_HEIGHT             ; Height of the sprite (number of lines)
+  MOV DX, MAP_TILE_HEIGHT         ; Height of the sprite (number of lines)
 
   ; --- draw the tile loop
   @dt_draw_line:
-    MOV CX, TILE_WIDTH
+    MOV CX, MAP_TILE_WIDTH
     PUSH DI                       ; Save current line start
 
     ; BX determine the map type
@@ -40,17 +40,17 @@ DRAW_TILE PROC
     @dt_draw_pixel:
       LODSB                       ; Load from SI in AL then increment SI
       OR AL, AL                   ; Check if pixel is transparent
-      JZ @dt_skip_pixel          ; Skip pixel if transparent
+      JZ @dt_skip_pixel           ; Skip pixel if transparent
       MOV ES:[DI], AL             ; Draw pixel
       @dt_skip_pixel:
         INC DI                    ;  Next pixel on screen
         LOOP @dt_draw_pixel
 
     @dt_next_line:
-      POP DI                        ; Restore line start
-      ADD DI, SCREEN_WIDTH          ; Move DI to the next line
+      POP DI                      ; Restore line start
+      ADD DI, SCREEN_WIDTH        ; Move DI to the next line
       DEC DX
-      JNZ @dt_draw_line            ; Draw next line if tile is not entirely draw
+      JNZ @dt_draw_line           ; Draw next line if tile is not entirely draw
 
   RESTORE_REGS
   RET
