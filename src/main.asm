@@ -52,6 +52,7 @@ INCLUDE defs/musics/consts.inc           ; Musics constants
   INCLUDE game/assets.asm                ; Assets functions
   INCLUDE game/player.asm                ; Player functions
   INCLUDE game/collis.asm                ; Collision functions
+  INCLUDE game/transit.asm               ; Scene transition functions
   INCLUDE sys/args.asm                   ; Command-line functions
   INCLUDE sys/print.asm                  ; Print functions
   INCLUDE sys/file.asm                   ; File functions
@@ -87,7 +88,7 @@ MAIN PROC
 
   ; --- Draw background and character ---
   MOV BX, OFFSET map_scene_0_0
-  MOV AX, [BX].SCENE.map_buffer_addr
+  MOV AX, [BX].SCENE.sc_map_buffer_addr
   MOV curr_scne, AX                   ; curr_scne is used to store the current scene buffer address
   CALL DRAW_SCENE                     ; This is the background layer
 

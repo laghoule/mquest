@@ -6,7 +6,7 @@
 ;----------------------------------------------------------------
 ; CHECK_COLLISION
 ; Description: Checks if a position is colliding with an object
-; Input:  pos_x, pos_y
+; Input:  DX = offset of the map, pos_x, pos_y
 ; Output: Carry flag set if collision, clear otherwise
 ; Modifed: curr_scne
 ;----------------------------------------------------------------
