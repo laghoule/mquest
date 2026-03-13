@@ -1,8 +1,15 @@
 ; --- Character directions ---
-RIGHT_DIR  EQU 0
-LEFT_DIR   EQU 1
-UP_DIR     EQU 2
-DOWN_DIR   EQU 3
+RIGHT_DIR   EQU 0
+LEFT_DIR    EQU 1
+UP_DIR      EQU 2
+DOWN_DIR    EQU 3
+
+; --- Directions to check for scene transitions ---
+TO_NORTH    EQU 0
+TO_SOUTH    EQU 176
+TO_EAST     EQU 320
+TO_WEST     EQU 0
+
 
 ; --- TILES ATTRIBUTS BITS ---
 B_FR EQU 00000000b  ; Bit 0: Free (No collision)
