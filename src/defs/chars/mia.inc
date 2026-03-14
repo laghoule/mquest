@@ -1,9 +1,9 @@
 ; Tool for sprites creation: https://github.com/laghoule/png2asm
 
-; --- definition ---------------------------------------------------------------
-; ch_x, ch_y, ch_dir, ch_dir_table_addr, ch_anim_idx, ch_bg_addr, ch_buf_addr
-; ------------------------------------------------------------------------------
-mia_data CHARACTER <150, 90, DOWN_DIR, OFFSET mia_dir_table, 0, OFFSET mia_bg_buffer, OFFSET mia_buffer>
+; --- definition ---------------------------------------------------------------------------
+; ch_x, ch_y, ch_dir, ch_dir_table_addr, ch_anim_idx, ch_bg_addr, ch_buf_addr, ch_scene_addr
+; ------------------------------------------------------------------------------------------
+mia_data CHARACTER <150, 90, DOWN_DIR, OFFSET mia_dir_table, 0, OFFSET mia_bg_buffer, OFFSET mia_buffer, OFFSET map_scene_0_0>
 
 mia_tile_file           DB "assets/mia.pic", 0  ; Mia tileset
 mia_bg_buffer           DB CHAR_SIZE DUP(0)     ; Mia background buffered sprite

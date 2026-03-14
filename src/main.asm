@@ -149,6 +149,9 @@ GAME_LOOP PROC
 
   XOR AX, AX                  ; Mia character
   RENDER_CHARACTER            ; Render character macro
+  
+  CALL CHECK_SCENE_TRANSITION
+  
   MOV pending_tick, 0         ; Reset pending ticks
   JMP @gl_get_next_key
 

@@ -1,7 +1,7 @@
-; --- definition ---------------------------------------------------------------
-; ch_x, ch_y, ch_dir, ch_dir_table_addr, ch_anim_idx, ch_bg_addr, ch_buf_addr
-; ------------------------------------------------------------------------------
-grandma_data CHARACTER <280, 45, DOWN_DIR, OFFSET grandma_dir_table, 0, OFFSET grandma_bg_buffer, OFFSET grandma_buffer>
+; --- definition ---------------------------------------------------------------------------
+; ch_x, ch_y, ch_dir, ch_dir_table_addr, ch_anim_idx, ch_bg_addr, ch_buf_addr, ch_scene_addr
+; ------------------------------------------------------------------------------------------
+grandma_data CHARACTER <280, 45, DOWN_DIR, OFFSET grandma_dir_table, 0, OFFSET grandma_bg_buffer, OFFSET grandma_buffer, OFFSET map_scene_0_0>
 
 grandma_tile_file           DB "assets/grandma.pic", 0  ; Grandma tileset
 grandma_bg_buffer           DB CHAR_SIZE DUP(0)         ; Grandma background buffered sprite

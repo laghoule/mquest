@@ -6,4 +6,5 @@ CHARACTER STRUCT
   ch_anim_idx          DB ? ; Index of the animation frame
   ch_bg_addr           DW ? ; Address of the saved background
   ch_buf_addr          DW ? ; Address of the character buffer sprite
+  ch_scene_addr        DW ? ; Address of the current scene location
 CHARACTER ENDS

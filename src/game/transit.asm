@@ -14,27 +14,32 @@ CHECK_SCENE_TRANSITION PROC
   SAVE_REGS
 
   MOV BX, OFFSET mia_data
+  MOV AX, [BX].CHARACTER.ch_y           ; Mia y position
+  MOV DX, [BX].CHARACTER.ch_x           ; Mia x position
 
-  ; North
-  CMP [BX].CHARACTER.ch_y, TO_NORTH
-  JNE @cs_no_transition
+  ; South check
+  CMP [BX].CHARACTER.ch_y, LIMIT_SOUTH
+  JNA @cs_no_transition
 
-  ; South
-  CMP [BX].CHARACTER.ch_y, TO_SOUTH
-  JNE @cs_no_transition
+  PUSH BX
+  MOV BX, [BX].CHARACTER.ch_scene_addr
+  MOV SI, [BX].SCENE.sc_south_addr
+  POP BX
+  CMP SI, 0
+  JE @cs_no_transition
 
-  ; East
-  CMP [BX].CHARACTER.ch_x, TO_EAST
-  JNE @cs_no_transition
+  PUSH BX
+  MOV BX, [SI].SCENE.sc_map_buffer_addr
+  MOV curr_scne, BX
+  POP BX
+  MOV [BX].CHARACTER.ch_y, 0
 
-  ; West
-  CMP [BX].CHARACTER.ch_x, TO_WEST
-  JNE @cs_no_transition
+@cs_transition:
+  MOV AX, curr_scne
+  CALL DRAW_SCENE
 
-@cs_draw:
-  CALL DRAW_SCENE                     ; Draw the new scene
-  XOR AX, AX ;                        ; Render mia character
-  CALL RENDER_CHARACTER
+  XOR AX, AX
+  RENDER_CHARACTER
 
 @cs_no_transition:
   RESTORE_REGS

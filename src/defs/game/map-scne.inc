@@ -3,7 +3,6 @@
 
 ; <scene_name> SCENE <
 ;   buffer offset,
-;   Music theme,
 ;   North scene,
 ;   South scene,
 ;   East scene,
