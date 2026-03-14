@@ -6,8 +6,8 @@ DOWN_DIR    EQU 3
 
 ; --- Directions to check for scene transitions ---
 LIMIT_NORTH    EQU 0
-LIMIT_SOUTH    EQU 160
-LIMIT_EAST     EQU 320
+LIMIT_SOUTH    EQU 158
+LIMIT_EAST     EQU 308
 LIMIT_WEST     EQU 0
 
 ; --- Scene edge ---
