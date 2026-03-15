@@ -6,7 +6,9 @@
 ;----------------------------------------------------------------
 ; CHECK_SCENE_TRANSITION
 ; Description: Check if the player is on a scene transition direction
+; Register used: AX, BX, CX, DX, SI
 ; Input:
+;   Implicit: mia_data
 ; Output:
 ; Modifed: curr_scne
 ;----------------------------------------------------------------
@@ -42,8 +44,9 @@ CHECK_SCENE_TRANSITION PROC
   CMP SI, SCENE_EDGE
   JE @cs_no_transition
 
+  XOR CX, CX
   MOV DX, LIMIT_SOUTH
-  JMP @cs_y_transition
+  JMP @cs_scne_transition
 
   ; South check
 @cs_south_check:
@@ -57,8 +60,9 @@ CHECK_SCENE_TRANSITION PROC
   CMP SI, SCENE_EDGE
   JE @cs_no_transition
 
+  XOR CX, CX
   MOV DX,LIMIT_NORTH
-  JMP @cs_y_transition
+  JMP @cs_scne_transition
 
 
   ; East check
@@ -73,8 +77,9 @@ CHECK_SCENE_TRANSITION PROC
   CMP SI, SCENE_EDGE
   JE @cs_no_transition
 
+  MOV CX, 1
   MOV DX, LIMIT_WEST
-  JMP @cs_x_transition
+  JMP @cs_scne_transition
 
   ; West check
 @cs_west_check:
@@ -88,22 +93,25 @@ CHECK_SCENE_TRANSITION PROC
   CMP SI, SCENE_EDGE
   JE @cs_no_transition
 
+  MOV CX, 1
   MOV DX, LIMIT_EAST
 
-@cs_x_transition:
+@cs_scne_transition:
   PUSH BX
   MOV BX, [SI].SCENE.sc_map_buffer_addr
   MOV curr_scne, BX
   POP BX
+
+  TEST CX, 1
+  JCXZ @cs_y_transition
+  JMP @cs_x_transition
+
+@cs_x_transition:
   MOV [BX].CHARACTER.ch_x, DX
   MOV [BX].CHARACTER.ch_scene_addr, SI
   JMP @cs_draw_transition
 
 @cs_y_transition:
-  PUSH BX
-  MOV BX, [SI].SCENE.sc_map_buffer_addr
-  MOV curr_scne, BX
-  POP BX
   MOV [BX].CHARACTER.ch_y, DX
   MOV [BX].CHARACTER.ch_scene_addr, SI
 
