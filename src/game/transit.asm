@@ -42,13 +42,8 @@ CHECK_SCENE_TRANSITION PROC
   CMP SI, SCENE_EDGE
   JE @cs_no_transition
 
-  PUSH BX
-  MOV BX, [SI].SCENE.sc_map_buffer_addr
-  MOV curr_scne, BX
-  POP BX
-  MOV [BX].CHARACTER.ch_y, LIMIT_SOUTH
-  MOV [BX].CHARACTER.ch_scene_addr, SI
-  JMP @cs_transition
+  MOV DX, LIMIT_SOUTH
+  JMP @cs_y_transition
 
   ; South check
 @cs_south_check:
@@ -62,13 +57,9 @@ CHECK_SCENE_TRANSITION PROC
   CMP SI, SCENE_EDGE
   JE @cs_no_transition
 
-  PUSH BX
-  MOV BX, [SI].SCENE.sc_map_buffer_addr
-  MOV curr_scne, BX
-  POP BX
-  MOV [BX].CHARACTER.ch_y, LIMIT_NORTH
-  MOV [BX].CHARACTER.ch_scene_addr, SI
-  JMP @cs_transition
+  MOV DX,LIMIT_NORTH
+  JMP @cs_y_transition
+
 
   ; East check
 @cs_east_check:
@@ -82,13 +73,8 @@ CHECK_SCENE_TRANSITION PROC
   CMP SI, SCENE_EDGE
   JE @cs_no_transition
 
-  PUSH BX
-  MOV BX, [SI].SCENE.sc_map_buffer_addr
-  MOV curr_scne, BX
-  POP BX
-  MOV [BX].CHARACTER.ch_x, LIMIT_WEST
-  MOV [BX].CHARACTER.ch_scene_addr, SI
-  JMP @cs_transition
+  MOV DX, LIMIT_WEST
+  JMP @cs_x_transition
 
   ; West check
 @cs_west_check:
@@ -102,14 +88,26 @@ CHECK_SCENE_TRANSITION PROC
   CMP SI, SCENE_EDGE
   JE @cs_no_transition
 
+  MOV DX, LIMIT_EAST
+
+@cs_x_transition:
   PUSH BX
   MOV BX, [SI].SCENE.sc_map_buffer_addr
   MOV curr_scne, BX
   POP BX
-  MOV [BX].CHARACTER.ch_x, LIMIT_EAST
+  MOV [BX].CHARACTER.ch_x, DX
+  MOV [BX].CHARACTER.ch_scene_addr, SI
+  JMP @cs_draw_transition
+
+@cs_y_transition:
+  PUSH BX
+  MOV BX, [SI].SCENE.sc_map_buffer_addr
+  MOV curr_scne, BX
+  POP BX
+  MOV [BX].CHARACTER.ch_y, DX
   MOV [BX].CHARACTER.ch_scene_addr, SI
 
-@cs_transition:
+@cs_draw_transition:
   MOV AX, curr_scne
   CALL DRAW_SCENE
 
