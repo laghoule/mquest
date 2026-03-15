@@ -40,7 +40,7 @@ CHECK_SCENE_TRANSITION PROC
   MOV SI, [BX].SCENE.sc_north_addr
   POP BX
   CMP SI, 0
-  JE @cs_south_check
+  JE @cs_no_transition
 
   PUSH BX
   MOV BX, [SI].SCENE.sc_map_buffer_addr
