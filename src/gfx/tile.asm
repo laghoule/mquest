@@ -61,32 +61,48 @@ DRAW_TILE PROC
   RET
 DRAW_TILE ENDP
 
-;----------------------------------------------
+;----------------------------------------------------
+; CHECK_OUT_OF_BOUND_POSITION
+; Description: Checks if the position is out of bound
+; Input:  pos_x, pos_y
+; Output: carry flag set if out of bound
+; ---------------------------------------------------
+CHECK_OUT_OF_BOUND_POSITION PROC
+  CMP pos_x, 325          ; TODO: magic number based on character width
+  JE @coobp_out_of_bound
+
+  CMP pos_x, 0
+  JE @coobp_out_of_bound
+
+  CMP pos_y, 0
+  JE @coobp_out_of_bound
+
+  CMP pos_y, 177
+  JE @coobp_out_of_bound
+
+  CLC
+  JMP @coobp_in_bound
+
+@coobp_out_of_bound:
+  STC
+
+@coobp_in_bound:
+  RET
+CHECK_OUT_OF_BOUND_POSITION ENDP
+
+;---------------------------------------------------------
 ; GET_TILE_PROP
 ; Description: Retrieves properties of a tile
 ; Input:  DX = offset of the scene to check, pos_x, pos_y
 ; Output: AH = tile type, AL = tile properties
-; ---------------------------------------------
+; -------------------------------------------------------
 GET_TILE_PROP PROC
   SAVE_REGS
 
-  ; Check if the position is out of bounds
-  CMP pos_x, 325          ; TODO: magic number based on character width
-  JE @gtp_set_collision
-
-  CMP pos_x, 0
-  JE @gtp_set_collision
-
-  CMP pos_y, 0
-  JE @gtp_set_collision
-
-  CMP pos_y, 177        ;
-  JE @gtp_set_collision
-
-  JMP @gtp_position_validated
+  CALL CHECK_OUT_OF_BOUND_POSITION
+  JNC @gtp_position_validated
 
   ; Out of bounds, set collision
-@gtp_set_collision:
   MOV AL, B_CL
   XOR AH, AH
   JMP @gtp_return
