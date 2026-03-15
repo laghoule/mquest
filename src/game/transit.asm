@@ -39,7 +39,7 @@ CHECK_SCENE_TRANSITION PROC
   MOV BX, [BX].CHARACTER.ch_scene_addr
   MOV SI, [BX].SCENE.sc_north_addr
   POP BX
-  CMP SI, 0
+  CMP SI, SCENE_EDGE
   JE @cs_no_transition
 
   PUSH BX
@@ -59,7 +59,7 @@ CHECK_SCENE_TRANSITION PROC
   MOV BX, [BX].CHARACTER.ch_scene_addr
   MOV SI, [BX].SCENE.sc_south_addr
   POP BX
-  CMP SI, 0
+  CMP SI, SCENE_EDGE
   JE @cs_no_transition
 
   PUSH BX
@@ -79,7 +79,7 @@ CHECK_SCENE_TRANSITION PROC
   MOV BX, [BX].CHARACTER.ch_scene_addr
   MOV SI, [BX].SCENE.sc_east_addr
   POP BX
-  CMP SI, 0
+  CMP SI, SCENE_EDGE
   JE @cs_no_transition
 
   PUSH BX
@@ -99,7 +99,7 @@ CHECK_SCENE_TRANSITION PROC
   MOV BX, [BX].CHARACTER.ch_scene_addr
   MOV SI, [BX].SCENE.sc_west_addr
   POP BX
-  CMP SI, 0
+  CMP SI, SCENE_EDGE
   JE @cs_no_transition
 
   PUSH BX
