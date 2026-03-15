@@ -70,6 +70,28 @@ DRAW_TILE ENDP
 GET_TILE_PROP PROC
   SAVE_REGS
 
+  ; Check if the position is out of bounds
+  CMP pos_x, 325          ; TODO: magic number based on character width
+  JE @gtp_set_collision
+
+  CMP pos_x, 0
+  JE @gtp_set_collision
+
+  CMP pos_y, 0
+  JE @gtp_set_collision
+
+  CMP pos_y, 177        ;
+  JE @gtp_set_collision
+
+  JMP @gtp_position_validated
+
+  ; Out of bounds, set collision
+@gtp_set_collision:
+  MOV AL, B_CL
+  XOR AH, AH
+  JMP @gtp_return
+
+@gtp_position_validated:
   ; TODO: we may reorganize the operation for better optimization
   ; Index = (Y/16 * 20) + (X/16).
   MOV AX, pos_y               ; Bit shift right by 4
@@ -110,6 +132,7 @@ GET_TILE_PROP PROC
   MOV AL, [map_tiles_props + BX]  ; Load tile properties via the index
   MOV AH, BL                  ; Save the tile type in AH
 
+@gtp_return:
   MOV TX, AX                  ; Use a software register to temporary store AX
   RESTORE_REGS
   MOV AX, TX                  ; Restore AX for returning properties in AL
