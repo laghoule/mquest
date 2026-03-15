@@ -69,16 +69,16 @@ DRAW_TILE ENDP
 ; ---------------------------------------------------
 CHECK_OUT_OF_BOUND_POSITION PROC
   CMP pos_x, 325          ; TODO: magic number based on character width
-  JE @coobp_out_of_bound
+  JGE @coobp_out_of_bound
 
   CMP pos_x, 0
-  JE @coobp_out_of_bound
+  JLE @coobp_out_of_bound
 
   CMP pos_y, 0
-  JE @coobp_out_of_bound
+  JLE @coobp_out_of_bound
 
   CMP pos_y, 177
-  JE @coobp_out_of_bound
+  JGE @coobp_out_of_bound
 
   CLC
   JMP @coobp_in_bound
