@@ -6,7 +6,7 @@
 ;----------------------------------------------------------------
 ; CHECK_SCENE_TRANSITION
 ; Description: Check if the player is on a scene transition direction
-; Register used: AX, BX, CX, DX, SI
+; Register: AX, BX, CX, DX, SI
 ; Input:
 ;   Implicit: mia_data
 ; Output:

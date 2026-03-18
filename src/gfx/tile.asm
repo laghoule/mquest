@@ -64,8 +64,8 @@ DRAW_TILE ENDP
 ;----------------------------------------------------
 ; CHECK_OUT_OF_BOUND_POSITION
 ; Description: Checks if the position is out of bound
-; Registers used: AX = pos_x, BX = pos_y
-; Input:  pos_x, pos_y
+; Registers: AX, BX
+; Input:  AX = pos_x, BX = pos_y
 ; Output: carry flag set if out of bound
 ; ---------------------------------------------------
 CHECK_OUT_OF_BOUND_POSITION PROC
