@@ -64,20 +64,21 @@ DRAW_TILE ENDP
 ;----------------------------------------------------
 ; CHECK_OUT_OF_BOUND_POSITION
 ; Description: Checks if the position is out of bound
+; Registers used: AX = pos_x, BX = pos_y
 ; Input:  pos_x, pos_y
 ; Output: carry flag set if out of bound
 ; ---------------------------------------------------
 CHECK_OUT_OF_BOUND_POSITION PROC
-  CMP pos_x, 325          ; TODO: magic number based on character width
+  CMP AX, LIMIT_EAST + CHAR_WIDTH + 1    ; 325 because pos_x is the left of the character
   JGE @coobp_out_of_bound
 
-  CMP pos_x, 0
+  CMP AX, LIMIT_WEST
   JLE @coobp_out_of_bound
 
-  CMP pos_y, 0
+  CMP BX, LIMIT_NORTH
   JLE @coobp_out_of_bound
 
-  CMP pos_y, 177
+  CMP BX, LIMIT_SOUTH + CHAR_HEIGHT + 1  ; 176 because we reserve 24 lines for the status bar
   JGE @coobp_out_of_bound
 
   CLC
@@ -99,6 +100,8 @@ CHECK_OUT_OF_BOUND_POSITION ENDP
 GET_TILE_PROP PROC
   SAVE_REGS
 
+  MOV AX, pos_x
+  MOV BX, pos_y
   CALL CHECK_OUT_OF_BOUND_POSITION
   JNC @gtp_position_validated
 
