@@ -6,6 +6,7 @@
 ; ---------------------------------------
 ; DRAW_TILE
 ; Description: Draws a tile with or without transparency
+; Registers: AX, BX, CX, DX, SI, DI
 ; Input:  AX = tileset offset, BX = map type (bg || fg)
 ; Output: None
 ; Modified: None
