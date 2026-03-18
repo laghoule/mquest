@@ -93,9 +93,11 @@ CHECK_OUT_OF_BOUND_POSITION ENDP
 
 ;---------------------------------------------------------
 ; GET_TILE_PROP
+; Registers: AX, BX, CX, DX, SI, DI
 ; Description: Retrieves properties of a tile
 ; Input:  DX = offset of the scene to check, pos_x, pos_y
 ; Output: AH = tile type, AL = tile properties
+; Modified: TX
 ; -------------------------------------------------------
 GET_TILE_PROP PROC
   SAVE_REGS
