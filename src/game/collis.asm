@@ -38,3 +38,63 @@ CHECK_COLLISION PROC
   RESTORE_REGS
   RET
 CHECK_COLLISION ENDP
+
+; ------------------------------------------------------------------------
+; CHECK_HITBOX_COLLISION
+; Description: Check if a character hitbox collides with object in the map
+; Registers: AX, BX, CX, DX, SI
+; Input: AX = Character index, CX = X position, DX = Y position
+; Output: Carry flag = 1 if collision detected
+; Modified: pos_x, pos_y, carry flag
+; -----------------------------------------------------------------------
+CHECK_HITBOX_COLLISION PROC
+  SAVE_REGS
+
+  SHL AX, 1                                 ; Conversion characted index -> offset (DW)
+  MOV BX, AX
+
+  MOV BX, [char_data_table + BX]            ; BX = Address of the character data structure
+
+  ; Get the direction of the character
+  XOR AH, AL
+  MOV AL, [BX].CHARACTER.ch_dir
+  SHL AX, 1
+
+  ;Resolve the direction indirection: Master table -> direction data block
+  MOV SI, [BX].CHARACTER.ch_dir_table_addr  ; SI = Address of the 4-directions table
+  ADD SI, AX                                ; SI = Address of the direction data
+  MOV SI, [SI]                              ; Dereference the direction data (hitbox, sprites, ...)
+
+  ; Hitbox 1 position X (CX -> AX)
+  XOR AX, AX
+  MOV AL, [SI + 2]                          ; Load hitbox P1X ; TODO: replace magic number
+  ADD AX, CX                                ; Add hitbox P1X to X position
+  MOV pos_x, AX ; TODO: temporary
+
+  ; Hitbox 1 position Y (DX -> BX)
+  XOR BX, BX
+  MOV BL, [SI + 3]                          ; Load hitbox P1Y ; TODO: replace magic number
+  ADD BX, DX                                ; Add hitbox P1Y to Y position
+  MOV pos_y, BX ; TODO: temporary
+
+  CALL CHECK_COLLISION                      ; Check for collition , carry flag will be set if collision
+  JC @chc_return                            ; If collision, return
+
+  ; Hitbox 2 position X (CX -> AX)
+  XOR AX, AX
+  MOV AL, [SI + 4]                          ; Load hitbox P2X ; TODO: replace magic number
+  ADD AX, CX                                ; Add hitbox P2X to X position
+  MOV pos_x, AX ; TODO: temporary
+
+  ; Hitbox 2 position Y (DX -> BX)
+  XOR BX, BX
+  MOV BL, [SI + 5]                          ; Load hitbox P2Y ; TODO: replace magic number
+  ADD BX, DX                                ; Add hitbox P2Y to Y position
+  MOV pos_y, BX ; TODO: temporary
+
+  CALL CHECK_COLLISION                      ; Check for collition, carry flag will be set if collision
+
+@chc_return:
+  RESTORE_REGS
+  RET
+CHECK_HITBOX_COLLISION ENDP

@@ -26,12 +26,6 @@ MOVE_CHAR PROC
   XOR DH, DH                                ; ch_dir is a byte, so we clear DH
   MOV [BX].CHARACTER.ch_dir, DL             ; Set character direction from input DX
 
-  ;Resolve the direction indirection: Master table -> direction data block
-  MOV SI, [BX].CHARACTER.ch_dir_table_addr  ; SI = Address of the 4-directions table
-  SHL DX, 1                                 ; Conversion direction index -> offset (DW)
-  ADD SI, DX                                ; SI = Address of the direction data
-  MOV SI, [SI]                              ; Dereference the direction data (hitbox, sprites, ...)
-
   MOV AX, char_index
   CALL RESTORE_CHARACTER_BG                 ; We restore the background
 
@@ -69,36 +63,8 @@ MOVE_CHAR PROC
   SUB DX, AX                                ; Subtract pending_tick from Y position
 
 @mm_collision_detection:
-  ; Hitbox 1 position X
-  XOR AX, AX
-  MOV AL, [SI + 2]                          ; Load hitbox P1X
-  ADD AX, CX                                ; Add hitbox P1X to X position
-  MOV pos_x, AX                             ; Save X position
-
-  ; Hitbox 1 position Y
-  XOR AX, AX
-  MOV AL, [SI + 3]                          ; Load hitbox P1Y
-  ADD AX, DX                                ; Add hitbox P1Y to Y position
-  MOV pos_y, AX                             ; Save Y position
-
-  ; TODO: get rid of pos_x, pos_y
-  CALL CHECK_COLLISION                      ; Check for collition via pos_x, pos_y
-  JC @mmg_skip_to_anim                      ; Goto skip to animation if carry flag set
-
-  ; Hitbox 2 position X
-  XOR AX, AX
-  MOV AL, [SI + 4]                          ; Load hitbox P2X
-  ADD AX, CX                                ; Add hitbox P2X to X position
-  MOV pos_x, AX                             ; Save X position
-
-  ; Hitbox 2 position Y
-  XOR AX, AX
-  MOV AL, [SI + 5]                          ; Load hitbox P2Y
-  ADD AX, DX                                ; Add hitbox P2Y to Y position
-  MOV pos_y, AX                             ; Save Y position
-
-  ; TODO: get rid of pos_x, pos_y
-  CALL CHECK_COLLISION                      ; Check for collition via pos_x, pos_y
+  MOV AX, char_index
+  CALL CHECK_HITBOX_COLLISION               ; Check for collition via character hitbox
   JC @mmg_skip_to_anim                      ; Goto skip to animation if carry flag set
 
   ; No collision detected
