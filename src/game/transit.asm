@@ -17,7 +17,7 @@ CHECK_SCENE_TRANSITION PROC
 
   MOV BX, OFFSET mia_data                   ; Only mia supported
 
-  ; Going borth direction
+  ; Going north direction
   CMP [BX].CHARACTER.ch_dir, UP_DIR
   JE @cs_north_check
 
