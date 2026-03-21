@@ -68,6 +68,7 @@ DRAW_TILE ENDP
 ; Registers: AX, BX
 ; Input:  AX = pos_x, BX = pos_y
 ; Output: carry flag set if out of bound
+; Modified: carry flag
 ; ---------------------------------------------------
 CHECK_OUT_OF_BOUND_POSITION PROC
   CMP AX, LIMIT_EAST + CHAR_WIDTH + 1    ; 325 because pos_x is the left of the character
@@ -94,69 +95,80 @@ CHECK_OUT_OF_BOUND_POSITION ENDP
 
 ;---------------------------------------------------------
 ; GET_TILE_PROP
+; Description: Retrieves properties of a tile (collision, etc.)
 ; Registers: AX, BX, CX, DX, SI, DI
-; Description: Retrieves properties of a tile
-; Input:  DX = offset of the scene to check, pos_x, pos_y
-; Output: AH = tile type, AL = tile properties
-; Modified: TX
+; Registers: AX, BX, CX, DX, SI
+; Input: AX = pos_x, BX = pos_y, DX = offset of the scene to check
+;   Implicit: curr_scne, map_tiles_props
+; Output: AL = tile properties
+; Modified: AX, TX
 ; -------------------------------------------------------
 GET_TILE_PROP PROC
   SAVE_REGS
 
-  MOV AX, pos_x
-  MOV BX, pos_y
+  PUSH AX                         ; Save pos_x
+
   CALL CHECK_OUT_OF_BOUND_POSITION
   JNC @gtp_position_validated
 
   ; Out of bounds, set collision
-  MOV AL, B_CL
-  XOR AH, AH
-  JMP @gtp_return
+  MOV AL, B_CL                    ; Collision result in AL
+  XOR AH, AH                      ; Clear AH
+  POP AX                          ; Restore AX before return
+  JMP @gtp_return                 ; Out of bounds, return
 
 @gtp_position_validated:
   ; TODO: we may reorganize the operation for better optimization
   ; Index = (Y/16 * 20) + (X/16).
-  MOV AX, pos_y               ; Bit shift right by 4
-  SHR AX, 1                   ; to get Y / 16
-  SHR AX, 1                   ; 4 SHR is better on the 8086
+  ;
+  ; AX = Y/16
+  MOV AX, BX                      ; Bit shift right by 4
+  SHR AX, 1                       ; to get Y / 16
+  SHR AX, 1                       ; 4 SHR is better on the 8086
   SHR AX, 1
   SHR AX, 1
 
-  MOV BX, AX                  ; We now have the line, save in BX
+  ; BX = Y/16
+  MOV BX, AX                      ; We now have the line, save in BX
 
-  SHL BX, 1                   ; We now need to multiply by 20
-  SHL BX, 1                   ; We decompose because 20, is not a factor of 2
-  SHL BX, 1                   ; Shift left by 4, to get multiply by 16
+  ; BX = Y/16 * 16
+  SHL BX, 1                       ; We now need to multiply by 20
+  SHL BX, 1                       ; We decompose because 20, is not a factor of 2
+  SHL BX, 1                       ; Shift left by 4, to get multiply by 16
   SHL BX, 1
 
-  MOV CX, AX                  ; We save the line in CX
-  SHL CX, 1                   ; We shift left by 2, to get multiply by 4
+  ; CX = Y/16 * 4
+  MOV CX, AX                      ; We save the line in CX
+  SHL CX, 1                       ; We shift left by 2, to get multiply by 4
   SHL CX, 1
 
+  ; Combine the two results
   ; 16 times + 4 times = 20 times
-  ADD BX, CX                  ; We now have (Y/16 * 20) in BX
+  ADD BX, CX                      ; We now have BX = (Y/16 * 20)
 
-  MOV AX, pos_x               ; AX = X/16
-  SHR AX, 1                   ; Bit shift right (4 times = /16)
+  ; AX = X/16
+  POP AX                          ; Retrieve pos_x in AX
+  SHR AX, 1                       ; Bit shift right (4 times = /16)
   SHR AX, 1
   SHR AX, 1
   SHR AX, 1
 
+  ; Index (Y/16 * 20) + (X/16)
   ADD BX, AX                  ; We now have our index in BX
 
-  MOV SI, [curr_scne]         ; curr_scne must be in SI for retriving the tile
-  ADD SI, DX                  ; SI now point the the offset of the scene (bg or fg)
-  MOV AL, [SI + BX]           ; Offset of curr_scne + index is the tile type
-  XOR AH, AH                  ; Clear AH
+  MOV SI, [curr_scne]             ; curr_scne must be in SI for retriving the tile
+  ADD SI, DX                      ; SI now point the the offset of the scene (bg or fg)
+  MOV AL, [SI + BX]               ; Offset of curr_scne + index is the tile type
+  XOR AH, AH                      ; Clear AH
 
-  MOV BX, AX                  ; BX = Final Map Index (0-239)
+  MOV BX, AX                      ; BX = Final Map Index (0-239)
 
   MOV AL, [map_tiles_props + BX]  ; Load tile properties via the index
-  MOV AH, BL                  ; Save the tile type in AH
+  MOV AH, BL                      ; Save the tile type in AH
 
 @gtp_return:
-  MOV TX, AX                  ; Use a software register to temporary store AX
+  MOV TX, AX                      ; Use a software register to temporary store AX
   RESTORE_REGS
-  MOV AX, TX                  ; Restore AX for returning properties in AL
+  MOV AX, TX                      ; Restore AX for returning properties in AL
   RET
 GET_TILE_PROP ENDP

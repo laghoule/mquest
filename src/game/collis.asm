@@ -7,9 +7,8 @@
 ; CHECK_COLLISION
 ; Description: Checks if a position is colliding with an object
 ; Register: AL, DX
-; Input:
+; Input: AX = pos_x, BX = pos_y
 ;   Implicit: curr_scne (via GET_TILE_PROP)
-;             pos_x, pos_y
 ; Output: Carry flag set if collision, clear otherwise
 ; Modifed: Carry flag
 ;----------------------------------------------------------------
@@ -17,17 +16,20 @@ CHECK_COLLISION PROC
   SAVE_REGS
   CLC                         ; Clear carry flag
 
+  PUSH AX                     ; Save AX, because GER_TILE_PROP uses it for return value
+
   XOR DX, DX                  ; DX = offset of the map (bg = 0)
   CALL GET_TILE_PROP          ; We then get the tile properties in AL
 
   TEST AL, B_CL               ; We test if the tile is collidable
-  JNZ @cc_is_collision
+  POP AX                      ; Restore pos_x in AX (need to be before jump)
+  JNZ @cc_is_collision        ; Jump if collision detected
 
   MOV DX, MAP_LAYER_SIZE      ; DX = offset of the scene (fg = 1, last part of the map)
   CALL GET_TILE_PROP          ; We then get the tile properties in AL
 
   TEST AL, B_CL               ; We test if the tile is collidable
-  JNZ @cc_is_collision
+  JNZ @cc_is_collision        ; Jump if collision detected
 
   JMP @cc_done
 
@@ -69,13 +71,11 @@ CHECK_HITBOX_COLLISION PROC
   XOR AX, AX
   MOV AL, [SI + 2]                          ; Load hitbox P1X ; TODO: replace magic number
   ADD AX, CX                                ; Add hitbox P1X to X position
-  MOV pos_x, AX ; TODO: temporary
 
   ; Hitbox 1 position Y (DX -> BX)
   XOR BX, BX
   MOV BL, [SI + 3]                          ; Load hitbox P1Y ; TODO: replace magic number
   ADD BX, DX                                ; Add hitbox P1Y to Y position
-  MOV pos_y, BX ; TODO: temporary
 
   CALL CHECK_COLLISION                      ; Check for collition , carry flag will be set if collision
   JC @chc_return                            ; If collision, return
@@ -84,13 +84,11 @@ CHECK_HITBOX_COLLISION PROC
   XOR AX, AX
   MOV AL, [SI + 4]                          ; Load hitbox P2X ; TODO: replace magic number
   ADD AX, CX                                ; Add hitbox P2X to X position
-  MOV pos_x, AX ; TODO: temporary
 
   ; Hitbox 2 position Y (DX -> BX)
   XOR BX, BX
   MOV BL, [SI + 5]                          ; Load hitbox P2Y ; TODO: replace magic number
   ADD BX, DX                                ; Add hitbox P2Y to Y position
-  MOV pos_y, BX ; TODO: temporary
 
   CALL CHECK_COLLISION                      ; Check for collition, carry flag will be set if collision
 
