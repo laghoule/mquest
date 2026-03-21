@@ -96,7 +96,6 @@ CHECK_OUT_OF_BOUND_POSITION ENDP
 ;---------------------------------------------------------
 ; GET_TILE_PROP
 ; Description: Retrieves properties of a tile (collision, etc.)
-; Registers: AX, BX, CX, DX, SI, DI
 ; Registers: AX, BX, CX, DX, SI
 ; Input: AX = pos_x, BX = pos_y, DX = offset of the scene to check
 ;   Implicit: curr_scne, map_tiles_props
