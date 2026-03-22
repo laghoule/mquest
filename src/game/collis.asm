@@ -47,7 +47,7 @@ CHECK_COLLISION ENDP
 ; Registers: AX, BX, CX, DX, SI
 ; Input: AX = Character index, CX = X position, DX = Y position
 ; Output: Carry flag = 1 if collision detected
-; Modified: pos_x, pos_y, carry flag
+; Modified: Carry flag
 ; -----------------------------------------------------------------------
 CHECK_HITBOX_COLLISION PROC
   SAVE_REGS
