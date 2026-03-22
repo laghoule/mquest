@@ -105,7 +105,7 @@ CHECK_OUT_OF_BOUND_POSITION ENDP
 GET_TILE_PROP PROC
   SAVE_REGS
 
-  PUSH AX                         ; Save pos_x
+  MOV CX, AX                      ; Save pos_x in CX
 
   CALL CHECK_OUT_OF_BOUND_POSITION
   JNC @gtp_position_validated
@@ -113,13 +113,12 @@ GET_TILE_PROP PROC
   ; Out of bounds, set collision
   MOV AL, B_CL                    ; Collision result in AL
   XOR AH, AH                      ; Clear AH
-  POP AX                          ; Restore AX before return
   JMP @gtp_return                 ; Out of bounds, return
 
 @gtp_position_validated:
   ; TODO: we may reorganize the operation for better optimization
   ; Index = (Y/16 * 20) + (X/16).
-  ;
+  MOV AX, CX                      ; Restore pos_x in AX
   ; AX = Y/16
   MOV AX, BX                      ; Bit shift right by 4
   SHR AX, 1                       ; to get Y / 16
@@ -137,6 +136,7 @@ GET_TILE_PROP PROC
   SHL BX, 1
 
   ; CX = Y/16 * 4
+  PUSH CX
   MOV CX, AX                      ; We save the line in CX
   SHL CX, 1                       ; We shift left by 2, to get multiply by 4
   SHL CX, 1
@@ -144,9 +144,10 @@ GET_TILE_PROP PROC
   ; Combine the two results
   ; 16 times + 4 times = 20 times
   ADD BX, CX                      ; We now have BX = (Y/16 * 20)
+  POP CX
 
   ; AX = X/16
-  POP AX                          ; Retrieve pos_x in AX
+  MOV AX, CX                      ; Restore pos_x in AX
   SHR AX, 1                       ; Bit shift right (4 times = /16)
   SHR AX, 1
   SHR AX, 1
