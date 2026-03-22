@@ -64,7 +64,6 @@ CHECK_SCENE_TRANSITION PROC
   MOV DX,LIMIT_NORTH                        ; DX = north limit for y transition
   JMP @cs_scne_transition                   ; Jump to scene transition
 
-
   ; East check
 @cs_east_check:
   CMP [BX].CHARACTER.ch_x, LIMIT_EAST       ; Check if the player is on the east limit
@@ -109,14 +108,37 @@ CHECK_SCENE_TRANSITION PROC
 
   ; x transition
 @cs_x_transition:
+  PUSH DX
+  XOR AX, AX
+  MOV CX, DX                                ; CX = pos_x
+  MOV DX, [BX].CHARACTER.ch_y               ; DX = pos_y
+  CALL CHECK_HITBOX_COLLISION               ; Check if there is a collision
+  POP DX
+  JC @cs_restore_scne                       ; If there is a collision, restore the scene and return
+
   MOV [BX].CHARACTER.ch_x, DX               ; Set the x position in the character structure
   MOV [BX].CHARACTER.ch_scene_addr, SI      ; Set the scene address in the character structure
   JMP @cs_draw_transition                   ; Draw the transition
 
   ; y transition
 @cs_y_transition:
+  XOR AX, AX
+  MOV CX, [BX].CHARACTER.ch_x               ; CX = pos_x, DX is already pos_y
+  CALL CHECK_HITBOX_COLLISION               ; Check if there is a collision
+  JC @cs_restore_scne                       ; If there is a collision, restore the scene and return
+
   MOV [BX].CHARACTER.ch_y, DX               ; Set the y position in the character structure
   MOV [BX].CHARACTER.ch_scene_addr, SI      ; Set the scene address in the character structure
+  JMP @cs_draw_transition                   ; Draw the transition
+
+@cs_restore_scne:
+  MOV BX, OFFSET mia_data
+
+  MOV BX, [BX].CHARACTER.ch_scene_addr      ; Load the scene address
+  MOV SI, [BX].SCENE.sc_map_buffer_addr     ; Load the west scene address
+
+  MOV curr_scne, SI
+  JMP @cs_no_transition
 
   ; Draw the transition
 @cs_draw_transition:
