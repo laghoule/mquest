@@ -46,6 +46,7 @@ CHECK_COLLISION ENDP
 ; Description: Check if a character hitbox collides with object in the map
 ; Registers: AX, BX, CX, DX, SI
 ; Input: AX = Character index, CX = X position, DX = Y position
+;   Implicit: curr_scne
 ; Output: Carry flag = 1 if collision detected
 ; Modified: Carry flag
 ; -----------------------------------------------------------------------
