@@ -3,14 +3,14 @@
 ;  it under the terms of the GNU General Public License as published by
 ;  the Free Software Foundation, either version 3 of the License.
 
-;---------------------------------------------------------
+;---------------------------------------------------------------
 ; MOVE_CHAR
 ; Description: Handles movement and collision for all directions
+; Registers: AX, BX, CX, DX
 ; Input:  AX: char_index, DX: direction
 ; Output: None
 ; Modify: Character data table of char_index
-;         pos_x, pos_y
-;---------------------------------------------------------
+;---------------------------------------------------------------
 MOVE_CHAR PROC
   SAVE_REGS
 
