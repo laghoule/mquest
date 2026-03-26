@@ -21,7 +21,7 @@ RUN uasm -mz src/main.asm && \
 # Create a simple zip archive for the game
 RUN mkdir .jsdos && \
   cp docker/.jsdos/dosbox.conf .jsdos/dosbox.conf && \
-  zip mquest.jsdos mquest.exe mia.pic grandma.pic .jsdos/dosbox.conf
+  zip -r mquest.jsdos mquest.exe assets .jsdos/dosbox.conf
 
 # Stage 2: Production
 FROM caddy:2-alpine
