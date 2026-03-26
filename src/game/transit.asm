@@ -103,7 +103,7 @@ CHECK_SCENE_TRANSITION PROC
 @cs_load_scene_transition:
   PUSH BX
   MOV BX, [SI].SCENE.sc_map_buffer_addr     ; Load the map buffer address
-  MOV curr_scne, BX                         ; Set the current scene
+  MOV map_buffer_addr, BX                   ; Set the map buffer address
   POP BX
 
   TEST CX, 1                                ; Check if it's an x transition
@@ -141,12 +141,12 @@ CHECK_SCENE_TRANSITION PROC
   MOV BX, [BX].CHARACTER.ch_scene_addr      ; Load the scene address
   MOV SI, [BX].SCENE.sc_map_buffer_addr     ; Load the west scene address
 
-  MOV curr_scne, SI
+  MOV map_buffer_addr, SI                   ; Set the new map buffer address
   JMP @cs_no_transition
 
   ; Draw the transition
 @cs_draw_transition:
-  MOV AX, curr_scne                         ; Load the current scene address in AX, needed for DRAW_SCENE
+  MOV AX, map_buffer_addr                   ; Load the map buffer address in AX, needed for DRAW_SCENE
   CALL DRAW_SCENE                           ; Draw the scene
 
   XOR AX, AX                                ; AX = 0 for mia character

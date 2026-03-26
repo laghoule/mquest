@@ -1,1 +1,1 @@
-curr_scne    DW 0 ; current scene
+map_buffer_addr DW 0  ; Buffer of the entire map data

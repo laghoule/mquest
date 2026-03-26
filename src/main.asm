@@ -89,7 +89,7 @@ MAIN PROC
   ; --- Draw background and character ---
   MOV BX, OFFSET map_scene_0_0
   MOV AX, [BX].SCENE.sc_map_buffer_addr
-  MOV curr_scne, AX                   ; curr_scne is used to store the current scene buffer address
+  MOV map_buffer_addr, AX             ; map_buffer_addr is used to store the current scene buffer
   CALL DRAW_SCENE                     ; This is the background layer
 
   ; Grandma
@@ -149,9 +149,9 @@ GAME_LOOP PROC
 
   XOR AX, AX                  ; Mia character
   RENDER_CHARACTER            ; Render character macro
-  
+
   CALL CHECK_SCENE_TRANSITION ; Check if scene transition is needed
-  
+
   MOV pending_tick, 0         ; Reset pending ticks
   JMP @gl_get_next_key
 

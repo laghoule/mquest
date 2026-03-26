@@ -156,9 +156,9 @@ GET_TILE_PROP PROC
   ; Index (Y/16 * 20) + (X/16)
   ADD BX, AX                  ; We now have our index in BX
 
-  MOV SI, [curr_scne]             ; curr_scne must be in SI for retriving the tile
+  MOV SI, [map_buffer_addr]       ; Must be in SI for retriving the tile
   ADD SI, DX                      ; SI now point the the offset of the scene (bg or fg)
-  MOV AL, [SI + BX]               ; Offset of curr_scne + index is the tile type
+  MOV AL, [SI + BX]               ; Offset of map_buffer_addr + index is the tile type
   XOR AH, AH                      ; Clear AH
 
   MOV BX, AX                      ; BX = Final Map Index (0-239)

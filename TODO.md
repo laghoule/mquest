@@ -7,4 +7,3 @@
 - Comments are not descriptive of what we do, review ALL comments
 - Add collision detection between character
 - Rename var with \_ptr to \_addr
-- Replace curr_scne var name, it's confusing, it should be map_buffer_addr
