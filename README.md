@@ -33,7 +33,9 @@ Mia is a young herbalist apprentice. Her grandmother has fallen ill, and the onl
 - **High-Performance Math:** Address calculations optimized using bit-shifting (`SHL`) instead of the costly `MUL` instruction, specifically tuned for the 8088's 8-bit bus.
 - **Non-Blocking Input:** Real-time keyboard sensing using BIOS interrupts (AH=01h).
 - **Background Restoration System:** Full "Save/Restore" buffer logic allowing Mia to walk over complex terrains without erasing them.
-- **Tiled Map Engine:** Dual-layer map system with opaque base tiles and transparent overlay items (rocks, flowers, objects).
+- **Tiled Map Engine:** A robust dual-layer system where `DRAW_SCENE` handles both opaque background tiles and transparent foreground items (rocks, flowers, objects) internally.
+- **Multi-Screen Navigation (Zelda-style):** Seamless "flip-screen" world navigation across all four cardinal directions, with dynamic scene loading and character position adjustments.
+- **Collision Detection:** Robust tile-based collision sensing, including hitbox checks and comprehensive boundary validation to prevent character movement into solid objects or off-map areas.
 - **Custom VGA Palette:** Custom 256-color palette optimized for the game's visual aesthetic, loaded at startup.
 - **PC Speaker Music:** Background music playback using the Intel 8253 PIT (Programmable Interval Timer) - features "Greensleeves" theme with configurable tempo and mute/unmute functionality.
 - **Smooth Animation System:** Delta-tick based timing system ensuring consistent animation speed across different hardware configurations.
@@ -44,7 +46,7 @@ Mia is a young herbalist apprentice. Her grandmother has fallen ill, and the onl
 - [x] **Background Restoration System:** Implement "Save/Restore" buffer logic to allow Mia to walk over complex terrains without erasing them.
 - [x] **Tiled Map Engine:** Create a dual-layer tile rendering system with transparency support.
 - [x] **PC Speaker Music:** Integrate background music using the Intel 8253 PIT.
-- [ ] **Multi-Screen Navigation:** Implement "Flip-Screen" world navigation system (Zelda-style).
+- [x] **Multi-Screen Navigation:** Implement "Flip-Screen" world navigation system (Zelda-style).
 - [x] **Collision Detection:** Implement tile-based collision sensing.
 - [ ] **OPL3 Sound:** Add sound effects using the Yamaha YMF262 chip (music already implemented via PC Speaker).
 - [ ] **Joystick Support:** Add support for analog game controllers via Port 201h.
@@ -87,7 +89,7 @@ And on real hardware, with Dos 6.22:
 
 ## Run in Browser (Docker)
 
-This project can be run in a modern web browser using Docker and the [js-dos](https://js-dos.com/) emulator.
+This project can be run in a modern web browser using Docker and the [js-dos](https://js-dos.com/) emulator. The Docker image packages the game and its assets into a `jsdos` compatible ZIP file, allowing it to run directly in the browser.
 
 1.  **Build the Docker image:**
 
