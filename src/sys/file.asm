@@ -22,24 +22,33 @@ LOAD_FILE PROC
   MOV BX, AX              ; Store file handle in BX
 
   ; --- Call DOS for reading the file ---
-  PUSH DX                 ; Save the file name on the stack
+  PUSH DX                 ; Save the file name
   MOV AH, 3Fh             ; Read file function
   MOV CX, 0FFFFh          ; Max allowed 64K (entire segment)
   MOV DX, DI              ; Destination buffer (DI addr in DX)
   INT 21h                 ; Call DOS, fill DX (buffered var)
-  POP DX                  ; Restore the file name from the stack
-  PUSHf                   ; Save flags for checking error later, need to close the file before
+  POP DX                  ; Restore the file name
+  PUSHF                   ; Save flags for checking error later, need to close the file before
 
   ; -- Call DOS to close the file ---
   MOV AH, 3Eh             ; Close file function
   INT 21h                 ; Call DOS
-  POPf                    ; Restore flags from reading function
+  POPF                    ; Restore flags from reading function
   JC @lf_fail_read        ; Carry flag set if error reading file
 
   RESTORE_REGS
   RET
 
 @lf_fail_open:            ; Open file error handler
+  ; TODO: refactor this, duplication
+  MOV SI, DX              ; Set SI to the filename
+  CALL STR_LEN            ; Get the length of the filename in CX
+  LEA SI, ERR_FILE_OPEN
+  ADD SI, 20              ; TODO: use STR_LEN
+  MOV DI, SI              ; Set DI to the end of the string
+  MOV SI, DX              ; Set SI to the filename
+  REP MOVSB               ; Copy filename to the end of the error message
+
   LEA DX, ERR_FILE_OPEN   ; Offset of open file error message
   MOV AL, 1               ; Set stderr
   CALL PRINT              ; Call print
@@ -47,6 +56,15 @@ LOAD_FILE PROC
   JMP @lf_return
 
 @lf_fail_read:            ; Read file error handler
+  ; TODO: refactor this, duplication
+  MOV SI, DX              ; Set SI to the filename
+  CALL STR_LEN            ; Get the length of the filename in CX
+  LEA SI, ERR_FILE_READ
+  ADD SI, 20              ; TODO: use STR_LEN
+  MOV DI, SI              ; Set DI to the end of the string
+  MOV SI, DX              ; Set SI to the filename
+  REP MOVSB               ; Copy filename to the end of the error message
+
   LEA DX, ERR_FILE_READ   ; Offset of read file error message
   MOV AL, 1               ; Set stderr
   CALL PRINT              ; Call print

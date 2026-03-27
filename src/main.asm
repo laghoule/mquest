@@ -66,9 +66,10 @@ INCLUDE defs/musics/consts.inc           ; Musics constants
   INCLUDE gfx/scene.asm                  ; Scene drawing functions
 
 MAIN PROC
-  ; ---Initialize data segment---
+  ; ---Initialize segments---
   MOV AX, @DATA
-  MOV DS, AX
+  MOV DS, AX                          ; Set DS to data segment
+  MOV ES, AX                          ; Set ES to data segment
 
   CALL PARSE_CMDLINE_ARGS             ; Process command-line arguments
 
