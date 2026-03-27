@@ -41,13 +41,15 @@ LOAD_FILE PROC
 
 @lf_fail_open:            ; Open file error handler
   LEA DX, ERR_FILE_OPEN   ; Offset of open file error message
-  CALL PRINT_ERR          ; Call print error
+  MOV AL, 1               ; Set stderr
+  CALL PRINT              ; Call print
   STC                     ; Set carry flag to indicate error
   JMP @lf_return
 
 @lf_fail_read:            ; Read file error handler
   LEA DX, ERR_FILE_READ   ; Offset of read file error message
-  CALL PRINT_ERR          ; Call print error
+  MOV AL, 1               ; Set stderr
+  CALL PRINT              ; Call print
   STC                     ; Set carry flag to indicate error
   JMP @lf_return
 
