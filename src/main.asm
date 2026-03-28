@@ -56,6 +56,7 @@ INCLUDE defs/musics/consts.inc           ; Musics constants
   INCLUDE sys/args.asm                   ; Command-line functions
   INCLUDE sys/print.asm                  ; Print functions
   INCLUDE sys/file.asm                   ; File functions
+  INCLUDE sys/error.asm                  ; Error functions
   INCLUDE sys/string.asm                 ; String functions
   INCLUDE sys/vga.asm                    ; VGA functions
   INCLUDE sys/timer.asm                  ; Timer functions
@@ -69,7 +70,6 @@ MAIN PROC
   ; ---Initialize segments---
   MOV AX, @DATA
   MOV DS, AX                          ; Set DS to data segment
-  MOV ES, AX                          ; Set ES to data segment
 
   CALL PARSE_CMDLINE_ARGS             ; Process command-line arguments
 

@@ -6,9 +6,11 @@
 ; --------------------------------------------
 ; LOAD_FILE
 ; Description: Load a file in a buffer
+; Registers: AX, BX, CX, DX, SI, DI
 ; Input:  DX: Offset of the name of the file
 ;         DI: Offset of the destination buffer
 ; Output: Carry flag set if error
+; Modified: None
 ; --------------------------------------------
 LOAD_FILE PROC
   SAVE_REGS
@@ -40,32 +42,26 @@ LOAD_FILE PROC
   RET
 
 @lf_fail_open:            ; Open file error handler
-  ; TODO: refactor this, duplication
   MOV SI, DX              ; Set SI to the filename
-  CALL STR_LEN            ; Get the length of the filename in CX
-  LEA SI, ERR_FILE_OPEN
-  ADD SI, 20              ; TODO: use STR_LEN
-  MOV DI, SI              ; Set DI to the end of the string
-  MOV SI, DX              ; Set SI to the filename
-  REP MOVSB               ; Copy filename to the end of the error message
+  LEA DI, ERR_OPEN_FILE   ; Set DI to the error message
 
-  LEA DX, ERR_FILE_OPEN   ; Offset of open file error message
+  MOV AX, 20              ; Concat at location 20
+  CALL CONCAT_ERROR_MSG
+
+  LEA DX, ERR_OPEN_FILE   ; Offset of open file error message
   MOV AL, 1               ; Set stderr
   CALL PRINT              ; Call print
   STC                     ; Set carry flag to indicate error
   JMP @lf_return
 
 @lf_fail_read:            ; Read file error handler
-  ; TODO: refactor this, duplication
   MOV SI, DX              ; Set SI to the filename
-  CALL STR_LEN            ; Get the length of the filename in CX
-  LEA SI, ERR_FILE_READ
-  ADD SI, 20              ; TODO: use STR_LEN
-  MOV DI, SI              ; Set DI to the end of the string
-  MOV SI, DX              ; Set SI to the filename
-  REP MOVSB               ; Copy filename to the end of the error message
+  LEA DI, ERR_READ_FILE   ; Set DI to the error message
 
-  LEA DX, ERR_FILE_READ   ; Offset of read file error message
+  MOV AX, 20              ; Concat at location 20
+  CALL CONCAT_ERROR_MSG
+
+  LEA DX, ERR_READ_FILE   ; Offset of read file error message
   MOV AL, 1               ; Set stderr
   CALL PRINT              ; Call print
   STC                     ; Set carry flag to indicate error
