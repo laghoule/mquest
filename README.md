@@ -19,6 +19,7 @@ Mia is a young herbalist apprentice. Her grandmother has fallen ill, and the onl
   - **IDE:** [Zed](https://zed.dev/).
   - **Tools:** 
     - [png2asm](https://github.com/laghoule/png2asm) - PNG-to-ASM sprite conversion
+    - [png2pal](https://github.com/laghoule/png2pal) - PNG-to Gimp Palette conversion
     - [png2pic](https://github.com/laghoule/png2pic) - PNG-to-PIC sprite conversion
     - [gpl2asm](https://github.com/laghoule/gpl2asm) - GIMP palette-to-ASM conversion
     - [tiled2map](https://github.com/laghoule/tilde2map) - Tiled to .map and ASM includes
