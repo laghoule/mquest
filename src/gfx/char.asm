@@ -74,9 +74,9 @@ DRAW_CHARACTER PROC
   ADD SI, AX                               ; Tile index in the tileset buffef
 
   ; --- Position ---
-  MOV AX, [BX].CHARACTER.ch_x              ; This will be gone when position refactor is complete
+  MOV AX, [BX].CHARACTER.ch_loc.lo_x       ; This will be gone when position refactor is complete
   PUSH BX                                  ; Save BX
-  MOV BX, [BX].CHARACTER.ch_y              ; Idem
+  MOV BX, [BX].CHARACTER.ch_loc.lo_y       ; Idem
   CALC_VGA_POSITION AX, BX                 ; Calculate VGA position in DI
   POP BX
 
@@ -122,8 +122,8 @@ SAVE_CHARACTER_BG PROC
 
   ; Calculate the VGA position of the character
   PUSH BX
-  MOV AX, [BX].CHARACTER.ch_x
-  MOV BX, [BX].CHARACTER.ch_y
+  MOV AX, [BX].CHARACTER.ch_loc.lo_x
+  MOV BX, [BX].CHARACTER.ch_loc.lo_y
   CALC_VGA_POSITION AX, BX            ; Calculate VGA position in DI
   POP BX
 
@@ -179,8 +179,8 @@ RESTORE_CHARACTER_BG PROC
   MOV BX, [char_data_table + BX]      ; Address to the character data
 
   PUSH BX
-  MOV AX, [BX].CHARACTER.ch_x
-  MOV BX, [BX].CHARACTER.ch_y
+  MOV AX, [BX].CHARACTER.ch_loc.lo_x
+  MOV BX, [BX].CHARACTER.ch_loc.lo_y
   CALC_VGA_POSITION AX, BX            ; Calculate VGA position in DI
   POP BX
 

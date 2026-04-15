@@ -1,9 +1,9 @@
 ; Tool for sprites creation: https://github.com/laghoule/png2asm
 
 ; --- definition ---------------------------------------------------------------------------
-; ch_x, ch_y, ch_dir, ch_dir_table_addr, ch_anim_idx, ch_bg_addr, ch_buf_addr, ch_scene_addr
+; ch_loc, ch_dir, ch_dir_table_addr, ch_anim_idx, ch_bg_addr, ch_buf_addr, ch_scene_addr
 ; ------------------------------------------------------------------------------------------
-mia_data CHARACTER <150, 90, DOWN_DIR, OFFSET mia_dir_table, 0, OFFSET mia_bg_buffer, OFFSET mia_buffer, OFFSET map_scene_0_0>
+mia_data CHARACTER <<150, 90>, DOWN_DIR, OFFSET mia_dir_table, 0, OFFSET mia_bg_buffer, OFFSET mia_buffer, OFFSET map_scene_0_0>
 
 mia_tile_file           DB "assets/mia.pic", 0  ; Mia tileset
 mia_bg_buffer           DB CHAR_SIZE DUP(0)     ; Mia background buffered sprite
@@ -16,23 +16,27 @@ mia_dir_table           DW OFFSET mia_right_data
                         DW OFFSET mia_up_data
                         DW OFFSET mia_down_data
 
-; --- definition ---------------------------------------------------------------
-; SpriteTable (DW), AnimState (DW), P1X (DB), P1Y (DB), P2X (DB), P2Y (DB), Dir
-; ------------------------------------------------------------------------------
+; --- definition ----------------------------------------------
+; SpriteTable (DW), P1X (DB), P1Y (DB), P2X (DB), P2Y (DB), Dir
+; -------------------------------------------------------------
 mia_right_data          DW OFFSET mia_sprt_right_table
                         DB HIT_RIGHT_X, HIT_HEAD_Y, HIT_RIGHT_X, HIT_BOTTOM_Y
+                        ;DW OFFSET char_hitbox_right
                         DB RIGHT_DIR
 
 mia_left_data           DW OFFSET mia_sprt_left_table
                         DB HIT_LEFT_X, HIT_HEAD_Y, HIT_LEFT_X, HIT_BOTTOM_Y
+                        ;DW OFFSET char_hitbox_left
                         DB LEFT_DIR
 
 mia_up_data             DW OFFSET mia_sprt_up_table
                         DB HIT_LEFT_FOOT_X, HIT_HEAD_Y, HIT_RIGHT_FOOT_X, HIT_HEAD_Y
+                        ;DW OFFSET char_hitbox_head
                         DB UP_DIR
 
 mia_down_data           DW OFFSET mia_sprt_down_table
                         DB HIT_LEFT_FOOT_X, HIT_BOTTOM_Y, HIT_RIGHT_FOOT_X, HIT_BOTTOM_Y
+                        ;DW OFFSET char_hitbox_foot
                         DB DOWN_DIR
 
 ; --- Mia animation down table ---

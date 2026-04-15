@@ -30,8 +30,8 @@ MOVE_CHAR PROC
   CALL RESTORE_CHARACTER_BG                 ; We restore the background
 
   ; We retrieve the x,y coordinates of the character
-  MOV CX, [BX].CHARACTER.ch_x
-  MOV DX, [BX].CHARACTER.ch_y
+  MOV CX, [BX].CHARACTER.ch_loc.lo_x
+  MOV DX, [BX].CHARACTER.ch_loc.lo_y
 
   ; Load pending_tick in AL
   XOR AH, AH
@@ -68,8 +68,8 @@ MOVE_CHAR PROC
   JC @mmg_skip_to_anim                      ; Goto skip to animation if carry flag set
 
   ; No collision detected
-  MOV [BX].CHARACTER.ch_x, CX               ; We save the x,y in the character struct
-  MOV [BX].CHARACTER.ch_y, DX
+  MOV [BX].CHARACTER.ch_loc.lo_x, CX        ; We save the x,y in the character struct
+  MOV [BX].CHARACTER.ch_loc.lo_y, DX
 
 @mmg_skip_to_anim:
   MOV AX, char_index

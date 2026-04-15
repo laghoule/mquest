@@ -31,6 +31,7 @@ INCLUDE defs/musics/consts.inc           ; Musics constants
 
   ; --- Characters ---
   INCLUDE defs/chars/types.inc           ; Characters types definitions
+  INCLUDE defs/chars/hitbox.inc          ; Characters hitbox data
   INCLUDE defs/chars/mia.inc             ; Mia animations sprite data
   INCLUDE defs/chars/grandma.inc         ; Grandma animations sprite data
   INCLUDE defs/chars/sprites.inc         ; Characters sprites tables and data
