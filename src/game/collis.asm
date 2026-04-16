@@ -64,7 +64,7 @@ CHECK_HITBOX_COLLISION PROC
   SHL AX, 1
 
   ;Resolve the direction indirection: Master table -> direction data block
-  MOV SI, [BX].CHARACTER.ch_dir_table_addr  ; SI = Address of the 4-directions table
+  MOV SI, [BX].CHARACTER.ch_dir_tbl_addr    ; SI = Address of the 4-directions table
   ADD SI, AX                                ; SI = Address of the direction data
   MOV SI, [SI]                              ; Dereference the direction data (hitbox, sprites, ...)
 

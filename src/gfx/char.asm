@@ -52,7 +52,7 @@ DRAW_CHARACTER PROC
   MOV AL, [BX].CHARACTER.ch_dir            ; AL = direction index
   SHL AX, 1                                ; Convert index -> offset (DW)
 
-  MOV SI, [BX].CHARACTER.ch_dir_table_addr ; SI = Address of the character direction table
+  MOV SI, [BX].CHARACTER.ch_dir_tbl_addr   ; SI = Address of the character direction table
   ADD SI, AX                               ; SI = Address of the direction data
 
   ; --- Resolve double indirection to sprite table ---
