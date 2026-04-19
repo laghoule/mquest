@@ -44,12 +44,12 @@ CHECK_COLLISION ENDP
 ; ------------------------------------------------------------------------
 ; CHECK_HITBOX_COLLISION
 ; Description: Check if a character hitbox collides with object in the map
-; Registers: AX, BX, CX, DX, SI
+; Registers: AX, BX, CX, DX, SI, DI
 ; Input: AX = Character index, CX = X position, DX = Y position
 ;   Implicit: curr_scne
 ; Output: Carry flag = 1 if collision detected
 ; Modified: Carry flag
-; -----------------------------------------------------------------------
+; ------------------------------------------------------------------------
 CHECK_HITBOX_COLLISION PROC
   SAVE_REGS
 
@@ -67,32 +67,28 @@ CHECK_HITBOX_COLLISION PROC
   MOV SI, [BX].CHARACTER.ch_dir_tbl_addr    ; SI = Address of the 4-directions table
   ADD SI, AX                                ; SI = Address of the direction data
   MOV SI, [SI]                              ; Dereference the direction data (hitbox, sprites, ...)
-
-  ; Hitbox 1 position X (CX -> AX)
-  XOR AX, AX
-  ;MOV AL, [SI + 2]
   MOV DI, [SI + 2]                          ; Dereference the hitbox
+
+  ; Hitbox 1 position X (CX -> AX (X))
+  XOR AX, AX
   MOV AL, [DI].HITBOX.hb_x1
   ADD AX, CX                                ; Add hitbox P1X to X position
 
-  ; Hitbox 1 position Y (DX -> BX)
+  ; Hitbox 1 position Y (DX -> BX (Y))
   XOR BX, BX
-  MOV DI, [SI + 2]                          ; Dereference the hitbox
   MOV BL, [DI].HITBOX.hb_y1
   ADD BX, DX                                ; Add hitbox P1Y to Y position
 
   CALL CHECK_COLLISION                      ; Check for collition , carry flag will be set if collision
   JC @chc_return                            ; If collision, return
 
-  ; Hitbox 2 position X (CX -> AX)
+  ; Hitbox 2 position X (CX -> AX (X))
   XOR AX, AX
-  MOV DI, [SI + 2]                          ; Dereference the hitbox
   MOV AL, [DI].HITBOX.hb_x2
   ADD AX, CX                                ; Add hitbox P2X to X position
 
-  ; Hitbox 2 position Y (DX -> BX)
+  ; Hitbox 2 position Y (DX -> BX (Y))
   XOR BX, BX
-  MOV DI, [SI + 2]                          ; Dereference the hitbox
   MOV BL, [DI].HITBOX.hb_y2
   ADD BX, DX                                ; Add hitbox P2Y to Y position
 
