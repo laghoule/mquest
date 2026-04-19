@@ -59,7 +59,7 @@ CHECK_HITBOX_COLLISION PROC
   MOV BX, [char_data_table + BX]            ; BX = Address of the character data structure
 
   ; Get the direction of the character
-  XOR AH, AL
+  XOR AH, AH
   MOV AL, [BX].CHARACTER.ch_dir
   SHL AX, 1
 
@@ -70,12 +70,15 @@ CHECK_HITBOX_COLLISION PROC
 
   ; Hitbox 1 position X (CX -> AX)
   XOR AX, AX
-  MOV AL, [SI + 2]                          ; Load hitbox P1X ; TODO: replace magic number
+  ;MOV AL, [SI + 2]
+  MOV DI, [SI + 2]                          ; Dereference the hitbox
+  MOV AL, [DI].HITBOX.hb_x1
   ADD AX, CX                                ; Add hitbox P1X to X position
 
   ; Hitbox 1 position Y (DX -> BX)
   XOR BX, BX
-  MOV BL, [SI + 3]                          ; Load hitbox P1Y ; TODO: replace magic number
+  MOV DI, [SI + 2]                          ; Dereference the hitbox
+  MOV BL, [DI].HITBOX.hb_y1
   ADD BX, DX                                ; Add hitbox P1Y to Y position
 
   CALL CHECK_COLLISION                      ; Check for collition , carry flag will be set if collision
@@ -83,12 +86,14 @@ CHECK_HITBOX_COLLISION PROC
 
   ; Hitbox 2 position X (CX -> AX)
   XOR AX, AX
-  MOV AL, [SI + 4]                          ; Load hitbox P2X ; TODO: replace magic number
+  MOV DI, [SI + 2]                          ; Dereference the hitbox
+  MOV AL, [DI].HITBOX.hb_x2
   ADD AX, CX                                ; Add hitbox P2X to X position
 
   ; Hitbox 2 position Y (DX -> BX)
   XOR BX, BX
-  MOV BL, [SI + 5]                          ; Load hitbox P2Y ; TODO: replace magic number
+  MOV DI, [SI + 2]                          ; Dereference the hitbox
+  MOV BL, [DI].HITBOX.hb_y2
   ADD BX, DX                                ; Add hitbox P2Y to Y position
 
   CALL CHECK_COLLISION                      ; Check for collition, carry flag will be set if collision
