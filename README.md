@@ -49,7 +49,6 @@ Mia is a young herbalist apprentice. Her grandmother has fallen ill, and the onl
 - [x] **PC Speaker Music:** Integrate background music using the Intel 8253 PIT.
 - [x] **Multi-Screen Navigation:** Implement "Flip-Screen" world navigation system (Zelda-style).
 - [x] **Collision Detection:** Implement tile-based collision sensing.
-- [ ] **OPL3 Sound:** Add sound effects using the Yamaha YMF262 chip (music already implemented via PC Speaker).
 - [ ] **Joystick Support:** Add support for analog game controllers via Port 201h.
 
 ## Testing
