@@ -110,4 +110,8 @@ This project can be run in a modern web browser using Docker and the [js-dos](ht
 
 ---
 
-_This project is a personal journey into low-level programming, bringing modern development workflows to the classic 8086/8088 architecture. It's a tribute to the era of early PCs._
+## Inspiration
+
+![Amdek PC](amdek.jpg)
+
+This game is a tribute to the **Amdek** personal computer I had as a child — the machine that sparked my lifelong passion for programming and computers. Everything about this project, from the 8086 Assembly code to the DOS target environment, is a love letter to that era.
