@@ -1,5 +1,5 @@
 ; --- definition ---------------------------------------------------------------------------
-; ch_x, ch_y, ch_dir, ch_dir_table_addr, ch_anim_idx, ch_bg_addr, ch_buf_addr, ch_scene_addr
+; ch_loc, ch_dir, ch_dir_table_addr, ch_anim_idx, ch_bg_addr, ch_buf_addr, ch_scene_addr
 ; ------------------------------------------------------------------------------------------
 grandma_data CHARACTER <<280, 45>, DOWN_DIR, OFFSET grandma_dir_table, 0, OFFSET grandma_bg_buffer, OFFSET grandma_buffer, OFFSET map_scene_0_0>
 
@@ -14,24 +14,11 @@ grandma_dir_table           DW OFFSET grandma_right_data
                             DW OFFSET grandma_up_data
                             DW OFFSET grandma_down_data
 
-; --- definition ---------------------------------------------------------------
-; SpriteTable (DW), AnimState (DW), P1X (DB), P1Y (DB), P2X (DB), P2Y (DB), Dir
-; ------------------------------------------------------------------------------
-grandma_right_data          DW OFFSET grandma_sprt_right_table
-                            DB HIT_RIGHT_X, HIT_HEAD_Y, HIT_RIGHT_X, HIT_BOTTOM_Y
-                            DB RIGHT_DIR
-
-grandma_left_data           DW OFFSET grandma_sprt_left_table
-                            DB HIT_LEFT_X, HIT_HEAD_Y, HIT_LEFT_X, HIT_BOTTOM_Y
-                            DB LEFT_DIR
-
-grandma_up_data             DW OFFSET grandma_sprt_up_table
-                            DB HIT_LEFT_FOOT_X, HIT_HEAD_Y, HIT_RIGHT_FOOT_X, HIT_HEAD_Y
-                            DB UP_DIR
-
-grandma_down_data           DW OFFSET grandma_sprt_down_table
-                            DB HIT_LEFT_FOOT_X, HIT_BOTTOM_Y, HIT_RIGHT_FOOT_X, HIT_BOTTOM_Y
-                            DB DOWN_DIR
+; --- Grandma direction data ---
+grandma_right_data          CHAR_DIR_DATA <OFFSET grandma_sprt_right_table, OFFSET char_hitbox_right, RIGHT_DIR>
+grandma_left_data           CHAR_DIR_DATA <OFFSET grandma_sprt_left_table,  OFFSET char_hitbox_left,  LEFT_DIR>
+grandma_up_data             CHAR_DIR_DATA <OFFSET grandma_sprt_up_table,    OFFSET char_hitbox_head,  UP_DIR>
+grandma_down_data           CHAR_DIR_DATA <OFFSET grandma_sprt_down_table,  OFFSET char_hitbox_foot,  DOWN_DIR>
 
 ; --- Grandma animation down table ---
 grandma_sprt_down_table     DW CHAR_SPRT_IDX_0  ; tile 0

@@ -12,7 +12,7 @@ HITBOX ENDS
 
 CHAR_DIR_DATA STRUCT
   cd_sprt_tbl_addr    DW ?
-  cd_hitbox           HITBOX < >
+  cd_hitbox           DW ?
   cd_dir              DB ?
 CHAR_DIR_DATA ENDS
 

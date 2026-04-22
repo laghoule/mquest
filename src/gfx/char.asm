@@ -40,65 +40,65 @@ UPDATE_CHARACTER_ANIM_INDEX ENDP
 ; ---------------------------------------------
 DRAW_CHARACTER PROC
   SAVE_REGS
-  CLD                                      ; Clear direction flag
+  CLD                                         ; Clear direction flag
 
-  SHL AX, 1                                ; Convert index -> offset (DW)
+  SHL AX, 1                                   ; Convert index -> offset (DW)
   MOV BX, AX
 
-  MOV BX, [char_data_table + BX]           ; BX = character data struct
+  MOV BX, [char_data_table + BX]              ; BX = character data struct
 
   ; --- Direction ---
   XOR AH, AH
-  MOV AL, [BX].CHARACTER.ch_dir            ; AL = direction index
-  SHL AX, 1                                ; Convert index -> offset (DW)
+  MOV AL, [BX].CHARACTER.ch_dir               ; AL = direction index
+  SHL AX, 1                                   ; Convert index -> offset (DW)
 
-  MOV SI, [BX].CHARACTER.ch_dir_tbl_addr   ; SI = Address of the character direction table
-  ADD SI, AX                               ; SI = Address of the direction data
+  MOV SI, [BX].CHARACTER.ch_dir_tbl_addr      ; SI = Address of the character direction table
+  ADD SI, AX                                  ; SI = Address of the direction data
 
   ; --- Resolve double indirection to sprite table ---
   ; dir_table[dir_offset] -> direction_data -> sprite_table
-  MOV SI, [SI]                             ; Follow pointer to direction_data
-  MOV SI, [SI]                             ; Follow pointer to sprite_table
+  MOV SI, [SI]                                ; Follow pointer to direction_data
+  MOV SI, [SI].CHAR_DIR_DATA.cd_sprt_tbl_addr ; Follow pointer to sprite_table
 
   ; --- Animation sprite ---
   XOR AH, AH
-  MOV AL, [BX].CHARACTER.ch_anim_idx       ; AL = animation index
-  SHL AX, 1                                ; Convert index -> offset (DW)
+  MOV AL, [BX].CHARACTER.ch_anim_idx          ; AL = animation index
+  SHL AX, 1                                   ; Convert index -> offset (DW)
 
-  ADD SI, AX                               ; SI = Address of the sprite data for the current animation index
-  MOV AX, [SI]                             ; AX = Dereference sprite offset to get the right tile
+  ADD SI, AX                                  ; SI = Address of the sprite data for the current animation index
+  MOV AX, [SI]                                ; AX = Dereference sprite offset to get the right tile
 
   ; --- Sprite buffered data ---
-  MOV SI, [BX].CHARACTER.ch_buf_addr       ; Load character offset buffer
-  ADD SI, PIC_HDR_SIZE                     ; Jump above .pic header size
-  ADD SI, AX                               ; Tile index in the tileset buffef
+  MOV SI, [BX].CHARACTER.ch_buf_addr          ; Load character offset buffer
+  ADD SI, PIC_HDR_SIZE                        ; Jump above .pic header size
+  ADD SI, AX                                  ; Tile index in the tileset buffef
 
   ; --- Position ---
-  MOV AX, [BX].CHARACTER.ch_loc.lo_x       ; This will be gone when position refactor is complete
-  PUSH BX                                  ; Save BX
-  MOV BX, [BX].CHARACTER.ch_loc.lo_y       ; Idem
-  CALC_VGA_POSITION AX, BX                 ; Calculate VGA position in DI
+  MOV AX, [BX].CHARACTER.ch_loc.lo_x          ; This will be gone when position refactor is complete
+  PUSH BX                                     ; Save BX
+  MOV BX, [BX].CHARACTER.ch_loc.lo_y          ; Idem
+  CALC_VGA_POSITION AX, BX                    ; Calculate VGA position in DI
   POP BX
 
-  MOV DX, CHAR_HEIGHT                      ; Height of the sprite (number of lines)
+  MOV DX, CHAR_HEIGHT                         ; Height of the sprite (number of lines)
 
   ; --- draw the character loop ---
   @dc_draw_line:
     MOV CX, CHAR_WIDTH
-    PUSH DI                                ; Save current line start
+    PUSH DI                                   ; Save current line start
     @dc_draw_pixel:
-      LODSB                                ; Load pixel from SI in AL then SI++
-      OR AL, AL                            ; Check if pixel color is 0 (transparent)
-      JZ @dc_skip_pixel                    ; If pixel is transparent, skip pixel
-      MOV ES:[DI], AL                      ; Draw pixel
+      LODSB                                   ; Load pixel from SI in AL then SI++
+      OR AL, AL                               ; Check if pixel color is 0 (transparent)
+      JZ @dc_skip_pixel                       ; If pixel is transparent, skip pixel
+      MOV ES:[DI], AL                         ; Draw pixel
       @dc_skip_pixel:
-        INC DI                             ; Next pixel on sreen
+        INC DI                                ; Next pixel on sreen
         LOOP @dc_draw_pixel
 
-    POP DI                                 ; Restore line start
-    ADD DI, SCREEN_WIDTH                   ; Move DI to the next line
+    POP DI                                    ; Restore line start
+    ADD DI, SCREEN_WIDTH                      ; Move DI to the next line
     DEC DX
-    JNZ @dc_draw_line                      ; Draw next line if character is not entirely draw
+    JNZ @dc_draw_line                         ; Draw next line if character is not entirely draw
 
   RESTORE_REGS
   RET

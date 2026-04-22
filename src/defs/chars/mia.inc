@@ -16,24 +16,11 @@ mia_dir_table           DW OFFSET mia_right_data
                         DW OFFSET mia_up_data
                         DW OFFSET mia_down_data
 
-; --- definition ----------------------------------------------
-; SpriteTable (DW), P1X (DB), P1Y (DB), P2X (DB), P2Y (DB), Dir
-; -------------------------------------------------------------
-mia_right_data          DW OFFSET mia_sprt_right_table
-                        DW OFFSET char_hitbox_right
-                        DB RIGHT_DIR
-
-mia_left_data           DW OFFSET mia_sprt_left_table
-                        DW OFFSET char_hitbox_left
-                        DB LEFT_DIR
-
-mia_up_data             DW OFFSET mia_sprt_up_table
-                        DW OFFSET char_hitbox_head
-                        DB UP_DIR
-
-mia_down_data           DW OFFSET mia_sprt_down_table
-                        DW OFFSET char_hitbox_foot
-                        DB DOWN_DIR
+; --- Mia direction data ---
+mia_right_data          CHAR_DIR_DATA <OFFSET mia_sprt_right_table, OFFSET char_hitbox_right, RIGHT_DIR>
+mia_left_data           CHAR_DIR_DATA <OFFSET mia_sprt_left_table,  OFFSET char_hitbox_left,  LEFT_DIR>
+mia_up_data             CHAR_DIR_DATA <OFFSET mia_sprt_up_table,    OFFSET char_hitbox_head,  UP_DIR>
+mia_down_data           CHAR_DIR_DATA <OFFSET mia_sprt_down_table,  OFFSET char_hitbox_foot,  DOWN_DIR>
 
 ; --- Mia animation down table ---
 mia_sprt_down_table     DW CHAR_SPRT_IDX_0  ; tile 0

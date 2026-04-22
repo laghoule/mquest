@@ -67,7 +67,7 @@ CHECK_HITBOX_COLLISION PROC
   MOV SI, [BX].CHARACTER.ch_dir_tbl_addr    ; SI = Address of the 4-directions table
   ADD SI, AX                                ; SI = Address of the direction data
   MOV SI, [SI]                              ; Dereference the direction data (hitbox, sprites, ...)
-  MOV DI, [SI + 2]                          ; Dereference the hitbox
+  MOV DI, [SI].CHAR_DIR_DATA.cd_hitbox      ; Dereference the hitbox
 
   ; Hitbox 1 position X (CX -> AX (X))
   XOR AX, AX
