@@ -50,6 +50,7 @@ Mia is a young herbalist apprentice. Her grandmother has fallen ill, and the onl
 - [x] **Multi-Screen Navigation:** Implement "Flip-Screen" world navigation system (Zelda-style).
 - [x] **Collision Detection:** Implement tile-based collision sensing.
 - [ ] **Joystick Support:** Add support for analog game controllers via Port 201h.
+- [ ] **A fun game scenario** This is the most diffult part, I'm not sure what to do yet.
 
 ## Testing
 
