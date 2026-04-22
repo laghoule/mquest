@@ -18,7 +18,7 @@ CHAR_DIR_DATA ENDS
 
 CHARACTER STRUCT
   ch_action_addr       DW ?         ; Address of the action procedure
-  ch_loc               LOCATION < > ; X, Y-coordinate of the character
+  ch_loc               LOCATION < > ; X, Y coordinate of the character
   ch_dir               DB ?         ; Direction of the character
   ch_dir_tbl_addr      DW ?         ; Address of the direction table
   ch_anim_idx          DB ?         ; Index of the animation frame
