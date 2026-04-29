@@ -3,15 +3,20 @@
 ;  it under the terms of the GNU General Public License as published by
 ;  the Free Software Foundation, either version 3 of the License.
 
-; ------------------------------------------
+; ------------------------------------------------------
 ; INIT_TICKS
-; Initialize the game tick and pending tick
-; INPUT: game_tick, pending_tick
-; OUTPUT: game_tick, pending_tick
-; ------------------------------------------
+; Description: Initialize the game tick and pending tick
+; Registers: AX, ES
+; Input: None
+; Output: None
+; Modifed: game_tick, pending_tick
+; ------------------------------------------------------
 INIT_TICKS PROC
   SAVE_REGS
   PUSH ES
+
+  ; 40:6C BIOS data area, timer
+  ; https://stanislavs.org/helppc/bios_data_area.html
 
   MOV AX, 40h         ; Load the segment of the BIOS data area into AX
   MOV ES, AX          ; Load the segment of the BIOS data area into ES
@@ -25,15 +30,20 @@ INIT_TICKS PROC
   RET
 INIT_TICKS ENDP
 
-; -----------------------------------------------
+; -----------------------------------------------------------
 ; SYNC_TICKS
-; Count the number of ticks since the last check
-; INPUT:  game_tick
-; OUTPUT: CX (number of tick missed)
-; -----------------------------------------------
+; Description: Synchronize the game tick with the system tick
+; Registers: AX, ES
+; Input:  None
+; Output: CL: Number of tick missed
+; Modified: game_tick
+; ----------------------------------------------------------
 SYNC_TICKS PROC
   PUSH AX             ; Save AX
   PUSH ES             ; Save the original segment register
+
+  ; 40:6C BIOS data area, timer
+  ; https://stanislavs.org/helppc/bios_data_area.html
 
   MOV AX, 40h         ; Load the segment of the BIOS data area into AX
   MOV ES, AX          ; Load the segment of the BIOS data area into ES
@@ -42,11 +52,11 @@ SYNC_TICKS PROC
 
   MOV AH, AL          ; Save the current tick count into AH
   SUB AL, game_tick   ; Subtract the game tick from the current tick count
-  JZ @sc_no_change       ; If the result is zero, jump to @no_change
+  JZ @sc_no_change    ; If the result is zero, jump to @no_change
 
   MOV game_tick, AH   ; Update the game tick with the current tick count
   MOV CL, AL          ; CL = Number of tick missed
-  XOR CH, CH          ; CX = Delta
+  XOR CH, CH          ; Clear CH
   POP AX              ; Restore AX
   RET
 
