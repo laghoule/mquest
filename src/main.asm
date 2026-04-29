@@ -141,7 +141,7 @@ GAME_LOOP PROC
   CALL UPDATE_MUSIC_THEME     ; Update theme music
 @@:
 
-  CALL HANDLE_KEYBOARD_INPUT  ; Input game_tick, Output AL = 0 (no key), AL = 1 (action), AL = 2 (quit game)
+  CALL HANDLE_KEYBOARD_INPUT  ; Output AL = 0 (no key), AL = 1 (action), AL = 2 (quit game)
 
   CMP AL, 0                   ; Check if no key was pressed
   JE @gl_no_movement
