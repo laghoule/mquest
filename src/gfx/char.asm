@@ -3,20 +3,21 @@
 ;  it under the terms of the GNU General Public License as published by
 ;  the Free Software Foundation, either version 3 of the License.
 
-;------------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ; UPDATE_CHARACTER_ANIM_INDEX
 ; Description : Update the sprite of the character based on the animation index
+; Registers: AX, BX
 ; Input:    AX: char_index
 ; Output:   None
 ; Modified: Character data struct
-;------------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 UPDATE_CHARACTER_ANIM_INDEX PROC
   SAVE_REGS
 
   SHL AX, 1                           ; Conversion index -> offset (DW)
   MOV BX, AX                          ; Move the offset into BX
 
-  MOV BX, [char_data_table + bx]      ; BX = character data struct
+  MOV BX, [char_data_table + BX]      ; BX = character data struct
 
   ; We use the game tick to update the animation index
   MOV AL, game_tick
@@ -34,6 +35,7 @@ UPDATE_CHARACTER_ANIM_INDEX ENDP
 ;----------------------------------------------
 ; DRAW_CHARACTER
 ; Description: Draw the character on the screen
+; Registers: AX, BX, CX, DX, SI, DI, ES
 ; Input:    AX: char_index
 ; Output:   None
 ; Modified:
@@ -108,6 +110,7 @@ DRAW_CHARACTER ENDP
 ; SAVE_CHARACTER_BG
 ; Description: Save character background in memory
 ;              with inversion of DS and ES for using MOVSB optimization
+; Registers: AX, BX, CX, DI, SI, ES, DS
 ; Input: AX: char_index
 ; Output: None
 ; Modified: char_data_table.ch_bg_addr
@@ -167,6 +170,7 @@ SAVE_CHARACTER_BG ENDP
 ; RESTORE_CHARACTER_BG
 ; Description: Restore character background from memory
 ;              with MOVSB optimization
+; Registers: AX, BX, CX, DX, SI, DI
 ; Input:  AX: char_index
 ; Output: None
 ; ------------------------------------------------------
