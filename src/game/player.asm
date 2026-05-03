@@ -6,8 +6,8 @@
 ;---------------------------------------------------------------
 ; MOVE_CHAR
 ; Description: Handles movement and collision for all directions
-; Registers: AX, BX, CX, DX
-; Input:  AX: char_index, DX: direction
+; Registers: AX, BX, CL, DX
+; Input:  AX: char_index, CX: speed, DX: direction
 ; Output: None
 ; Modify: Character data table of char_index
 ;---------------------------------------------------------------
@@ -29,13 +29,13 @@ MOVE_CHAR PROC
   MOV AX, char_index
   CALL RESTORE_CHARACTER_BG                 ; We restore the background
 
+  ; Speed control of the character
+  XOR AH, AH
+  MOV AL, CL
+  
   ; We retrieve the x,y coordinates of the character
   MOV CX, [BX].CHARACTER.ch_loc.lo_x
   MOV DX, [BX].CHARACTER.ch_loc.lo_y
-
-  ; Load pending_tick in AL
-  XOR AH, AH
-  MOV AL, pending_tick
 
   ; Check for which direction to go
   CMP [BX].CHARACTER.ch_dir, RIGHT_DIR      ; Check for right

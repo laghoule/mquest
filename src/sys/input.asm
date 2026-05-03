@@ -40,26 +40,30 @@ HANDLE_KEYBOARD_INPUT PROC
   RET
 
 ; TODO: a lot of duplicated code here, optimize
-  
+
 @hki_move_right:
+  MOV CL, pending_tick
   MOV DX, RIGHT_DIR
   XOR AX, AX              ; Mia character index
   CALL MOVE_CHAR
   JMP @hki_return
 
 @hki_move_left:
+  MOV CL, pending_tick
   MOV DX, LEFT_DIR
   XOR AX, AX              ; Mia character index
   CALL MOVE_CHAR
   JMP @hki_return
 
 @hki_move_up:
+  MOV CL, pending_tick
   MOV DX, UP_DIR
   XOR AX, AX              ; Mia character index
   CALL MOVE_CHAR
   JMP @hki_return
 
 @hki_move_down:
+  MOV CL, pending_tick
   MOV DX, DOWN_DIR
   XOR AX, AX              ; Mia character index
   CALL MOVE_CHAR
@@ -72,7 +76,7 @@ HANDLE_KEYBOARD_INPUT PROC
 @hki_mute_music:
   CMP mute_flag, 1        ; Don't mute music if the mute flag is set (e.g. from command-line arguments)
   JE @hki_no_input
-  
+
   CMP music_theme_active, 1
   JE @F
   MOV music_theme_active, 1

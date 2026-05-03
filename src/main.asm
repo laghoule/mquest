@@ -20,6 +20,7 @@ INCLUDE defs/game/consts.inc             ; Game constants
 INCLUDE defs/musics/consts.inc           ; Musics constants
 
 .DATA
+  last_grandma_tick DB 0
   ; --- game ---
   INCLUDE defs/game/types.inc            ; Game types
   INCLUDE defs/game/assets.inc           ; Game assets
@@ -66,6 +67,7 @@ INCLUDE defs/musics/consts.inc           ; Musics constants
   INCLUDE gfx/char.asm                   ; Caracters drawing functions
   INCLUDE gfx/tile.asm                   ; Tiles drawing functions
   INCLUDE gfx/scene.asm                  ; Scene drawing functions
+  INCLUDE logic/npc.asm                  ; Non player character AI
 
 MAIN PROC
   ; ---Initialize segments---
@@ -89,7 +91,8 @@ MAIN PROC
   CALL LOAD_GAME_PALETTE
 
   ; --- Draw background and character ---
-  MOV BX, OFFSET map_scene_0_0
+  MOV BX, OFFSET map_scene_0_0        ; First scene (0,0)
+  MOV current_scene_addr, BX
   MOV AX, [BX].SCENE.sc_map_buffer_addr
   MOV map_buffer_addr, AX             ; map_buffer_addr is used to store the current scene buffer
   CALL DRAW_SCENE                     ; This is the background layer
@@ -132,6 +135,9 @@ GAME_LOOP PROC
 
   CALL SYNC_TICKS             ; Syncing timing
   ADD pending_tick, CL        ; Ticks count
+
+  ; Temporary NPC update testing
+  CALL UPDATE_GRANDMA_0_0     ; TODO: use ch_action_addr of the character
 
   ; Mute / Unmute music theme
   CMP mute_flag, 1

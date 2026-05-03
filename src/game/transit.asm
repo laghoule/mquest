@@ -146,6 +146,7 @@ CHECK_SCENE_TRANSITION PROC
 
   ; Draw the transition
 @cs_draw_transition:
+  MOV current_scene_addr, SI                ; Set the current scene address
   MOV AX, map_buffer_addr                   ; Load the map buffer address in AX, needed for DRAW_SCENE
   CALL DRAW_SCENE                           ; Draw the scene
 

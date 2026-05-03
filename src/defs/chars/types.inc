@@ -21,7 +21,9 @@ CHARACTER STRUCT
   ch_loc               LOCATION < > ; X, Y coordinate of the character
   ch_dir               DB ?         ; Direction of the character
   ch_dir_tbl_addr      DW ?         ; Address of the direction table
-  ch_anim_idx          DB ?         ; Index of the animation frame
+  ch_anim_idx          DB ?         ; Index of the animation frame | TODO: create anim struct
+  ch_anim_spd          DB ?         ; Speed for the animation frame | TODO: create anim struct
+  ch_anim_cnt          DB ?         ; Counter for the animation frame | TODO: create anim struct
   ch_bg_addr           DW ?         ; Address of the saved background
   ch_buf_addr          DW ?         ; Address of the character buffer sprite
   ch_scene_addr        DW ?         ; Address of the current scene location
