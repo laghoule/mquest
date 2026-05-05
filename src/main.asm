@@ -134,7 +134,8 @@ GAME_LOOP PROC
   WAIT_VSYNC                  ; Wait for vertical syncronization to avoid flickering
 
   CALL SYNC_TICKS             ; Syncing timing
-  ADD pending_tick, CL        ; Ticks count
+  MOV delta_tick, cl          ; Missing ticks since last update
+  ADD pending_tick, CL        ; Accumulate pending ticks
 
   ; Temporary NPC update testing
   CALL UPDATE_GRANDMA_0_0     ; TODO: use ch_action_addr of the character
