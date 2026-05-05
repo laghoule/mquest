@@ -11,9 +11,9 @@ HITBOX STRUCT
 HITBOX ENDS
 
 CHAR_DIR_DATA STRUCT
-  cd_sprt_tbl_addr    DW ?
-  cd_hitbox           DW ?
-  cd_dir              DB ?
+  cd_sprt_tbl_addr    DW ?          ; Address of the sprite table
+  cd_hitbox           DW ?          ; Address of the hitbox | TODO: should be HITBOX struct
+  cd_dir              DB ?          ; Direction of the character | TODO: value already in CHARACTER struct, check if really needed
 CHAR_DIR_DATA ENDS
 
 CHARACTER STRUCT
