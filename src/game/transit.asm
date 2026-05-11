@@ -116,7 +116,7 @@ CHECK_SCENE_TRANSITION PROC
   XOR AX, AX
   MOV CX, DX                                ; CX = pos_x
   MOV DX, [BX].CHARACTER.ch_loc.lo_y        ; DX = pos_y
-  CALL CHECK_HITBOX_COLLISION               ; Check if there is a collision
+  CALL CHECK_OBJECT_COLLISION               ; Check if there is a collision
   POP DX
   JC @cs_restore_scene                      ; If there is a collision, restore the scene and return
 
@@ -128,7 +128,7 @@ CHECK_SCENE_TRANSITION PROC
 @cs_check_and_update_y_transition:
   XOR AX, AX
   MOV CX, [BX].CHARACTER.ch_loc.lo_x        ; CX = pos_x, DX is already pos_y
-  CALL CHECK_HITBOX_COLLISION               ; Check if there is a collision
+  CALL CHECK_OBJECT_COLLISION               ; Check if there is a collision
   JC @cs_restore_scene                      ; If there is a collision, restore the scene and return
 
   MOV [BX].CHARACTER.ch_loc.lo_y, DX        ; Set the y position in the character structure

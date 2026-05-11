@@ -25,17 +25,16 @@ INCLUDE defs/musics/consts.inc           ; Musics constants
   INCLUDE defs/game/types.inc            ; Game types
   INCLUDE defs/game/assets.inc           ; Game assets
   INCLUDE defs/game/map-refs.inc         ; Map references
-  INCLUDE defs/game/map-scne.inc        ; Map scene data
+  INCLUDE defs/game/map-scne.inc         ; Map scene data
 
   ; --- Musics ---
   INCLUDE defs/musics/themes.inc         ; Music variables and songs
 
   ; --- Characters ---
+  INCLUDE defs/chars/chars.inc           ; Characters sprites tables and data
   INCLUDE defs/chars/types.inc           ; Characters types definitions
-  INCLUDE defs/chars/hitbox.inc          ; Characters hitbox data
   INCLUDE defs/chars/mia.inc             ; Mia animations sprite data
   INCLUDE defs/chars/grandma.inc         ; Grandma animations sprite data
-  INCLUDE defs/chars/sprites.inc         ; Characters sprites tables and data
 
   ; --- Palettes ---
   INCLUDE defs/gfx/pals/pal.inc          ; Palette data
@@ -52,6 +51,7 @@ INCLUDE defs/musics/consts.inc           ; Musics constants
 
 .CODE
   INCLUDE game/assets.asm                ; Assets functions
+  INCLUDE game/events.asm                ; Events functions
   INCLUDE game/player.asm                ; Player functions
   INCLUDE game/collis.asm                ; Collision functions
   INCLUDE game/transit.asm               ; Scene transition functions

@@ -55,6 +55,17 @@ UPDATE_GRANDMA_0_0 PROC
   MOV DX, LEFT_DIR                              ; DX is the direction in MOVE_CHAR
 
 @ug_move:
+  ;PUSH ES
+  ;MOV AX, 40h
+  ;MOV ES, AX
+  ;MOV AX, ES:[6Ch]
+  ;MOV grandma_tick, AX
+  ;MOV SI, OFFSET grandma_tick
+  ;POP ES
+
+  ;MOV AX, OFFSET SLEEP
+  ;MOV [BX].CHARACTER.ch_event_addr, AX
+
   MOV CL, delta_tick                            ; Use delta_tick as the speed
   MOV AX, 1                                     ; AX is the character index in MOVE_CHAR (1 = grandma) | TODO: remove magic number
   CALL MOVE_CHAR
