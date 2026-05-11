@@ -1,7 +1,7 @@
-; --- definition -----------------------------------------------------------------------------------------------------------------
-; ch_action_addr, ch_loc, ch_dir, ch_dir_table_addr, ch_anim_idx, ch_anim_spd, ch_anim_cnt, ch_bg_addr, ch_buf_addr, ch_scene_addr
-; --------------------------------------------------------------------------------------------------------------------------------
-grandma_data CHARACTER <0, <280, 45>, LEFT_DIR, OFFSET grandma_dir_table, 0, 1, 0, OFFSET grandma_bg_buffer, OFFSET grandma_buffer, OFFSET map_scene_0_0>
+; --- definition --------------------------------------------------------------------------------------------------------------------------------
+; ch_action_addr, ch_event_addr, ch_loc, ch_dir, ch_dir_table_addr, ch_anim_idx, ch_anim_spd, ch_anim_cnt, ch_bg_addr, ch_buf_addr, ch_scene_addr
+; -----------------------------------------------------------------------------------------------------------------------------------------------
+grandma_data CHARACTER <0, 0, <280, 45>, LEFT_DIR, OFFSET grandma_dir_table, 0, 1, 0, OFFSET grandma_bg_buffer, OFFSET grandma_buffer, OFFSET map_scene_0_0>
 
 grandma_tile_file           DB "assets/grandma.pic", 0  ; Grandma tileset
 grandma_bg_buffer           DB CHAR_SIZE DUP(0)         ; Grandma background buffered sprite
@@ -15,10 +15,10 @@ grandma_dir_table           DW OFFSET grandma_right_data
                             DW OFFSET grandma_down_data
 
 ; --- Grandma direction data ---
-grandma_right_data          CHAR_DIR_DATA <OFFSET grandma_sprt_right_table, OFFSET char_hitbox_right, RIGHT_DIR>
-grandma_left_data           CHAR_DIR_DATA <OFFSET grandma_sprt_left_table,  OFFSET char_hitbox_left,  LEFT_DIR>
-grandma_up_data             CHAR_DIR_DATA <OFFSET grandma_sprt_up_table,    OFFSET char_hitbox_head,  UP_DIR>
-grandma_down_data           CHAR_DIR_DATA <OFFSET grandma_sprt_down_table,  OFFSET char_hitbox_foot,  DOWN_DIR>
+grandma_right_data          CHAR_DIR_DATA <OFFSET grandma_sprt_right_table, OFFSET grandma_hb_right,  RIGHT_DIR>
+grandma_left_data           CHAR_DIR_DATA <OFFSET grandma_sprt_left_table,  OFFSET grandma_hb_left,   LEFT_DIR>
+grandma_up_data             CHAR_DIR_DATA <OFFSET grandma_sprt_up_table,    OFFSET grandma_hb_top,    UP_DIR>
+grandma_down_data           CHAR_DIR_DATA <OFFSET grandma_sprt_down_table,  OFFSET grandma_hb_bottom, DOWN_DIR>
 
 ; --- Grandma animation down table ---
 grandma_sprt_down_table     DW CHAR_SPRT_IDX_0  ; tile 0
@@ -39,3 +39,9 @@ grandma_sprt_up_table       DW CHAR_SPRT_IDX_2  ; tile 2
 grandma_sprt_left_table     DW CHAR_SPRT_IDX_3  ; tile 3
                             DW CHAR_SPRT_IDX_7  ; tile 7
                             DW CHAR_SPRT_IDX_11 ; tile 11
+
+; --- Grandma hitbox data ---
+grandma_hb_left             HITBOX <1, 1, 15, 16>
+grandma_hb_right            HITBOX <0, 1, 15, 16>
+grandma_hb_top              HITBOX <1, 1, 15, 16>
+grandma_hb_bottom           HITBOX <1, 1, 15, 16>

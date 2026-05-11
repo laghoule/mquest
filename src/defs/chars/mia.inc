@@ -1,9 +1,7 @@
-; Tool for sprites creation: https://github.com/laghoule/png2asm
-
-; --- definition -----------------------------------------------------------------------------------------------------------------
-; ch_action_addr, ch_loc, ch_dir, ch_dir_table_addr, ch_anim_idx, ch_anim_spd, ch_anim_cnt, ch_bg_addr, ch_buf_addr, ch_scene_addr
-; --------------------------------------------------------------------------------------------------------------------------------
-mia_data CHARACTER <0, <150, 90>, DOWN_DIR, OFFSET mia_dir_table, 0, 3, 0, OFFSET mia_bg_buffer, OFFSET mia_buffer, OFFSET map_scene_0_0>
+; --- definition --------------------------------------------------------------------------------------------------------------------------------
+; ch_action_addr, ch_event_addr, ch_loc, ch_dir, ch_dir_table_addr, ch_anim_idx, ch_anim_spd, ch_anim_cnt, ch_bg_addr, ch_buf_addr, ch_scene_addr
+; -----------------------------------------------------------------------------------------------------------------------------------------------
+mia_data CHARACTER <0, 0, <150, 90>, DOWN_DIR, OFFSET mia_dir_table, 0, 3, 0, OFFSET mia_bg_buffer, OFFSET mia_buffer, OFFSET map_scene_0_0>
 
 mia_tile_file           DB "assets/mia.pic", 0  ; Mia tileset
 mia_bg_buffer           DB CHAR_SIZE DUP(0)     ; Mia background buffered sprite
@@ -17,10 +15,10 @@ mia_dir_table           DW OFFSET mia_right_data
                         DW OFFSET mia_down_data
 
 ; --- Mia direction data ---
-mia_right_data          CHAR_DIR_DATA <OFFSET mia_sprt_right_table, OFFSET char_hitbox_right, RIGHT_DIR>
-mia_left_data           CHAR_DIR_DATA <OFFSET mia_sprt_left_table,  OFFSET char_hitbox_left,  LEFT_DIR>
-mia_up_data             CHAR_DIR_DATA <OFFSET mia_sprt_up_table,    OFFSET char_hitbox_head,  UP_DIR>
-mia_down_data           CHAR_DIR_DATA <OFFSET mia_sprt_down_table,  OFFSET char_hitbox_foot,  DOWN_DIR>
+mia_right_data          CHAR_DIR_DATA <OFFSET mia_sprt_right_table, OFFSET mia_hb_right,  RIGHT_DIR>
+mia_left_data           CHAR_DIR_DATA <OFFSET mia_sprt_left_table,  OFFSET mia_hb_left,   LEFT_DIR>
+mia_up_data             CHAR_DIR_DATA <OFFSET mia_sprt_up_table,    OFFSET mia_hb_top,    UP_DIR>
+mia_down_data           CHAR_DIR_DATA <OFFSET mia_sprt_down_table,  OFFSET mia_hb_bottom, DOWN_DIR>
 
 ; --- Mia animation down table ---
 mia_sprt_down_table     DW CHAR_SPRT_IDX_0  ; tile 0
@@ -41,3 +39,9 @@ mia_sprt_up_table       DW CHAR_SPRT_IDX_2  ; tile 2
 mia_sprt_left_table     DW CHAR_SPRT_IDX_3  ; tile 3
                         DW CHAR_SPRT_IDX_7  ; tile 7
                         DW CHAR_SPRT_IDX_11 ; tile 11
+
+; --- Mia hitbox data ---
+mia_hb_left             HITBOX <1, 1, 15, 16>
+mia_hb_right            HITBOX <0, 1, 15, 16>
+mia_hb_top              HITBOX <1, 1, 15, 16>
+mia_hb_bottom           HITBOX <1, 1, 15, 16>
