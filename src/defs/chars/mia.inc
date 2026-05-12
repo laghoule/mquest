@@ -42,7 +42,7 @@ mia_sprt_left_table     DW CHAR_SPRT_IDX_3  ; tile 3
                         DW CHAR_SPRT_IDX_11 ; tile 11
 
 ; --- Mia hitbox data ---
-mia_hb_left             HITBOX <1, 1, 15, 16>
-mia_hb_right            HITBOX <0, 1, 15, 16>
-mia_hb_top              HITBOX <1, 1, 15, 16>
-mia_hb_bottom           HITBOX <1, 1, 15, 16>
+mia_hb_left             HITBOX <1, 1, 15, 15>
+mia_hb_right            HITBOX <1, 1, 15, 15>
+mia_hb_top              HITBOX <1, 1, 15, 15>
+mia_hb_bottom           HITBOX <1, 1, 15, 15>
