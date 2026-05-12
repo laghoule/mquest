@@ -4,7 +4,7 @@
 ;  the Free Software Foundation, either version 3 of the License.
 
 ;--------------------------------------------------
-; SLEEP
+; PAUSE
 ; Description: Wait for a number of second (max 10)
 ; Registers: AX, BX, CX, DX, ES
 ; Input:  CX = Number of second to wait
@@ -12,36 +12,44 @@
 ; Output: None
 ; Modify: None
 ;--------------------------------------------------
-SLEEP PROC
+PAUSE PROC
   SAVE_REGS
 
   MOV CX, 2
-  
-  MOV AX, 40h         ; Segment of the BIOS data area
-  MOV ES, AX
-  MOV AX, ES:[6Ch]    ; Get the current tick
-  ;MOV AX, [SI]
+
+  SHL AX, 1
+  MOV BX, AX
+  MOV BX, [char_data_table + BX]
+
+  MOV AX, [BX].CHARACTER.ch_tick
 
   ; We need to wait for CX * 18.20648 ticks
-  MOV BX, CX          ; Multiply * 2
-  SHL BX, 1
+  MOV DX, CX          ; Multiply * 2
+  SHL DX, 1
 
   SHL CX, 1           ; Multiply * 16
   SHL CX, 1
   SHL CX, 1
   SHL CX, 1
 
-  ADD CX, BX          ; We add to get the * 18
+  ADD CX, DX          ; We add to get the * 18
 
   ; --- Wait for the number of tick ---
-@s_wait:
+  MOV DX, 40h
+  PUSH ES
+  MOV ES, DX
   MOV DX, ES:[6Ch]    ; Get the current tick
+  POP ES
   SUB DX, AX          ; Subtract the initial tick
   CMP DX, CX          ; Compare with the number of tick to wait
-  JGE @s_return       ; If we have waited enough, return
-  JMP @s_wait         ; Else, wait more
+  JGE @s_unpause      ; If we have waited enough, unpause the character
+  MOV [BX].CHARACTER.ch_state, 1
+  JMP @s_return
+
+@s_unpause:
+  MOV [BX].CHARACTER.ch_state, 0
 
 @s_return:
   RESTORE_REGS
   RET
-SLEEP ENDP
+PAUSE ENDP

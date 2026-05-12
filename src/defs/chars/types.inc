@@ -19,6 +19,8 @@ CHAR_DIR_DATA ENDS
 CHARACTER STRUCT
   ch_action_addr       DW ?         ; Address of the action procedure
   ch_event_addr        DW ?         ; Address of the event procedure
+  ch_tick              DW ?         ; Tick counter
+  ch_state             DB ?         ; State of the character
   ch_loc               LOCATION < > ; X, Y coordinate of the character
   ch_dir               DB ?         ; Direction of the character
   ch_dir_tbl_addr      DW ?         ; Address of the direction table

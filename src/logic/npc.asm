@@ -17,6 +17,17 @@ UPDATE_GRANDMA_0_0 PROC
   ; Load grandma character
   MOV BX, [char_data_table + 2]
 
+  MOV AX, OFFSET PAUSE                          ; Offset of the label of the PAUSE proc
+  MOV [BX].CHARACTER.ch_event_addr, AX
+
+  CMP [BX].CHARACTER.ch_state, 0                ; If state is 0, we jump to @@
+  JZ @F
+
+  MOV AX, 1                                     ; Grandma character index
+  CALL [BX].CHARACTER.ch_event_addr             ; State is not 0, so we call the pause event
+  JMP @ug_skip
+
+@@:
   ; If not in the current scene, we dont render
   MOV AX, current_scene_addr
   CMP [BX].CHARACTER.ch_scene_addr, AX
@@ -55,19 +66,9 @@ UPDATE_GRANDMA_0_0 PROC
   MOV DX, LEFT_DIR                              ; DX is the direction in MOVE_CHAR
 
 @ug_move:
-  ;PUSH ES
-  ;MOV AX, 40h
-  ;MOV ES, AX
-  ;MOV AX, ES:[6Ch]
-  ;MOV grandma_tick, AX
-  ;MOV SI, OFFSET grandma_tick
-  ;POP ES
-
-  ;MOV AX, OFFSET SLEEP
-  ;MOV [BX].CHARACTER.ch_event_addr, AX
-
   MOV CL, delta_tick                            ; Use delta_tick as the speed
   MOV AX, 1                                     ; AX is the character index in MOVE_CHAR (1 = grandma) | TODO: remove magic number
+  CALL UPDATE_CHAR_TICK
   CALL MOVE_CHAR
   RENDER_CHARACTER
 
@@ -75,3 +76,29 @@ UPDATE_GRANDMA_0_0 PROC
   RESTORE_REGS
   RET
 UPDATE_GRANDMA_0_0 ENDP
+
+;------------------------------------------------------------------------------
+; UPDATE_CHAR_TICK
+; Description: Updates the tick of a character
+; Registers: AX, BX, ES
+; Input: AX = character index
+; Output: None
+; Modified: [BX].CHARACTER.ch_tick
+;------------------------------------------------------------------------------
+UPDATE_CHAR_TICK PROC
+  SAVE_REGS
+
+  SHL AX, 1
+  MOV BX, AX
+  MOV BX, [char_data_table + BX]
+
+  PUSH ES
+  MOV AX, 40h
+  MOV ES, AX
+  MOV AX, ES:[6Ch]
+  MOV [BX].CHARACTER.ch_tick, AX
+  POP ES
+
+  RESTORE_REGS
+  RET
+UPDATE_CHAR_TICK ENDP
