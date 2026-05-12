@@ -10,39 +10,41 @@
 ; Input:  CX = Number of second to wait
 ;   Implicit: tick = Initial tick
 ; Output: None
-; Modify: None
+; Modify: [BX].CHARACTER.ch_state
 ;--------------------------------------------------
 PAUSE PROC
   SAVE_REGS
 
-  MOV CX, 2
+  MOV CX, 2                         ; TODO: hardcoded pause of 2 sec
 
-  SHL AX, 1
+  SHL AX, 1                         ;  Conversion characted index -> offset (DW)
   MOV BX, AX
-  MOV BX, [char_data_table + BX]
+  MOV BX, [char_data_table + BX]    ; BX = Address of the character data structure
 
-  MOV AX, [BX].CHARACTER.ch_tick
+  MOV AX, [BX].CHARACTER.ch_tick    ; AX = Initial tick of the character
 
   ; We need to wait for CX * 18.20648 ticks
-  MOV DX, CX          ; Multiply * 2
+  MOV DX, CX                        ; Multiply * 2
   SHL DX, 1
 
-  SHL CX, 1           ; Multiply * 16
+  SHL CX, 1                         ; Multiply * 16
   SHL CX, 1
   SHL CX, 1
   SHL CX, 1
 
-  ADD CX, DX          ; We add to get the * 18
+  ADD CX, DX                        ; We add to get the * 18
 
   ; --- Wait for the number of tick ---
-  MOV DX, 40h
   PUSH ES
+  MOV DX, 40h
   MOV ES, DX
-  MOV DX, ES:[6Ch]    ; Get the current tick
+  MOV DX, ES:[6Ch]                  ; Get the current tick
   POP ES
-  SUB DX, AX          ; Subtract the initial tick
-  CMP DX, CX          ; Compare with the number of tick to wait
-  JGE @s_unpause      ; If we have waited enough, unpause the character
+  ; --- current - character tick to get the number of tick waited ----
+  SUB DX, AX                        ; Subtract the initial tick
+  CMP DX, CX                        ; Compare with the number of tick to wait
+  ; --- If we have waited enough, unpause the character ---
+  JGE @s_unpause
   MOV [BX].CHARACTER.ch_state, 1
   JMP @s_return
 
