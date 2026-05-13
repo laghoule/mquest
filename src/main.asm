@@ -20,7 +20,7 @@ INCLUDE defs/game/consts.inc             ; Game constants
 INCLUDE defs/musics/consts.inc           ; Musics constants
 
 .DATA
-  last_grandma_tick DB 0
+  last_grandma_tick DB 0                 ; TODO: Move to char data
   ; --- game ---
   INCLUDE defs/game/types.inc            ; Game types
   INCLUDE defs/game/assets.inc           ; Game assets
