@@ -64,11 +64,11 @@ MOVE_CHAR PROC
 
 @mm_collision_detection:
   CALL CHECK_CHAR_COLLISION
-  JC @mmg_collision_event                      ; Goto skip to animation if carry flag set
+  JC @mmg_collision_event                   ; Goto skip to animation if carry flag set
 
   MOV AX, char_index
   CALL CHECK_OBJECT_COLLISION               ; Check for collition via character hitbox
-  JC @mmg_collision_event                      ; Goto skip to animation if carry flag set
+  JC @mmg_collision_event                   ; Goto skip to animation if carry flag set
 
   ; No collision detected
   MOV [BX].CHARACTER.ch_loc.lo_x, CX        ; We save the x,y in the character struct
@@ -76,9 +76,9 @@ MOVE_CHAR PROC
   JMP @mmg_skip_to_anim
 
 @mmg_collision_event:
-  CMP [BX].CHARACTER.ch_event_addr, 0       ; Check if event address is zero (no event action)
+  CMP [BX].CHARACTER.ch_event.ev_addr, 0    ; Check if event address is zero (no event action)
   JE @mmg_skip_to_anim                      ; If zero, skip to animation
-  CALL [BX].CHARACTER.ch_event_addr         ; Call collision event
+  CALL [BX].CHARACTER.ch_event.ev_addr      ; Call collision event
 
 @mmg_skip_to_anim:
   MOV AX, char_index

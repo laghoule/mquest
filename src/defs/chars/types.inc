@@ -11,16 +11,21 @@ HITBOX STRUCT
 HITBOX ENDS
 
 CHAR_DIR_DATA STRUCT
-  cd_sprt_tbl_addr    DW ?          ; Address of the sprite table
-  cd_hitbox           DW ?          ; Address of the hitbox | TODO: should be HITBOX struct
-  cd_dir              DB ?          ; Direction of the character | TODO: value already in CHARACTER struct, check if really needed
+  cd_sprt_tbl_addr     DW ?         ; Address of the sprite table
+  cd_hitbox            DW ?         ; Address of the hitbox | TODO: should be HITBOX struct
+  cd_dir               DB ?         ; Direction of the character | TODO: value already in CHARACTER struct, check if really needed
 CHAR_DIR_DATA ENDS
+
+EVENT STRUCT
+  ev_addr              DW ?         ; Address of the event procedure
+  ev_tick              DW ?         ; Tick counter
+  ev_state             DW ?         ; State of the event
+  ev_param             DW ?         ; Parameter of the event
+EVENT ENDS
 
 CHARACTER STRUCT
   ch_action_addr       DW ?         ; Address of the action procedure
-  ch_event_addr        DW ?         ; Address of the event procedure
-  ch_tick              DW ?         ; Tick counter
-  ch_state             DB ?         ; State of the character
+  ch_event             EVENT < >    ; Event data
   ch_loc               LOCATION < > ; X, Y coordinate of the character
   ch_dir               DB ?         ; Direction of the character
   ch_dir_tbl_addr      DW ?         ; Address of the direction table

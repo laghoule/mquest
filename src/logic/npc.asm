@@ -18,13 +18,14 @@ UPDATE_GRANDMA_0_0 PROC
   MOV BX, [char_data_table + 2]
 
   MOV AX, OFFSET PAUSE                          ; Offset of the label of the PAUSE proc
-  MOV [BX].CHARACTER.ch_event_addr, AX
-
-  CMP [BX].CHARACTER.ch_state, 0                ; If state is 0, we jump to @@
+  MOV [BX].CHARACTER.ch_event.ev_addr, AX
+  MOV [BX].CHARACTER.ch_event.ev_param, 2
+  
+  CMP [BX].CHARACTER.ch_event.ev_state, 0       ; If state is 0, we jump to @@
   JZ @F
 
   MOV AX, 1                                     ; Grandma character index
-  CALL [BX].CHARACTER.ch_event_addr             ; State is not 0, so we call the pause event
+  CALL [BX].CHARACTER.ch_event.ev_addr          ; State is not 0, so we call the pause event
   JMP @ug_skip
 
 @@:
@@ -83,20 +84,20 @@ UPDATE_GRANDMA_0_0 ENDP
 ; Registers: AX, BX, ES
 ; Input: AX = character index
 ; Output: None
-; Modified: [BX].CHARACTER.ch_tick
+; Modified: [BX].CHARACTER.ch_event.ev_tick
 ;------------------------------------------------------------------------------
 UPDATE_CHAR_TICK PROC
   SAVE_REGS
 
-  SHL AX, 1
+  SHL AX, 1                                     ; Conversion characted index -> offset (DW)
   MOV BX, AX
-  MOV BX, [char_data_table + BX]
+  MOV BX, [char_data_table + BX]                ; BX = Address of the character data structure
 
   PUSH ES
   MOV AX, 40h
   MOV ES, AX
   MOV AX, ES:[6Ch]
-  MOV [BX].CHARACTER.ch_tick, AX
+  MOV [BX].CHARACTER.ch_event.ev_tick, AX       ; Set the tick to the current tick for the character
   POP ES
 
   RESTORE_REGS
