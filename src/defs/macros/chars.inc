@@ -4,6 +4,12 @@ SYNC_POS_REGS MACRO
 ENDM
 
 RENDER_CHARACTER MACRO
+  CALL RESTORE_CHARACTER_BG
+  CALL SAVE_CHARACTER_BG          ; Save the background of the character
+  CALL DRAW_CHARACTER             ; Draw the character on the screen
+ENDM
+
+INIT_RENDER_CHARACTER MACRO
   CALL SAVE_CHARACTER_BG          ; Save the background of the character
   CALL DRAW_CHARACTER             ; Draw the character on the screen
 ENDM

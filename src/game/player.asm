@@ -26,9 +26,6 @@ MOVE_CHAR PROC
   XOR DH, DH                                ; ch_dir is a byte, so we clear DH
   MOV [BX].CHARACTER.ch_dir, DL             ; Set character direction from input DX
 
-  MOV AX, char_index
-  CALL RESTORE_CHARACTER_BG                 ; We restore the background
-
   ; Speed control of the character
   XOR AH, AH
   MOV AL, CL
@@ -36,6 +33,9 @@ MOVE_CHAR PROC
   ; We retrieve the x,y coordinates of the character
   MOV CX, [BX].CHARACTER.ch_loc.lo_x
   MOV DX, [BX].CHARACTER.ch_loc.lo_y
+
+  MOV pos_x, CX                             ; Save the current position of the character
+  MOV pos_y, DX                             ; For use in background restoration
 
   ; Check for which direction to go
   CMP [BX].CHARACTER.ch_dir, RIGHT_DIR      ; Check for right

@@ -99,11 +99,11 @@ MAIN PROC
 
   ; Grandma
   MOV AX, 1                           ; Charater index
-  RENDER_CHARACTER                    ; Render character macro
+  INIT_RENDER_CHARACTER               ; Render character macro
 
   ; Mia
   XOR AX, AX                          ; Charater index
-  RENDER_CHARACTER                    ; Render character macro
+  INIT_RENDER_CHARACTER               ; Render character macro
 
   CMP mute_flag, 1
   JE @m_no_music
@@ -131,8 +131,6 @@ GAME_LOOP PROC
   SAVE_REGS
 
 @gl_get_next_key:
-  WAIT_VSYNC                  ; Wait for vertical syncronization to avoid flickering
-
   CALL SYNC_TICKS             ; Syncing timing
   MOV delta_tick, cl          ; Missing ticks since last update
   ADD pending_tick, CL        ; Accumulate pending ticks
@@ -155,6 +153,8 @@ GAME_LOOP PROC
 
   CMP AL, 2                   ; Check if quit game key was pressed
   JE @gl_exit_game
+
+  WAIT_VSYNC                  ; Wait for vertical syncronization to avoid flickering
 
   XOR AX, AX                  ; Mia character
   RENDER_CHARACTER            ; Render character macro
