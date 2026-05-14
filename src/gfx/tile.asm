@@ -40,11 +40,11 @@ DRAW_TILE PROC
 
     ; MOVSB copies a byte from DS:SI to ES:DI and increments both pointers
     ; REP repeats the MOVSB instruction CX times (line width)
-    REP MOVSB
+    REP MOVSB                     ; TODO: use MOVSW
     JMP @dt_next_line
 
     @dt_draw_pixel:
-      LODSB                       ; Load from SI in AL then increment SI
+      LODSB                       ; Load from SI in AL then increment SI | TODO: use LODSW
       OR AL, AL                   ; Check if pixel is transparent
       JZ @dt_skip_pixel           ; Skip pixel if transparent
       MOV ES:[DI], AL             ; Draw pixel
