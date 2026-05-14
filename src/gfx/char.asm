@@ -176,7 +176,7 @@ SAVE_CHARACTER_BG ENDP
 ; ------------------------------------------------------
 ; RESTORE_CHARACTER_BG
 ; Description: Restore character background from memory
-;              with MOVSB optimization
+;              with MOVSW optimization
 ; Registers: AX, BX, CX, DX, SI, DI
 ; Input:  AX: char_index
 ; Output: None
@@ -201,10 +201,11 @@ RESTORE_CHARACTER_BG PROC
 @rcb_restore_line:
   PUSH DI
   MOV CX, CHAR_WIDTH                  ; Counter of number of pixels to draw (line width)
+  SHR CX, 1                           ; Divide by 2 because we use MOVSW
 
-  ; MOVSB copies a byte from DS:SI to ES:DI and increments both pointers
+  ; MOVSW copies a byte from DS:SI to ES:DI and increments both pointers
   ; REP repeats the MOVSB instruction CX times (line width)
-  REP MOVSB
+  REP MOVSW
 
   POP DI                              ; Restore the initial position of the line
   ADD DI, SCREEN_WIDTH                ; Calcul the position of the next line
