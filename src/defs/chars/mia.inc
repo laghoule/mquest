@@ -2,7 +2,7 @@
 ; ch_action_addr, ch_event, ch_loc, ch_dir, ch_dir_table_addr, ch_anim_idx, ch_anim_spd, ch_anim_cnt,
 ; ch_bg_buf_addr, ch_sprt_buf_addr, ch_render_buf_addr, ch_scene_addr
 ; ---------------------------------------------------------------------------------------------------
-mia_data CHARACTER <0, <0, 0, 0, 0>, <280, 90>, DOWN_DIR, OFFSET mia_dir_table, 0, 3, 0, OFFSET mia_bg_buffer, OFFSET mia_buffer, OFFSET mia_sprite_buffer, OFFSET map_scene_0_0>
+mia_data CHARACTER <0, <0, 0, 0, 0>, <280, 90>, DOWN_DIR, OFFSET mia_dir_table, 0, 3, 0, OFFSET mia_bg_buffer, OFFSET mia_tile_buffer, OFFSET mia_sprite_buffer, OFFSET map_scene_0_0>
 
 mia_tile_file           DB "assets/mia.pic", 0  ; Mia tileset
 mia_bg_buffer           DB CHAR_SIZE DUP(0)     ; Mia background buffered sprite
