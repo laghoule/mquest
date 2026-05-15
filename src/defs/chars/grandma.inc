@@ -1,12 +1,13 @@
 ; --- definition ------------------------------------------------------------------------------------
-; ch_action_addr, ch_event, ch_loc, ch_dir, ch_dir_table_addr, ch_anim_idx, ch_anim_spd, ch_anim_cnt, 
-; ch_bg_addr, ch_buf_addr, ch_scene_addr
+; ch_action_addr, ch_event, ch_loc, ch_dir, ch_dir_table_addr, ch_anim_idx, ch_anim_spd, ch_anim_cnt,
+; ch_bg_buf_addr, ch_sprt_buf_addr, ch_render_buf_addr, ch_scene_addr
 ; ---------------------------------------------------------------------------------------------------
-grandma_data CHARACTER <0, <0, 0, 0, 0>, <280, 45>, LEFT_DIR, OFFSET grandma_dir_table, 0, 1, 0, OFFSET grandma_bg_buffer, OFFSET grandma_buffer, OFFSET map_scene_0_0>
+grandma_data CHARACTER <0, <0, 0, 0, 0>, <280, 45>, LEFT_DIR, OFFSET grandma_dir_table, 0, 1, 0, OFFSET grandma_bg_buffer, OFFSET grandma_buffer, OFFSET grandma_sprite_buffer, OFFSET map_scene_0_0>
 
 grandma_tile_file           DB "assets/grandma.pic", 0  ; Grandma tileset
 grandma_bg_buffer           DB CHAR_SIZE DUP(0)         ; Grandma background buffered sprite
-grandma_buffer              DB 3500 DUP(0)              ; Grandma buffered sprite
+grandma_tile_buffer         DB 3500 DUP(0)              ; Grandma buffered tiles sprite
+grandma_sprite_buffer       DB 272 DUP(0)               ; Grandma buffered sprite
 
 ; --- Grandma movement data table ---
 ; Must follow orders define in defs/game/dir.inc

@@ -39,15 +39,15 @@ UPDATE_CHARACTER_ANIM_INDEX PROC
   RET
 UPDATE_CHARACTER_ANIM_INDEX ENDP
 
-;----------------------------------------------
-; DRAW_CHARACTER
-; Description: Draw the character on the screen
+;---------------------------------------------------
+; DRAW_CHARACTER_MEM
+; Description: Draw the character in a memory buffer
 ; Registers: AX, BX, CX, DX, SI, DI, ES
 ; Input:    AX: char_index
 ; Output:   None
 ; Modified:
-; ---------------------------------------------
-DRAW_CHARACTER PROC
+; --------------------------------------------------
+DRAW_CHARACTER_MEM PROC
   SAVE_REGS
   CLD                                         ; Clear direction flag
 
@@ -55,6 +55,20 @@ DRAW_CHARACTER PROC
   MOV BX, AX
 
   MOV BX, [char_data_table + BX]              ; BX = character data struct
+
+  ; --- Copy character background to ch_sprite_buffer
+  PUSH ES
+  MOV AX, DS
+  MOV ES, AX
+  MOV SI, [BX].CHARACTER.ch_bg_buf_addr       ; SI = Address of the character background buffer
+  MOV DI, [BX].CHARACTER.ch_render_buf_addr   ; DI = Address of the character render buffer
+  MOV CX, CHAR_SIZE                           ; CX = Number of bytes to copy
+  SHR CX, 1                                   ; Convert byte count -> word count
+  REP MOVSW                                   ; Copy background to render buffer
+  POP ES
+
+  ; --- Setup registers for sprite drawing ---
+  MOV DI, [BX].CHARACTER.ch_render_buf_addr
 
   ; --- Direction ---
   XOR AH, AH
@@ -78,20 +92,16 @@ DRAW_CHARACTER PROC
   MOV AX, [SI]                                ; AX = Dereference sprite offset to get the right tile
 
   ; --- Sprite buffered data ---
-  MOV SI, [BX].CHARACTER.ch_buf_addr          ; Load character offset buffer
+  MOV SI, [BX].CHARACTER.ch_sprt_buf_addr     ; Load character offset buffer
   ADD SI, PIC_HDR_SIZE                        ; Jump above .pic header size
   ADD SI, AX                                  ; Tile index in the tileset buffef
-
-  ; --- Position ---
-  MOV AX, [BX].CHARACTER.ch_loc.lo_x          ; This will be gone when position refactor is complete
-  PUSH BX                                     ; Save BX
-  MOV BX, [BX].CHARACTER.ch_loc.lo_y          ; Idem
-  CALC_VGA_POSITION AX, BX                    ; Calculate VGA position in DI
-  POP BX
 
   MOV DX, CHAR_HEIGHT                         ; Height of the sprite (number of lines)
 
   ; --- draw the character loop ---
+  PUSH ES                                     ; Save ES (VGA segment)
+  MOV AX, DS
+  MOV ES, AX                                  ; ES = DS (Memory segment)
   @dc_draw_line:
     MOV CX, CHAR_WIDTH
     PUSH DI                                   ; Save current line start
@@ -105,13 +115,55 @@ DRAW_CHARACTER PROC
         LOOP @dc_draw_pixel
 
     POP DI                                    ; Restore line start
-    ADD DI, SCREEN_WIDTH                      ; Move DI to the next line
+    ADD DI, CHAR_WIDTH                        ; Move DI to the next line
     DEC DX
     JNZ @dc_draw_line                         ; Draw next line if character is not entirely draw
+  POP ES                                      ; Restore ES (VGA segment)
 
   RESTORE_REGS
   RET
-DRAW_CHARACTER ENDP
+DRAW_CHARACTER_MEM ENDP
+
+;----------------------------------------------
+; DRAW_CHARACTER_VGA
+; Description: Draw the character on VGA memory
+; Registers: AX, BX, CX, DX, SI, DI, ES
+; Input:    AX: char_index
+; Output:   None
+; Modified:
+; ---------------------------------------------
+DRAW_CHARACTER_VGA PROC
+  SAVE_REGS
+  CLD                                         ; Clear direction flag
+
+  SHL AX, 1                                   ; Convert index -> offset (DW)
+  MOV BX, AX
+
+  MOV BX, [char_data_table + BX]              ; BX = character data struct
+
+  ; --- Position ---
+  MOV AX, [BX].CHARACTER.ch_loc.lo_x          ; AX = character X position
+  PUSH BX
+  MOV BX, [BX].CHARACTER.ch_loc.lo_y          ; BX = character Y position
+  CALC_VGA_POSITION AX, BX                    ; Calculate VGA position in DI
+  POP BX
+
+  MOV SI, [BX].CHARACTER.ch_render_buf_addr   ; SI = character render buffer address
+  MOV DX, CHAR_HEIGHT
+
+@dcg_draw_line:
+  PUSH DI                                     ; Save current line start
+  MOV CX, CHAR_WIDTH                          ; CX = number of bytes to copy
+  SHR CX, 1                                   ; Divide by 2 for word copy
+  REP MOVSW                                   ; Copy a line of the character to the screen
+  POP DI                                      ; Restore line start
+  ADD DI, SCREEN_WIDTH                        ; Move DI to the next line
+  DEC DX                                      ; Decrement line counter
+  JNZ @dcg_draw_line                          ; Draw next line if character is not entirely draw
+
+  RESTORE_REGS
+  RET
+DRAW_CHARACTER_VGA ENDP
 
 ; ---------------------------------------------------------------------
 ; SAVE_CHARACTER_BG
@@ -137,8 +189,8 @@ SAVE_CHARACTER_BG PROC
   CALC_VGA_POSITION AX, BX            ; Calculate VGA position in DI
   POP BX
 
-  MOV SI, DI                          ; Save VGA position in SI
-  MOV DI, [BX].CHARACTER.ch_bg_addr   ; Background buffer in DI
+  MOV SI, DI                            ; Save VGA position in SI
+  MOV DI, [BX].CHARACTER.ch_bg_buf_addr ; Background buffer in DI
 
   ; Save and inverse DS and ES
   PUSH DS
@@ -195,8 +247,8 @@ RESTORE_CHARACTER_BG PROC
   CALC_VGA_POSITION AX, BX            ; Calculate VGA position in DI
   POP BX
 
-  MOV SI, [BX].CHARACTER.ch_bg_addr   ; SI = Address of the background buffer
-  MOV DX, CHAR_HEIGHT                 ; Number of lines to draw
+  MOV SI, [BX].CHARACTER.ch_bg_buf_addr ; SI = Address of the background buffer
+  MOV DX, CHAR_HEIGHT                   ; Number of lines to draw
 
 @rcb_restore_line:
   PUSH DI

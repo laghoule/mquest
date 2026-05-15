@@ -20,7 +20,7 @@ INCLUDE defs/game/consts.inc             ; Game constants
 INCLUDE defs/musics/consts.inc           ; Musics constants
 
 .DATA
-  last_grandma_tick DB 0                 ; TODO: Move to char data
+  last_grandma_tick DB 0                 ; TODO: Move to char struct
   ; --- game ---
   INCLUDE defs/game/types.inc            ; Game types
   INCLUDE defs/game/assets.inc           ; Game assets
@@ -155,10 +155,10 @@ GAME_LOOP PROC
   JE @gl_exit_game
 
   WAIT_VSYNC                  ; Wait for vertical syncronization to avoid flickering
-
+  
   XOR AX, AX                  ; Mia character
-  RENDER_CHARACTER            ; Render character macro
-
+  RENDER_CHARACTER
+  
   CALL CHECK_SCENE_TRANSITION ; Check if scene transition is needed
 
   MOV pending_tick, 0         ; Reset pending ticks
