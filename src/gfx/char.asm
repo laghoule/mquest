@@ -207,10 +207,11 @@ SAVE_CHARACTER_BG PROC
 
 @scb_read_line:
   MOV CX, CHAR_WIDTH                  ; Number of pixels to read
+  SHR CX, 1                           ; Divide by 2 for MOVSW
   PUSH SI
-  ; MOVSB is used to copy a byte from DS:SI to ES:DI
+  ; MOVSW is used to copy a byte from DS:SI to ES:DI
   ; REP is used to repeat the instruction CX times
-  REP MOVSB
+  REP MOVSW
   POP SI
 
   ADD SI, SCREEN_WIDTH                ; Next line
