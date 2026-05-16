@@ -11,17 +11,16 @@ RENDER_CHARACTER MACRO
 ENDM
 
 RENDER_CHARACTER_MEM MACRO
-  ;CALL RESTORE_CHARACTER_BG
-  ;CALL SAVE_CHARACTER_BG          ; Save the background of the character
   CALL DRAW_CHARACTER_MEM         ; Draw the character in memory
 ENDM
 
 RENDER_CHARACTER_VGA MACRO
   PUSH AX
-  WAIT_VSYNC                  ; Wait for vertical syncronization to avoid flickering
+  WAIT_VSYNC                      ; Wait for vertical syncronization to avoid flickering
   POP AX
-  ;CALL RESTORE_CHARACTER_BG
-  ;CALL SAVE_CHARACTER_BG          ; Save the background of the character  
+
+  CALL RESTORE_CHARACTER_BG
+  CALL SAVE_CHARACTER_BG          ; Save the background of the character
   CALL DRAW_CHARACTER_VGA         ; Draw the character on the screen
 ENDM
 

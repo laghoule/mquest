@@ -154,10 +154,9 @@ GAME_LOOP PROC
   CMP AL, 2                   ; Check if quit game key was pressed
   JE @gl_exit_game
 
-  WAIT_VSYNC                  ; Wait for vertical syncronization to avoid flickering
-  
   XOR AX, AX                  ; Mia character
-  RENDER_CHARACTER
+  RENDER_CHARACTER_MEM
+  RENDER_CHARACTER_VGA
   
   CALL CHECK_SCENE_TRANSITION ; Check if scene transition is needed
 
