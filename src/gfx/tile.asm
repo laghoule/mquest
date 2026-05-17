@@ -3,14 +3,14 @@
 ;  it under the terms of the GNU General Public License as published by
 ;  the Free Software Foundation, either version 3 of the License.
 
-; ---------------------------------------
+; ------------------------------------------------------
 ; DRAW_TILE
 ; Description: Draws a tile with or without transparency
 ; Registers: AX, BX, CX, DX, SI, DI
 ; Input:  AX = tileset offset, BX = map type (bg || fg)
 ; Output: None
 ; Modified: None
-; ---------------------------------------
+; ------------------------------------------------------
 DRAW_TILE PROC
   SAVE_REGS
   CLD                             ; Clear direction flag
