@@ -93,7 +93,7 @@ CHECK_OUT_OF_BOUND_POSITION PROC
   RET
 CHECK_OUT_OF_BOUND_POSITION ENDP
 
-;---------------------------------------------------------
+;-----------------------------------------------------------------
 ; GET_TILE_PROP
 ; Description: Retrieves properties of a tile (collision, etc.)
 ; Registers: AX, BX, CX, DX, SI
@@ -101,7 +101,7 @@ CHECK_OUT_OF_BOUND_POSITION ENDP
 ;   Implicit: curr_scne, map_tiles_props
 ; Output: AL = tile properties
 ; Modified: AX, TX
-; -------------------------------------------------------
+; ----------------------------------------------------------------
 GET_TILE_PROP PROC
   SAVE_REGS
 
@@ -172,3 +172,59 @@ GET_TILE_PROP PROC
   MOV AX, TX                      ; Restore AX for returning properties in AL
   RET
 GET_TILE_PROP ENDP
+
+;-------------------------------------------------------------------------
+; GET_MAP_TILE
+; Description: Get the tile id (BG & FG) at a specific position in the map
+; Registers: AX, BX, DX, SI
+; Input: SI = scene address, AX = pos_x, BX = pos_y
+; Output: AH = Backgrount tile id, AL = Foreground tile id
+; Modified:
+; ------------------------------------------------------------------------
+GET_MAP_TILE PROC
+  ; --- Save registers ---
+  PUSH BX
+  PUSH CX
+  PUSH DX
+  PUSH SI
+
+  MOV SI, [SI]                          ; SI = Dereferenced sc_map_buffer_addr
+
+  ; --- Calculate the Tile X, Y and index ---
+  ; Tile are 16 x 16, so we divedy by 16
+  SHR AX, 1                             ; Divide by 16
+  SHR AX, 1                             ; Using bit shifting (4)
+  SHR AX, 1
+  SHR AX, 1
+
+  SHR BX, 1                             ; Divide by 16
+  SHR BX, 1                             ; Using bit shifting (4)
+  SHR BX, 1
+  SHR BX, 1
+
+  ; --- Index = (BX * 20) + AX ---
+  MOV DX, BX
+
+  SHL BX, 1                             ; Multiply by 16
+  SHL BX, 1                             ; Using bit shifting (4)
+  SHL BX, 1
+  SHL BX, 1
+
+  SHL DX, 1                             ; Multiply by 4
+  SHL DX, 1                             ; Using bit shifting (2)
+
+  ADD BX, DX                            ; BX = (BX * 16) + (BX * 4) = BX * 20
+
+  ADD BX, AX                            ; BX = (BX * 20) + AX
+
+  MOV AH, [SI + BX]                     ; AH = Background tile id
+  MOV AL, [SI + BX + MAP_LAYER_SIZE]    ; AL = Foreground tile id
+
+  ; --- Restore registers ---
+  POP SI
+  POP DX
+  POP CX
+  POP BX
+
+  RET
+GET_MAP_TILE ENDP
