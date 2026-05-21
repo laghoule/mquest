@@ -190,7 +190,7 @@ GET_MAP_TILE PROC
 
   MOV SI, [SI]                          ; SI = Dereferenced sc_map_buffer_addr
 
-  ; --- Calculate the Tile X, Y and index ---
+  ; --- Calculate the Tile X, Y ---
   ; Tile are 16 x 16, so we divedy by 16
   SHR AX, 1                             ; Divide by 16
   SHR AX, 1                             ; Using bit shifting (4)
@@ -228,3 +228,89 @@ GET_MAP_TILE PROC
 
   RET
 GET_MAP_TILE ENDP
+
+;-------------------------------------------------------------------------------------------------------
+; RESOLVE_MAP_TILES
+; Description: Resolves the map tiles for a given position, and a given layer (background or foreground)
+; Registers:
+; Input: SI = scene address, AX = pos_x, BX = pos_y, DX = background (0) or foreground (1)
+; Output: AX = X, Y offsets, BX = top left, right tiles , CX = bottom left, right tiles
+; Modified:
+; ------------------------------------------------------------------------------------------------------
+RESOLVE_MAP_TILES PROC
+  MOV pos_x, AX
+  MOV pos_y, BX
+
+  AND AX, 15            ; Fine offset X (modulo 16)
+  MOV AH, AL            ; AH = X offset
+  AND BX, 15            ; Fine offset Y (modulo 16)
+  MOV AL, BL            ; AL = Y offset
+
+  PUSH AX               ; Save the offsets
+
+  ; --- Top left tile ---
+  MOV AX, pos_x
+  MOV BX, pos_y
+  CALL GET_MAP_TILE     ; Get the tiles at the AX, BX position
+  XOR BX, BX            ; Clear BX
+  TEST DX, 1            ; Check if we want the background layer
+  JNZ @F                ; If not, skip the next instruction
+  MOV BH, AH            ; BH = Background tile id
+  JMP @rmt_top_right
+@@:
+  MOV BH, AL            ; BH = Foreground tile id
+
+@rmt_top_right:
+  ; --- Top right tile ---
+  MOV AX, pos_x         ; AX = pos_x + (CHAR_HEIGHT - 1)
+  ADD AX, CHAR_WIDTH
+  DEC AX
+  PUSH BX               ; Save BX (BH = top left tile id)
+  MOV BX, pos_y
+  CALL GET_MAP_TILE     ; Get the tiles at the AX, BX position
+  POP BX                ; Restore BX (BH = top left tile id)
+  TEST DX, 1            ; Check if we want the background layer
+  JNZ @F                ; If not, skip the next instruction
+  MOV BL, AH            ; BL = Background tile id
+  JMP @rmt_bottom_left
+@@:
+  MOV BL, AL            ; BL = Foreground tile id
+
+@rmt_bottom_left:
+  ; --- Bottom left tile ---
+  MOV AX, pos_x
+  PUSH BX               ; Save BX (BH = top left tile id, BL = top right tile id)
+  MOV BX, pos_y         ; BX = pos_y + (CHAR_HEIGHT - 1)
+  ADD BX, CHAR_HEIGHT
+  DEC BX
+  CALL GET_MAP_TILE     ; Get the tiles at the AX, BX position
+  POP BX                ; Restore BX (BH = top left tile id, BL = top right tile id)
+  TEST DX, 1            ; Check if we want the background layer
+  JNZ @F                ; If not, skip the next instruction
+  MOV CH, AH            ; CH = Background tile id
+  JMP @rmt_bottom_right
+@@:
+  MOV CH, AL            ; CH = Foreground tile id
+
+@rmt_bottom_right:
+  ; --- Bottom right tile ---
+  MOV AX, pos_x         ; AX = pos_x + (CHAR_HEIGHT - 1)
+  ADD AX, CHAR_WIDTH
+  DEC AX
+  PUSH BX               ; Save BX (BH = top left tile id, BL = top right tile id)
+  MOV BX, pos_y         ; BX = pos_y + (CHAR_HEIGHT - 1)
+  ADD BX, CHAR_HEIGHT
+  DEC BX
+  CALL GET_MAP_TILE     ; Get the tiles at the AX, BX position
+  POP BX                ; Restore BX (BH = top left tile id, BL = top right tile id)
+  TEST DX, 1            ; Check if we want the background layer
+  JNZ @F                ; If not, skip the next instruction
+  MOV CL, AH            ; CL = Background tile id
+  JMP @rmt_return
+@@:
+  MOV CL, AL            ; CL = Foreground tile id
+
+@rmt_return:
+  POP AX                ; Return Fine Offset X, Y
+  RET
+RESOLVE_MAP_TILES ENDP
