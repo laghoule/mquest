@@ -15,8 +15,7 @@ DRAW_TILE PROC
   SAVE_REGS
   CLD                             ; Clear direction flag
 
-  MOV TX, BX                      ; Save map type temporarely
-
+  PUSH BX                         ; Save map type in BX
   MOV BX, AX
   LEA SI, [BX]                    ; Tileset offset
 
@@ -24,7 +23,7 @@ DRAW_TILE PROC
   SYNC_POS_REGS                   ; AX=pos_x, BX=pos_y
   CALC_VGA_POSITION AX, BX        ; Calculate VGA position in DI
 
-  MOV BX, TX                      ; Restore map type in BX
+  POP BX                          ; Restore map type in BX
   MOV DX, MAP_TILE_HEIGHT         ; Height of the sprite (number of lines)
 
   ; --- draw the tile loop
