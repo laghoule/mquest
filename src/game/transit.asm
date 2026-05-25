@@ -148,7 +148,7 @@ CHECK_SCENE_TRANSITION PROC
 @cs_draw_transition:
   MOV current_scene_addr, SI                ; Set the current scene address
   MOV AX, map_buffer_addr                   ; Load the map buffer address in AX, needed for DRAW_SCENE
-  CALL DRAW_SCENE                           ; Draw the scene
+  CALL DRAW_SCENE_VGA                       ; Draw the scene
 
   XOR AX, AX                                ; AX = 0 for mia character
   RENDER_CHARACTER                          ; Render the character

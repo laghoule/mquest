@@ -3,15 +3,15 @@
 ;  it under the terms of the GNU General Public License as published by
 ;  the Free Software Foundation, either version 3 of the License.
 
-; ------------------------------------------------------
-; DRAW_TILE
-; Description: Draws a tile with or without transparency
+; -------------------------------------------------------------
+; DRAW_TILE_VGA
+; Description: Draws a tile with or without transparency on VGA
 ; Registers: AX, BX, CX, DX, SI, DI
 ; Input:  AX = tileset offset, BX = map type (bg || fg)
 ; Output: None
 ; Modified: None
-; ------------------------------------------------------
-DRAW_TILE PROC
+; -------------------------------------------------------------
+DRAW_TILE_VGA PROC
   SAVE_REGS
   CLD                             ; Clear direction flag
 
@@ -27,7 +27,7 @@ DRAW_TILE PROC
   MOV DX, MAP_TILE_HEIGHT         ; Height of the sprite (number of lines)
 
   ; --- draw the tile loop
-  @dt_draw_line:
+  @dtv_draw_line:
     MOV CX, MAP_TILE_WIDTH
     PUSH DI                       ; Save current line start
 
@@ -35,31 +35,92 @@ DRAW_TILE PROC
     ; 0 = bg (opaque)
     ; 1 = fg (transparent)
     TEST BX, BX
-    JNZ @dt_draw_pixel
+    JNZ @dtv_draw_pixel
 
     ; MOVSB copies a byte from DS:SI to ES:DI and increments both pointers
     ; REP repeats the MOVSB instruction CX times (line width)
     REP MOVSB                     ; TODO: use MOVSW
-    JMP @dt_next_line
+    JMP @dtv_next_line
 
-    @dt_draw_pixel:
+    @dtv_draw_pixel:
       LODSB                       ; Load from SI in AL then increment SI | TODO: use LODSW
       OR AL, AL                   ; Check if pixel is transparent
       JZ @dt_skip_pixel           ; Skip pixel if transparent
       MOV ES:[DI], AL             ; Draw pixel
       @dt_skip_pixel:
         INC DI                    ;  Next pixel on screen
-        LOOP @dt_draw_pixel
+        LOOP @dtv_draw_pixel
 
-    @dt_next_line:
+    @dtv_next_line:
       POP DI                      ; Restore line start
       ADD DI, SCREEN_WIDTH        ; Move DI to the next line
       DEC DX
-      JNZ @dt_draw_line           ; Draw next line if tile is not entirely draw
+      JNZ @dtv_draw_line           ; Draw next line if tile is not entirely draw
 
   RESTORE_REGS
   RET
-DRAW_TILE ENDP
+DRAW_TILE_VGA ENDP
+
+; ------------------------------------------------------------------------------
+; DRAW_TILE_VGA
+; Description: Draws a tile with or without transparency in a memory buffer
+; Registers: AX, BX, CX, DX, SI, DI
+; Input:  AX = tileset offset, BX = map type (bg || fg), DI = memory tile buffer
+; Output: None
+; Modified: None
+; NOTES: Maybe merge with DRAW_TILE_VGA in the future
+; ------------------------------------------------------------------------------
+DRAW_TILE_RAM PROC
+  SAVE_REGS
+  PUSH ES
+
+  CLD                             ; Clear direction flag
+
+  MOV DX, DS
+  MOV ES, DX                      ; Set ES to DS (RAM)
+
+  PUSH BX                         ; Save map type in BX
+  MOV BX, AX
+  LEA SI, [BX]                    ; Tileset offset
+
+  POP BX                          ; Restore map type in BX
+  MOV DX, MAP_TILE_HEIGHT         ; Height of the sprite (number of lines)
+
+  ; --- draw the tile loop
+  @dtr_draw_line:
+    MOV CX, MAP_TILE_WIDTH
+    PUSH DI                       ; Save current line start
+
+    ; BX determine the map type
+    ; 0 = bg (opaque)
+    ; 1 = fg (transparent)
+    TEST BX, BX
+    JNZ @dtr_draw_pixel
+
+    ; MOVSB copies a byte from DS:SI to ES:DI and increments both pointers
+    ; REP repeats the MOVSB instruction CX times (line width)
+    REP MOVSB                     ; Draw a line of the tile in the memory buffer
+    JMP @dtr_next_line
+
+    @dtr_draw_pixel:
+      LODSB                       ; Load from SI in AL then increment SI
+      OR AL, AL                   ; Check if pixel is transparent
+      JZ @dtr_skip_pixel          ; Skip pixel if transparent
+      MOV [DI], AL                ; Draw pixel in the memory buffer
+      @dtr_skip_pixel:
+        INC DI                    ;  Next pixel in the buffer memory
+        LOOP @dtr_draw_pixel
+
+    @dtr_next_line:
+      POP DI                      ; Restore line start
+      ADD DI, SCENE_SCRATCHPAG_BG ; Move DI to the next line (2 x MAP_TILE_WIDTH)
+      DEC DX
+      JNZ @dtr_draw_line          ; Draw next line if tile is not entirely draw
+
+  POP ES
+  RESTORE_REGS
+  RET
+DRAW_TILE_RAM ENDP
 
 ;----------------------------------------------------
 ; CHECK_OUT_OF_BOUND_POSITION

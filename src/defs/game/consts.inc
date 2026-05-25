@@ -6,17 +6,18 @@ DOWN_DIR    EQU 3
 
 ; --- Directions to check for scene transitions ---
 LIMIT_NORTH    EQU 0
-LIMIT_SOUTH    EQU 158  ; Room for status bar
-LIMIT_EAST     EQU 305  ; Not 320, because of we check via pos_x hitbox 2
+LIMIT_SOUTH    EQU 158        ; Room for status bar
+LIMIT_EAST     EQU 305        ; Not 320, because of we check via pos_x hitbox 2
 LIMIT_WEST     EQU 0
 
-; --- Scene edge ---
+; --- Scene ---
 SCENE_EDGE EQU 0
+SCENE_SCRATCHPAG_BG EQU 32    ; Rectangle of 2x2 tile (16x16 pixels)
 
 ; --- TILES ATTRIBUTS BITS ---
-B_FR EQU 00000000b  ; Bit 0: Free (No collision)
-B_CL EQU 00000001b  ; Bit 0: Object collision
-B_EV EQU 00000010b  ; Bit 1: Event (Interaction)
+B_FR EQU 00000000b            ; Bit 0: Free (No collision)
+B_CL EQU 00000001b            ; Bit 0: Object collision
+B_EV EQU 00000010b            ; Bit 1: Event (Interaction)
 
 ;--------------------------------------------TODO------------------------------------------
 ;| Bits | Catégorie | Valeurs possibles |

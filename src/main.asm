@@ -95,7 +95,7 @@ MAIN PROC
   MOV current_scene_addr, BX
   MOV AX, [BX].SCENE.sc_map_buffer_addr
   MOV map_buffer_addr, AX             ; map_buffer_addr is used to store the current scene buffer
-  CALL DRAW_SCENE                     ; This is the background layer
+  CALL DRAW_SCENE_VGA                 ; This is the background layer
 
   ; Grandma
   MOV AX, 1                           ; Charater index
