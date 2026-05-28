@@ -10,6 +10,9 @@ LIMIT_SOUTH    EQU 158        ; Room for status bar
 LIMIT_EAST     EQU 305        ; Not 320, because of we check via pos_x hitbox 2
 LIMIT_WEST     EQU 0
 
+; TODO: add to tiled2map
+MAP_TILE_SIZE EQU 256
+
 ; --- Scene ---
 SCENE_EDGE EQU 0
 SCENE_SCRATCHPAG_BG EQU 32    ; Rectangle of 2x2 tile (16x16 pixels)

@@ -40,7 +40,7 @@ DRAW_SCENE_VGA PROC
 
     @dsv_draw_tile:
       PUSH CX
-      LODSB
+      LODSB                            ; Load tile ID from map buffer into AL
 
       ; BX determines if tile is opaque or transparent
       ; 0 = bg (opaque)
@@ -78,17 +78,3 @@ DRAW_SCENE_VGA PROC
   RESTORE_REGS
   RET
 DRAW_SCENE_VGA ENDP
-
-; -------------------------------------------------------------------------
-; DRAW_SCENE_PARTIAL_RAM
-; Description:
-; Input: AX = pos_x, BX = pos_y, SI = scene buffer, DI = memory tile buffer
-; Output:
-; Modified:
-; -------------------------------------------------------------------------
-DRAW_SCENE_PARTIAL_RAM PROC
-  SAVE_REGS
-  ; TODO: Implement
-  RESTORE_REGS
-  RET
-DRAW_SCENE_PARTIAL_RAM ENDP

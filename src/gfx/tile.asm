@@ -62,7 +62,7 @@ DRAW_TILE_VGA PROC
 DRAW_TILE_VGA ENDP
 
 ; ------------------------------------------------------------------------------
-; DRAW_TILE_VGA
+; DRAW_TILE_RAM
 ; Description: Draws a tile with or without transparency in a memory buffer
 ; Registers: AX, BX, CX, DX, SI, DI
 ; Input:  AX = tileset offset, BX = map type (bg || fg), DI = memory tile buffer
@@ -121,6 +121,110 @@ DRAW_TILE_RAM PROC
   RESTORE_REGS
   RET
 DRAW_TILE_RAM ENDP
+
+; --------------------------------------------------------------------------
+; DRAW_METATILE_RAM
+; Description: Draws a metatile of 32x32 in RAM
+; Input: AX = pos_x, BX = pos_y, SI = scene address, DI = memory tile buffer
+; Output:
+; Modified:
+; Notes: Tiles are stored in memory as follows:
+;
+;    0               16              32
+;  0 +---------------+---------------+
+;    |    Tile TL    |    Tile TR    |
+;    |   (DI + 0)    |   (DI + 16)   |
+; 16 +---------------+---------------+
+;    |    Tile BL    |    Tile BR    |
+;    |  (DI + 512)   |  (DI + 528)   |
+; 32 +---------------+---------------+
+;
+; --------------------------------------------------------------------------
+DRAW_METATILE_RAM PROC
+  SAVE_REGS
+
+  MOV pos_x, AX           ; Save X position
+  MOV pos_y, BX           ; Save Y position
+
+  MOV DX, 0               ; Initial layer is background (0)
+
+@dspr_next_layer:
+  MOV AX, pos_x
+  MOV BX, pos_y
+  ; --- Resolve the 4 tiles that are needed to draw the background ----
+  ; Input: AX = pos_x, BX = pos_y, DX = background (0) or foreground (1), SI = scene address
+  CALL RESOLVE_MAP_TILES ; Return: AX = X, Y offsets, BX = top left, right tiles , CX = bottom left, right tiles
+
+  PUSH AX                 ; Save X, Y offsets
+  PUSH BX                 ; Save top left, right tiles
+  PUSH DI                 ; Save memory tile buffer
+
+  ; --- Top left tile id ---
+  XOR AH, AH              ; Clear AH
+  MOV AL, BH              ; AX = tile id for top left
+
+  ; Get the offset of the tile in the tileset
+  MOV AH, AL              ; Multiply by 256 (bitshifting of 8 bits)
+  XOR AL, AL              ; AX = tile id * 256 (offset)
+
+  MOV BX, DX              ; Map layer
+  ; Input:  AX = tileset offset, BX = map type (bg || fg), DI = memory tile buffer
+  CALL DRAW_TILE_RAM      ; Draw the BG tile in buffer
+  ; ------------------------
+
+  ; --- Top right tile id ---
+  ADD DI, 16              ; Next tile in buffer
+  XOR AH, AH              ; Clear AH
+  MOV AL, BL              ; AX = tile id for top right
+
+  ; Get the offset of the tile in the tileset
+  MOV AH, AL              ; Multiply by 256 (bitshifting of 8 bits)
+  XOR AL, AL              ; AX = tile id * 256 (offset)
+
+  MOV BX, DX              ; Map layer
+  ; Input:  AX = tileset offset, BX = map type (bg || fg), DI = memory tile buffer
+  CALL DRAW_TILE_RAM      ; Draw the BG tile in buffer
+  ; ------------------------
+
+  ; --- Bottom left tile id ---
+  ADD DI, 496             ; Next tile in buffer (512 - 16)
+  XOR AH, AH              ; Clear AH
+  MOV AL, CH              ; AX = tile id for bottom left
+
+  ; Get the offset of the tile in the tileset
+  MOV AH, AL              ; Multiply by 256 (bitshifting of 8 bits)
+  XOR AL, AL              ; AX = tile id * 256 (offset)
+
+  MOV BX, DX              ; Map layer
+  ; Input:  AX = tileset offset, BX = map type (bg || fg), DI = memory tile buffer
+  CALL DRAW_TILE_RAM      ; Draw the BG tile in buffer
+  ; ------------------------
+
+  ; --- Bottom right tile id ---
+  ADD DI, 16             ; Next tile in buffer (528 − 512)
+  XOR AH, AH              ; Clear AH
+  MOV AL, CL              ; AX = tile id for bottom right
+
+  ; Get the offset of the tile in the tileset
+  MOV AH, AL              ; Multiply by 256 (bitshifting of 8 bits)
+  XOR AL, AL              ; AX = tile id * 256 (offset)
+
+  MOV BX, DX              ; Map layer
+  ; Input:  AX = tileset offset, BX = map type (bg || fg), DI = memory tile buffer
+  CALL DRAW_TILE_RAM      ; Draw the BG tile in buffer
+  ; ------------------------
+
+  POP DI                  ; Restore memory tile buffer
+  POP BX                  ; Restore top left, right tiles
+  POP AX                  ; Restore X, Y offsets
+
+  INC DX                  ; Next layer
+  CMP DX, 1               ; Check if we've drawn all layers
+  JLE @dspr_next_layer    ; If DX is lower than or equal 1, draw next layer (0, 1 layer)
+
+  RESTORE_REGS
+  RET
+DRAW_METATILE_RAM ENDP
 
 ;----------------------------------------------------
 ; CHECK_OUT_OF_BOUND_POSITION
@@ -237,7 +341,7 @@ GET_TILE_PROP ENDP
 ; GET_MAP_TILE
 ; Description: Get the tile id (BG & FG) at a specific position in the map
 ; Registers: AX, BX, DX, SI
-; Input: SI = scene address, AX = pos_x, BX = pos_y
+; Input: AX = pos_x, BX = pos_y, SI = scene address
 ; Output: AH = Backgrount tile id, AL = Foreground tile id
 ; Modified:
 ; ------------------------------------------------------------------------
@@ -293,7 +397,7 @@ GET_MAP_TILE ENDP
 ; RESOLVE_MAP_TILES
 ; Description: Resolves the map tiles for a given position, and a given layer (background or foreground)
 ; Registers:
-; Input: SI = scene address, AX = pos_x, BX = pos_y, DX = background (0) or foreground (1)
+; Input: AX = pos_x, BX = pos_y, DX = background (0) or foreground (1), SI = scene address
 ; Output: AX = X, Y offsets, BX = top left, right tiles , CX = bottom left, right tiles
 ; Modified:
 ; ------------------------------------------------------------------------------------------------------
