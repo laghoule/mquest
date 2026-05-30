@@ -226,7 +226,7 @@ DRAW_METATILE_RAM PROC
   RET
 DRAW_METATILE_RAM ENDP
 
-;----------------------------------------------------
+;-----------------------------------------------------------------------
 ; CROP_METATILE_RAM
 ; Description: Crops a metatile into the tile buffer
 ; Registers: AX, BX, CX, DX, SI, DI
@@ -246,7 +246,7 @@ DRAW_METATILE_RAM ENDP
 ;   |               +-------+       |
 ;32 +-------------------------------+
 ;                   <-- 16 ->
-; ---------------------------------------------------
+; ----------------------------------------------------------------------
 CROP_METATILE_RAM PROC
   SAVE_REGS
 
