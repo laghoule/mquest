@@ -43,8 +43,8 @@ UPDATE_CHARACTER_ANIM_INDEX ENDP
 ; DRAW_CHARACTER_MEM
 ; Description: Draw the character in a memory buffer
 ; Registers: AX, BX, CX, DX, SI, DI, ES
-; Input:    AX: char_index
-; Output:   None
+; Input:AX: char_index
+; Output: None
 ; Modified:
 ; --------------------------------------------------
 DRAW_CHARACTER_MEM PROC
