@@ -227,6 +227,65 @@ DRAW_METATILE_RAM PROC
 DRAW_METATILE_RAM ENDP
 
 ;----------------------------------------------------
+; CROP_METATILE_RAM
+; Description: Crops a metatile into the tile buffer
+; Registers: AX, BX, CX, DX, SI, DI
+; Input: AX = FineX, BX = FineY, SI = Metatile buffer, DI =  Tile buffer
+; Output: None
+; Modified: DI
+; Notes:
+;   Metatile buffer is 32x32
+;
+;   0             FineX            32
+; 0 +---------------+---------------+
+;   |               |               |
+;   |               | (Begin)       |
+;   |       FineY ->+-------+       |
+;   |               |  MIA  | 17    |  <-- Copy this tile zone
+;   |               | 16x17 | lines |      to ch_render_buf_addr
+;   |               +-------+       |
+;32 +-------------------------------+
+;                   <-- 16 ->
+; ---------------------------------------------------
+CROP_METATILE_RAM PROC
+  SAVE_REGS
+
+  PUSH ES                     ; Save ES
+
+  ; --- Set ES to DS (source) so we can copy from SI to DI ---
+  MOV DX, DS
+  MOV ES, DX
+
+  ; --- StartOffset = (FineY * 32) + FineX ---
+  SHL BX, 1                   ; BX = FineY * 32 --
+  SHL BX, 1                   ; * 4
+  SHL BX, 1                   ; * 8
+  SHL BX, 1                   ; * 16
+  SHL BX, 1                   ; * 32
+  ADD BX, AX                  ; BX = (FineY * 32) + FineX
+
+  ADD SI, BX                  ; SI = Offset to crop
+  MOV DX, CHAR_TILE_HEIGHT
+
+@cbr_next_line:
+  MOV CX, CHAR_TILE_WIDTH
+  SHR CX, 1                   ; CX = CHAR_TILE_HEIGHT / 2 (because we use MOVSW)
+
+  REP MOVSW                   ; DS:SI -> ES:DI
+  DEC DX                      ; Decrement DX (tile height)
+  JZ @cbr_done                ; Test if DX is zero (end of tile)
+
+  ADD SI, 16                  ; Advance SI to next line (metatile line = 16 + 16)
+  JMP @cbr_next_line
+
+@cbr_done:
+  POP ES                      ; Restore ES
+
+  RESTORE_REGS
+  RET
+CROP_METATILE_RAM ENDP
+
+;----------------------------------------------------
 ; CHECK_OUT_OF_BOUND_POSITION
 ; Description: Checks if the position is out of bound
 ; Registers: AX, BX
