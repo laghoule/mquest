@@ -265,10 +265,10 @@ CROP_METATILE_RAM PROC
   ADD BX, AX                  ; BX = (FineY * 32) + FineX
 
   ADD SI, BX                  ; SI = Offset to crop
-  MOV DX, CHAR_TILE_HEIGHT
+  MOV DX, CHAR_HEIGHT         ; Number of lines to copy
 
 @cbr_next_line:
-  MOV CX, CHAR_TILE_WIDTH
+  MOV CX, CHAR_WIDTH          ; Number of iterations per line
   SHR CX, 1                   ; CX = CHAR_TILE_HEIGHT / 2 (because we use MOVSW)
 
   REP MOVSW                   ; DS:SI -> ES:DI
@@ -452,22 +452,40 @@ GET_MAP_TILE PROC
   RET
 GET_MAP_TILE ENDP
 
-;-------------------------------------------------------------------------------------------------------
-; RESOLVE_MAP_TILES
-; Description: Resolves the map tiles for a given position, and a given layer (background or foreground)
-; Registers:
-; Input: AX = pos_x, BX = pos_y, DX = background (0) or foreground (1), SI = scene address
-; Output: AX = X, Y offsets, BX = top left, right tiles , CX = bottom left, right tiles
-; Modified:
-; ------------------------------------------------------------------------------------------------------
-RESOLVE_MAP_TILES PROC
-  MOV pos_x, AX
-  MOV pos_y, BX
+;-----------------------------------------------------------
+; RESOLVE_TILE_FINEOFFSET
+; Description: Resolves the fine offset for a given position
+; Registers: AX, BX
+; Input: AX = X position, BX = Y position
+; Output: AH = FineX offset, AL = FineY offsets
+; Modified: AX
+; ----------------------------------------------------------
+RESOLVE_TILE_FINEOFFSET PROC
+  PUSH BX
 
   AND AX, 15            ; Fine offset X (modulo 16)
   MOV AH, AL            ; AH = X offset
   AND BX, 15            ; Fine offset Y (modulo 16)
   MOV AL, BL            ; AL = Y offset
+
+  POP BX
+  RET
+RESOLVE_TILE_FINEOFFSET ENDP
+
+;-------------------------------------------------------------------------------------------------------
+; RESOLVE_MAP_TILES
+; Description: Resolves the map tiles for a given position, and a given layer (background or foreground)
+; Registers:
+; Input: AX = pos_x, BX = pos_y, DX = background (0) or foreground (1), SI = scene address
+; Output: AX = FineX, FineY offsets, BX = top left, right tiles , CX = bottom left, right tiles
+; Modified:
+; ------------------------------------------------------------------------------------------------------
+RESOLVE_MAP_TILES PROC
+  ; TODO: Add register protection (DX, SI, DI)
+  MOV pos_x, AX
+  MOV pos_y, BX
+
+  CALL RESOLVE_TILE_FINEOFFSET
 
   PUSH AX               ; Save the offsets
 
