@@ -233,6 +233,7 @@ SAVE_CHARACTER_BG ENDP
 ; Registers: AX, BX, CX, DX, SI, DI
 ; Input:  AX: char_index
 ; Output: None
+; Modified: None
 ; ------------------------------------------------------
 RESTORE_CHARACTER_BG PROC
   SAVE_REGS
@@ -243,8 +244,8 @@ RESTORE_CHARACTER_BG PROC
   MOV BX, [char_data_table + BX]      ; Address to the character data
 
   PUSH BX
-  MOV AX, pos_x
-  MOV BX, pos_y
+  MOV AX, old_x
+  MOV BX, old_y
   CALC_VGA_POSITION AX, BX            ; Calculate VGA position in DI
   POP BX
 
@@ -257,7 +258,7 @@ RESTORE_CHARACTER_BG PROC
   SHR CX, 1                           ; Divide by 2 because we use MOVSW
 
   ; MOVSW copies a byte from DS:SI to ES:DI and increments both pointers
-  ; REP repeats the MOVSB instruction CX times (line width)
+  ; REP repeats the MOVSW instruction CX times (line width)
   REP MOVSW
 
   POP DI                              ; Restore the initial position of the line
@@ -268,3 +269,89 @@ RESTORE_CHARACTER_BG PROC
   RESTORE_REGS
   RET
 RESTORE_CHARACTER_BG ENDP
+
+RESTORE_CHARACTER_PREV_BG PROC
+  SAVE_REGS
+  CLD
+
+  SHL AX, 1
+  MOV BX, AX
+  MOV BX, [char_data_table + BX]
+
+  PUSH BX
+  MOV AX, old_x
+  MOV BX, old_y
+  CALC_VGA_POSITION AX, BX
+  POP BX
+
+  MOV SI, [BX].CHARACTER.ch_prev_bg_buf_addr  ; ← seul changement
+  MOV DX, CHAR_HEIGHT
+
+@rcpb_restore_line:
+  PUSH DI
+  MOV CX, CHAR_WIDTH
+  SHR CX, 1
+  REP MOVSW
+  POP DI
+  ADD DI, SCREEN_WIDTH
+  DEC DX
+  JNZ @rcpb_restore_line
+
+  RESTORE_REGS
+  RET
+RESTORE_CHARACTER_PREV_BG ENDP
+
+
+; ---------------------------------------------------------------------
+; RENDER_CHARACTER
+; Description:
+; Registers:
+; Input: AX: char_index
+; Output: None
+; Modified:
+; ---------------------------------------------------------------------
+RENDER_CHARACTER_1 PROC
+  PUSH AX                                   ; Save char_index (SHL will modify AX)
+
+  SHL AX, 1
+  MOV BX, AX
+  MOV BX, [char_data_table + BX]
+
+  ; === Ping-pong bg buffers ===
+  MOV AX, [BX].CHARACTER.ch_bg_buf_addr
+  MOV DX, [BX].CHARACTER.ch_prev_bg_buf_addr
+  MOV [BX].CHARACTER.ch_bg_buf_addr, DX       ; ← slot vide → cible du CROP
+  MOV [BX].CHARACTER.ch_prev_bg_buf_addr, AX  ; ← ancien bg → source du RESTORE
+
+  MOV SI, [BX].CHARACTER.ch_scene_addr      ; SI = scene address
+  MOV DI, [BX].CHARACTER.ch_bg_buf_addr     ; DI = background buffer
+  PUSH DI                                   ; Save DI (background buffer address)
+  MOV DI, OFFSET metatile_sp_buffer         ; DI = metatile scratchpad
+
+  MOV AX, [BX].CHARACTER.ch_loc.lo_x
+  MOV BX, [BX].CHARACTER.ch_loc.lo_y
+
+  CALL DRAW_METATILE_RAM                    ; Builds 32x32 metatile → metatile_sp_buffer
+
+  CALL RESOLVE_TILE_FINEOFFSET              ; AH = FineX, AL = FineY
+  XOR BH, BH
+  MOV BL, AL                                ; BX = FineY
+  MOV AL, AH                                ; AX = FineX
+  XOR AH, AH
+
+  POP DI                                    ; Restore DI = background buffer address
+  MOV SI, OFFSET metatile_sp_buffer
+  CALL CROP_METATILE_RAM                    ; Crops 16x17 into ch_bg_buf_addr (ready for next frame)
+
+  POP AX
+  CALL DRAW_CHARACTER_MEM                   ; Copies bg_buf into render_buf, draws sprite on top
+
+  PUSH AX                                   ; Save AX (char_index)
+  WAIT_VSYNC
+  POP AX                                    ; Restore AX (char_index)
+
+  CALL RESTORE_CHARACTER_PREV_BG
+  CALL DRAW_CHARACTER_VGA                   ; Blits render_buf → VGA at current position
+
+  RET
+RENDER_CHARACTER_1 ENDP

@@ -32,7 +32,8 @@ CHARACTER STRUCT
   ch_anim_idx          DB ?         ; Index of the animation frame | TODO: create anim struct
   ch_anim_spd          DB ?         ; Speed for the animation frame | TODO: create anim struct
   ch_anim_cnt          DB ?         ; Counter for the animation frame | TODO: create anim struct
-  ch_bg_buf_addr       DW ?         ; Address of the saved background
+  ch_bg_buf_addr       DW ?         ; Address of the background map buffer
+  ch_prev_bg_buf_addr  DW ?         ; Address of the previous background map buffer
   ch_sprt_buf_addr     DW ?         ; Address of the character buffer sprite
   ch_render_buf_addr   DW ?         ; Address of the rendered buffer (ch_bg_buf_addr + ch_sprt_buf_addr)
   ch_scene_addr        DW ?         ; Address of the current scene location

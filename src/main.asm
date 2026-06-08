@@ -20,7 +20,10 @@ INCLUDE defs/game/consts.inc             ; Game constants
 INCLUDE defs/musics/consts.inc           ; Musics constants
 
 .DATA
+  old_x DW 280                           ; TODO: moved to right place
+  old_y DW 90                            ; TODO: moved to right place
   last_grandma_tick DB 0                 ; TODO: Move to char struct
+  metatile_sp_buffer DB 1024 DUP(0)      ; TODO: Find a place for this var
   ; --- game ---
   INCLUDE defs/game/types.inc            ; Game types
   INCLUDE defs/game/assets.inc           ; Game assets
@@ -103,7 +106,7 @@ MAIN PROC
 
   ; Mia
   XOR AX, AX                          ; Charater index
-  INIT_RENDER_CHARACTER               ; Render character macro
+  CALL RENDER_CHARACTER_1             ; TODO: change name
 
   CMP mute_flag, 1
   JE @m_no_music
@@ -155,9 +158,10 @@ GAME_LOOP PROC
   JE @gl_exit_game
 
   XOR AX, AX                  ; Mia character
-  RENDER_CHARACTER_MEM
-  RENDER_CHARACTER_VGA
-  
+  CALL RENDER_CHARACTER_1
+  ;RENDER_CHARACTER_MEM
+  ;RENDER_CHARACTER_VGA
+
   CALL CHECK_SCENE_TRANSITION ; Check if scene transition is needed
 
   MOV pending_tick, 0         ; Reset pending ticks

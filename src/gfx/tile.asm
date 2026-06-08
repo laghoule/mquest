@@ -69,6 +69,7 @@ DRAW_TILE_VGA ENDP
 ; Output: None
 ; Modified: None
 ; NOTES: Maybe merge with DRAW_TILE_VGA in the future
+; TODO: Now, it's hardcoded for 32x32 tile. Make it dynamic.
 ; ------------------------------------------------------------------------------
 DRAW_TILE_RAM PROC
   SAVE_REGS
@@ -146,14 +147,16 @@ DRAW_METATILE_RAM PROC
   MOV pos_x, AX           ; Save X position
   MOV pos_y, BX           ; Save Y position
 
+  MOV SI, [SI]            ; SI = Dereference scene address (sc_map_buffer_addr)
+
   MOV DX, 0               ; Initial layer is background (0)
 
 @dspr_next_layer:
   MOV AX, pos_x
   MOV BX, pos_y
+
   ; --- Resolve the 4 tiles that are needed to draw the background ----
-  ; Input: AX = pos_x, BX = pos_y, DX = background (0) or foreground (1), SI = scene address
-  CALL RESOLVE_MAP_TILES ; Return: AX = X, Y offsets, BX = top left, right tiles , CX = bottom left, right tiles
+  CALL RESOLVE_MAP_TILES
 
   PUSH AX                 ; Save X, Y offsets
   PUSH BX                 ; Save top left, right tiles
@@ -167,9 +170,12 @@ DRAW_METATILE_RAM PROC
   MOV AH, AL              ; Multiply by 256 (bitshifting of 8 bits)
   XOR AL, AL              ; AX = tile id * 256 (offset)
 
+  ADD AX, OFFSET map_tileset_buffer ; Add tileset buffer offset to tile id to get the offset in the tileset
+
+  PUSH BX                 ; Save BL (top right tile id)
   MOV BX, DX              ; Map layer
-  ; Input:  AX = tileset offset, BX = map type (bg || fg), DI = memory tile buffer
   CALL DRAW_TILE_RAM      ; Draw the BG tile in buffer
+  POP BX                  ; Restore BL (top right tile id)
   ; ------------------------
 
   ; --- Top right tile id ---
@@ -181,8 +187,9 @@ DRAW_METATILE_RAM PROC
   MOV AH, AL              ; Multiply by 256 (bitshifting of 8 bits)
   XOR AL, AL              ; AX = tile id * 256 (offset)
 
+  ADD AX, OFFSET map_tileset_buffer ; Add tileset buffer offset to tile id to get the offset in the tileset
+
   MOV BX, DX              ; Map layer
-  ; Input:  AX = tileset offset, BX = map type (bg || fg), DI = memory tile buffer
   CALL DRAW_TILE_RAM      ; Draw the BG tile in buffer
   ; ------------------------
 
@@ -195,13 +202,14 @@ DRAW_METATILE_RAM PROC
   MOV AH, AL              ; Multiply by 256 (bitshifting of 8 bits)
   XOR AL, AL              ; AX = tile id * 256 (offset)
 
+  ADD AX, OFFSET map_tileset_buffer ; Add tileset buffer offset to tile id to get the offset in the tileset
+
   MOV BX, DX              ; Map layer
-  ; Input:  AX = tileset offset, BX = map type (bg || fg), DI = memory tile buffer
   CALL DRAW_TILE_RAM      ; Draw the BG tile in buffer
   ; ------------------------
 
   ; --- Bottom right tile id ---
-  ADD DI, 16             ; Next tile in buffer (528 − 512)
+  ADD DI, 16              ; Next tile in buffer (528 − 512)
   XOR AH, AH              ; Clear AH
   MOV AL, CL              ; AX = tile id for bottom right
 
@@ -209,8 +217,9 @@ DRAW_METATILE_RAM PROC
   MOV AH, AL              ; Multiply by 256 (bitshifting of 8 bits)
   XOR AL, AL              ; AX = tile id * 256 (offset)
 
+  ADD AX, OFFSET map_tileset_buffer ; Add tileset buffer offset to tile id to get the offset in the tileset
+
   MOV BX, DX              ; Map layer
-  ; Input:  AX = tileset offset, BX = map type (bg || fg), DI = memory tile buffer
   CALL DRAW_TILE_RAM      ; Draw the BG tile in buffer
   ; ------------------------
 
@@ -228,9 +237,9 @@ DRAW_METATILE_RAM ENDP
 
 ;-----------------------------------------------------------------------
 ; CROP_METATILE_RAM
-; Description: Crops a metatile into the tile buffer
+; Description: Crops a metatile into a tile buffer
 ; Registers: AX, BX, CX, DX, SI, DI
-; Input: AX = FineX, BX = FineY, SI = Metatile buffer, DI =  Tile buffer
+; Input: AX = FineX, BX = FineY, SI = Metatile buffer, DI = Destination tile buffer
 ; Output: None
 ; Modified: DI
 ; Notes:
@@ -249,8 +258,7 @@ DRAW_METATILE_RAM ENDP
 ; ----------------------------------------------------------------------
 CROP_METATILE_RAM PROC
   SAVE_REGS
-
-  PUSH ES                     ; Save ES
+  PUSH ES
 
   ; --- Set ES to DS (source) so we can copy from SI to DI ---
   MOV DX, DS
@@ -269,7 +277,7 @@ CROP_METATILE_RAM PROC
 
 @cbr_next_line:
   MOV CX, CHAR_WIDTH          ; Number of iterations per line
-  SHR CX, 1                   ; CX = CHAR_TILE_HEIGHT / 2 (because we use MOVSW)
+  SHR CX, 1                   ; CX = CHAR_WIDTH / 2 (because we use MOVSW)
 
   REP MOVSW                   ; DS:SI -> ES:DI
   DEC DX                      ; Decrement DX (tile height)
@@ -279,8 +287,7 @@ CROP_METATILE_RAM PROC
   JMP @cbr_next_line
 
 @cbr_done:
-  POP ES                      ; Restore ES
-
+  POP ES
   RESTORE_REGS
   RET
 CROP_METATILE_RAM ENDP
@@ -399,19 +406,16 @@ GET_TILE_PROP ENDP
 ;-------------------------------------------------------------------------
 ; GET_MAP_TILE
 ; Description: Get the tile id (BG & FG) at a specific position in the map
-; Registers: AX, BX, DX, SI
+; Registers: AX, BX, CX, DX, SI
 ; Input: AX = pos_x, BX = pos_y, SI = scene address
 ; Output: AH = Backgrount tile id, AL = Foreground tile id
 ; Modified:
 ; ------------------------------------------------------------------------
 GET_MAP_TILE PROC
-  ; --- Save registers ---
   PUSH BX
   PUSH CX
   PUSH DX
   PUSH SI
-
-  MOV SI, [SI]                          ; SI = Dereferenced sc_map_buffer_addr
 
   ; --- Calculate the Tile X, Y ---
   ; Tile are 16 x 16, so we divedy by 16
@@ -440,10 +444,16 @@ GET_MAP_TILE PROC
 
   ADD BX, AX                            ; BX = (BX * 20) + AX
 
+  ; SI should be dereferenced sc_map_buffer_addr
   MOV AH, [SI + BX]                     ; AH = Background tile id
   MOV AL, [SI + BX + MAP_LAYER_SIZE]    ; AL = Foreground tile id
 
-  ; --- Restore registers ---
+  TEST AL, AL                           ; Test if foreground tile is void
+  JNZ @gmt_return
+
+  MOV AL, AH                            ; AL = Background tile id (void foreground)
+
+@gmt_return:
   POP SI
   POP DX
   POP CX
@@ -481,7 +491,10 @@ RESOLVE_TILE_FINEOFFSET ENDP
 ; Modified:
 ; ------------------------------------------------------------------------------------------------------
 RESOLVE_MAP_TILES PROC
-  ; TODO: Add register protection (DX, SI, DI)
+  PUSH DX
+  PUSH SI
+  PUSH DI
+
   MOV pos_x, AX
   MOV pos_y, BX
 
@@ -553,5 +566,8 @@ RESOLVE_MAP_TILES PROC
 
 @rmt_return:
   POP AX                ; Return Fine Offset X, Y
+  POP DI
+  POP SI
+  POP DX
   RET
 RESOLVE_MAP_TILES ENDP
