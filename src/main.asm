@@ -99,14 +99,14 @@ MAIN PROC
   CALL DRAW_SCENE_VGA                 ; This is the background layer
 
   ; Grandma
-  MOV AX, 1                           ; Charater index
-  INIT_RENDER_CHARACTER               ; Render character macro
+  MOV AX, 1                           ; Charater index | TODO: remove magic number
+  CALL RENDER_CHARACTER
 
   ; Mia
-  XOR AX, AX                          ; Charater index
-  CALL RENDER_CHARACTER_1             ; TODO: change name
+  XOR AX, AX                          ; Charater index | TODO: remove magic number
+  CALL RENDER_CHARACTER
 
-  CMP mute_flag, 1
+  CMP mute_flag, 1                    ; TODO: remove magic number
   JE @m_no_music
   MOV SI, OFFSET greensleeves_data
   CALL INIT_MUSIC_THEME               ; Initialize music theme
@@ -156,9 +156,7 @@ GAME_LOOP PROC
   JE @gl_exit_game
 
   XOR AX, AX                  ; Mia character
-  CALL RENDER_CHARACTER_1
-  ;RENDER_CHARACTER_MEM
-  ;RENDER_CHARACTER_VGA
+  CALL RENDER_CHARACTER
 
   CALL CHECK_SCENE_TRANSITION ; Check if scene transition is needed
 

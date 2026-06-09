@@ -151,7 +151,7 @@ CHECK_SCENE_TRANSITION PROC
   CALL DRAW_SCENE_VGA                       ; Draw the scene
 
   XOR AX, AX                                ; AX = 0 for mia character
-  RENDER_CHARACTER                          ; Render the character
+  CALL RENDER_CHARACTER                     ; Render the character
 
   ; No transition needed
 @cs_no_transition:

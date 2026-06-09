@@ -71,7 +71,7 @@ UPDATE_GRANDMA_0_0 PROC
   MOV AX, 1                                     ; AX is the character index in MOVE_CHAR (1 = grandma) | TODO: remove magic number
   CALL UPDATE_CHAR_TICK
   CALL MOVE_CHAR
-  RENDER_CHARACTER
+  CALL RENDER_CHARACTER
 
 @ug_skip:
   RESTORE_REGS

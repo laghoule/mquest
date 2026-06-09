@@ -312,7 +312,7 @@ RESTORE_CHARACTER_PREV_BG ENDP
 ; Output: None
 ; Modified:
 ; ---------------------------------------------------------------------
-RENDER_CHARACTER_1 PROC
+RENDER_CHARACTER PROC
   PUSH AX                                   ; Save char_index (SHL will modify AX)
 
   SHL AX, 1
@@ -356,4 +356,4 @@ RENDER_CHARACTER_1 PROC
   CALL DRAW_CHARACTER_VGA                   ; Blits render_buf → VGA at current position
 
   RET
-RENDER_CHARACTER_1 ENDP
+RENDER_CHARACTER ENDP
