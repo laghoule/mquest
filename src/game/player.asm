@@ -34,8 +34,9 @@ MOVE_CHAR PROC
   MOV CX, [BX].CHARACTER.ch_loc.lo_x
   MOV DX, [BX].CHARACTER.ch_loc.lo_y
 
-  MOV old_x, CX                             ; Save the current position of the character
-  MOV old_y, DX                             ; For use in background restoration
+  ; We save the previous location of the character
+  MOV [BX].CHARACTER.ch_prev_loc.lo_x, CX
+  MOV [BX].CHARACTER.ch_prev_loc.lo_y, DX
 
   ; Check for which direction to go
   CMP [BX].CHARACTER.ch_dir, RIGHT_DIR      ; Check for right

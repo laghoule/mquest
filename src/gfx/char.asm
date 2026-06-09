@@ -244,8 +244,9 @@ RESTORE_CHARACTER_BG PROC
   MOV BX, [char_data_table + BX]      ; Address to the character data
 
   PUSH BX
-  MOV AX, old_x
-  MOV BX, old_y
+  ; Load the previous location of the character
+  MOV AX, [BX].CHARACTER.ch_prev_loc.lo_x
+  MOV BX, [BX].CHARACTER.ch_prev_loc.lo_y
   CALC_VGA_POSITION AX, BX            ; Calculate VGA position in DI
   POP BX
 
@@ -279,8 +280,9 @@ RESTORE_CHARACTER_PREV_BG PROC
   MOV BX, [char_data_table + BX]
 
   PUSH BX
-  MOV AX, old_x
-  MOV BX, old_y
+  ; Load the previous location of the character
+  MOV AX, [BX].CHARACTER.ch_prev_loc.lo_x
+  MOV BX, [BX].CHARACTER.ch_prev_loc.lo_y
   CALC_VGA_POSITION AX, BX
   POP BX
 

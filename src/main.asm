@@ -20,8 +20,6 @@ INCLUDE defs/game/consts.inc             ; Game constants
 INCLUDE defs/musics/consts.inc           ; Musics constants
 
 .DATA
-  old_x DW 280                           ; TODO: moved to right place
-  old_y DW 90                            ; TODO: moved to right place
   last_grandma_tick DB 0                 ; TODO: Move to char struct
   metatile_sp_buffer DB 1024 DUP(0)      ; TODO: Find a place for this var
   ; --- game ---
