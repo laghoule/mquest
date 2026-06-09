@@ -239,70 +239,37 @@ RESTORE_CHARACTER_BG PROC
   SAVE_REGS
   CLD
 
-  SHL AX, 1                           ; Convert character index to offset (DW)
+  SHL AX, 1                                   ; Convert character index to offset (DW)
   MOV BX, AX
-  MOV BX, [char_data_table + BX]      ; Address to the character data
+  MOV BX, [char_data_table + BX]              ; Address to the character data
 
   PUSH BX
   ; Load the previous location of the character
   MOV AX, [BX].CHARACTER.ch_prev_loc.lo_x
   MOV BX, [BX].CHARACTER.ch_prev_loc.lo_y
-  CALC_VGA_POSITION AX, BX            ; Calculate VGA position in DI
+  CALC_VGA_POSITION AX, BX                    ; Calculate VGA position in DI
   POP BX
 
-  MOV SI, [BX].CHARACTER.ch_bg_buf_addr ; SI = Address of the background buffer
-  MOV DX, CHAR_HEIGHT                   ; Number of lines to draw
+  MOV SI, [BX].CHARACTER.ch_prev_bg_buf_addr  ; SI = Address of the previous background buffer
+  MOV DX, CHAR_HEIGHT                         ; Number of lines to draw
 
 @rcb_restore_line:
   PUSH DI
-  MOV CX, CHAR_WIDTH                  ; Counter of number of pixels to draw (line width)
-  SHR CX, 1                           ; Divide by 2 because we use MOVSW
+  MOV CX, CHAR_WIDTH                          ; Counter of number of pixels to draw (line width)
+  SHR CX, 1                                   ; Divide by 2 because we use MOVSW
 
   ; MOVSW copies a byte from DS:SI to ES:DI and increments both pointers
   ; REP repeats the MOVSW instruction CX times (line width)
   REP MOVSW
 
-  POP DI                              ; Restore the initial position of the line
-  ADD DI, SCREEN_WIDTH                ; Calcul the position of the next line
-  DEC DX                              ; Decrement line counter
-  JNZ @rcb_restore_line               ; If not zero, repeat the process
+  POP DI                                      ; Restore the initial position of the line
+  ADD DI, SCREEN_WIDTH                        ; Calcul the position of the next line
+  DEC DX                                      ; Decrement line counter
+  JNZ @rcb_restore_line                       ; If not zero, repeat the process
 
   RESTORE_REGS
   RET
 RESTORE_CHARACTER_BG ENDP
-
-RESTORE_CHARACTER_PREV_BG PROC
-  SAVE_REGS
-  CLD
-
-  SHL AX, 1
-  MOV BX, AX
-  MOV BX, [char_data_table + BX]
-
-  PUSH BX
-  ; Load the previous location of the character
-  MOV AX, [BX].CHARACTER.ch_prev_loc.lo_x
-  MOV BX, [BX].CHARACTER.ch_prev_loc.lo_y
-  CALC_VGA_POSITION AX, BX
-  POP BX
-
-  MOV SI, [BX].CHARACTER.ch_prev_bg_buf_addr  ; ← seul changement
-  MOV DX, CHAR_HEIGHT
-
-@rcpb_restore_line:
-  PUSH DI
-  MOV CX, CHAR_WIDTH
-  SHR CX, 1
-  REP MOVSW
-  POP DI
-  ADD DI, SCREEN_WIDTH
-  DEC DX
-  JNZ @rcpb_restore_line
-
-  RESTORE_REGS
-  RET
-RESTORE_CHARACTER_PREV_BG ENDP
-
 
 ; ---------------------------------------------------------------------
 ; RENDER_CHARACTER
@@ -352,7 +319,7 @@ RENDER_CHARACTER PROC
   WAIT_VSYNC
   POP AX                                    ; Restore AX (char_index)
 
-  CALL RESTORE_CHARACTER_PREV_BG
+  CALL RESTORE_CHARACTER_BG
   CALL DRAW_CHARACTER_VGA                   ; Blits render_buf → VGA at current position
 
   RET

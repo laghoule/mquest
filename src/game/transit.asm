@@ -121,6 +121,7 @@ CHECK_SCENE_TRANSITION PROC
   JC @cs_restore_scene                      ; If there is a collision, restore the scene and return
 
   MOV [BX].CHARACTER.ch_loc.lo_x, DX        ; Set the x position in the character structure
+  MOV [BX].CHARACTER.ch_prev_loc.lo_x, DX   ; Save the previous x position
   MOV [BX].CHARACTER.ch_scene_addr, SI      ; Set the scene address in the character structure
   JMP @cs_draw_transition                   ; Draw the transition
 
@@ -132,6 +133,7 @@ CHECK_SCENE_TRANSITION PROC
   JC @cs_restore_scene                      ; If there is a collision, restore the scene and return
 
   MOV [BX].CHARACTER.ch_loc.lo_y, DX        ; Set the y position in the character structure
+  MOV [BX].CHARACTER.ch_prev_loc.lo_y, DX   ; Save the previous y position
   MOV [BX].CHARACTER.ch_scene_addr, SI      ; Set the scene address in the character structure
   JMP @cs_draw_transition                   ; Draw the transition
 
