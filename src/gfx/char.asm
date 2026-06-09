@@ -271,14 +271,14 @@ RESTORE_CHARACTER_BG PROC
   RET
 RESTORE_CHARACTER_BG ENDP
 
-; ---------------------------------------------------------------------
+; ----------------------------------------------
 ; RENDER_CHARACTER
-; Description:
-; Registers:
+; Description: Renders a character on the screen
+; Registers: AX, BX, DX, SI, DI
 ; Input: AX: char_index
 ; Output: None
 ; Modified:
-; ---------------------------------------------------------------------
+; ----------------------------------------------
 RENDER_CHARACTER PROC
   PUSH AX                                   ; Save char_index (SHL will modify AX)
 
@@ -286,11 +286,11 @@ RENDER_CHARACTER PROC
   MOV BX, AX
   MOV BX, [char_data_table + BX]
 
-  ; === Ping-pong bg buffers ===
+  ; --- Ping-pong bg buffers ---
   MOV AX, [BX].CHARACTER.ch_bg_buf_addr
   MOV DX, [BX].CHARACTER.ch_prev_bg_buf_addr
-  MOV [BX].CHARACTER.ch_bg_buf_addr, DX       ; ← slot vide → cible du CROP
-  MOV [BX].CHARACTER.ch_prev_bg_buf_addr, AX  ; ← ancien bg → source du RESTORE
+  MOV [BX].CHARACTER.ch_bg_buf_addr, DX       ; Save the previous bg buffer as the current buffer
+  MOV [BX].CHARACTER.ch_prev_bg_buf_addr, AX  ; Save the current bg buffer as the previous buffer
 
   MOV SI, [BX].CHARACTER.ch_scene_addr      ; SI = scene address
   MOV DI, [BX].CHARACTER.ch_bg_buf_addr     ; DI = background buffer
@@ -315,6 +315,7 @@ RENDER_CHARACTER PROC
   POP AX
   CALL DRAW_CHARACTER_MEM                   ; Copies bg_buf into render_buf, draws sprite on top
 
+  ; --- Wait for VSYNC before restoring bg buffer & drawing to VGA ---
   PUSH AX                                   ; Save AX (char_index)
   WAIT_VSYNC
   POP AX                                    ; Restore AX (char_index)
