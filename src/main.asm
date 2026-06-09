@@ -21,7 +21,6 @@ INCLUDE defs/musics/consts.inc           ; Musics constants
 
 .DATA
   last_grandma_tick DB 0                 ; TODO: Move to char struct
-  metatile_sp_buffer DB 1024 DUP(0)      ; TODO: Find a place for this var
   ; --- game ---
   INCLUDE defs/game/types.inc            ; Game types
   INCLUDE defs/game/assets.inc           ; Game assets
@@ -41,6 +40,7 @@ INCLUDE defs/musics/consts.inc           ; Musics constants
   INCLUDE defs/gfx/pals/pal.inc          ; Palette data
 
   ; --- Scenes ---
+  INCLUDE defs/gfx/scene/tile.inc        ; Tile data
   INCLUDE defs/gfx/scene/scene.inc       ; Scene data
 
   ; --- System ---
