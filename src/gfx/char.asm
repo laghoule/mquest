@@ -7,8 +7,8 @@
 ; UPDATE_CHARACTER_ANIM_INDEX
 ; Description : Update the sprite of the character based on the animation index
 ; Registers: AX, BX, CL
-; Input:    AX: char_index
-; Output:   None
+; Input:AX = char_index
+; Output: None
 ; Modified: Character data struct
 ;------------------------------------------------------------------------------
 UPDATE_CHARACTER_ANIM_INDEX PROC
@@ -43,7 +43,7 @@ UPDATE_CHARACTER_ANIM_INDEX ENDP
 ; DRAW_CHARACTER_MEM
 ; Description: Draw the character in a memory buffer
 ; Registers: AX, BX, CX, DX, SI, DI, ES
-; Input:AX: char_index
+; Input:AX = char_index
 ; Output: None
 ; Modified:
 ; --------------------------------------------------
@@ -128,8 +128,8 @@ DRAW_CHARACTER_MEM ENDP
 ; DRAW_CHARACTER_VGA
 ; Description: Draw the character on VGA memory
 ; Registers: AX, BX, CX, DX, SI, DI, ES
-; Input:    AX: char_index
-; Output:   None
+; Input: AX = char_index
+; Output: None
 ; Modified:
 ; ---------------------------------------------
 DRAW_CHARACTER_VGA PROC
@@ -165,73 +165,12 @@ DRAW_CHARACTER_VGA PROC
   RET
 DRAW_CHARACTER_VGA ENDP
 
-; ---------------------------------------------------------------------
-; SAVE_CHARACTER_BG
-; Description: Save character background in memory
-;              with inversion of DS and ES for using MOVSB optimization
-; Registers: AX, BX, CX, DI, SI, ES, DS
-; Input: AX: char_index
-; Output: None
-; Modified: char_data_table.ch_bg_addr
-; ---------------------------------------------------------------------
-SAVE_CHARACTER_BG PROC
-  SAVE_REGS
-  CLD
-
-  SHL AX, 1                           ; Character index, multiply by 2
-  MOV BX, AX
-  MOV BX, [char_data_table + BX]      ; Pointer to the character data
-
-  ; Calculate the VGA position of the character
-  PUSH BX
-  MOV AX, [BX].CHARACTER.ch_loc.lo_x
-  MOV BX, [BX].CHARACTER.ch_loc.lo_y
-  CALC_VGA_POSITION AX, BX            ; Calculate VGA position in DI
-  POP BX
-
-  MOV SI, DI                            ; Save VGA position in SI
-  MOV DI, [BX].CHARACTER.ch_bg_buf_addr ; Background buffer in DI
-
-  ; Save and inverse DS and ES
-  PUSH DS
-  PUSH ES
-
-  MOV AX, DS                          ; Save DS in AX
-  MOV DX, ES                          ; Save ES in DX
-  MOV DS, DX                          ; Inverse DS and ES
-  MOV ES, AX                          ; Inverse ES and DS
-
-  ; Now we have : DS:SI = VGA, ES:DI = RAM
-
-  MOV DX, CHAR_HEIGHT                 ; Number of lines to read
-
-@scb_read_line:
-  MOV CX, CHAR_WIDTH                  ; Number of pixels to read
-  SHR CX, 1                           ; Divide by 2 for MOVSW
-  PUSH SI
-  ; MOVSW is used to copy a byte from DS:SI to ES:DI
-  ; REP is used to repeat the instruction CX times
-  REP MOVSW
-  POP SI
-
-  ADD SI, SCREEN_WIDTH                ; Next line
-  DEC DX                              ; Decrement line counter
-  JNZ @scb_read_line
-
-  ; ---Restore DS & ES---
-  POP ES
-  POP DS
-
-  RESTORE_REGS
-  RET
-SAVE_CHARACTER_BG ENDP
-
 ; ------------------------------------------------------
 ; RESTORE_CHARACTER_BG
 ; Description: Restore character background from memory
 ;              with MOVSW optimization
 ; Registers: AX, BX, CX, DX, SI, DI
-; Input:  AX: char_index
+; Input: AX = char_index
 ; Output: None
 ; Modified: None
 ; ------------------------------------------------------
@@ -275,7 +214,7 @@ RESTORE_CHARACTER_BG ENDP
 ; RENDER_CHARACTER
 ; Description: Renders a character on the screen
 ; Registers: AX, BX, DX, SI, DI
-; Input: AX: char_index
+; Input: AX = char_index
 ; Output: None
 ; Modified:
 ; ----------------------------------------------
