@@ -8,7 +8,7 @@
 ; Description: Draw the scene on the screen, 2 layers (bg, fg) on VGA
 ; Input: AX: scene buffer
 ; Output: None
-; Modified: VGA memory
+; Modified: pos_x, pos_y
 ; -------------------------------------------------------------------
 DRAW_SCENE_VGA PROC
   SAVE_REGS
