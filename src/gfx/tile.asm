@@ -409,7 +409,7 @@ GET_TILE_PROP ENDP
 ; Registers: AX, BX, CX, DX, SI
 ; Input: AX = pos_x, BX = pos_y, SI = scene address
 ; Output: AH = Backgrount tile id, AL = Foreground tile id
-; Modified:
+; Modified: AX
 ; ------------------------------------------------------------------------
 GET_MAP_TILE PROC
   PUSH BX
@@ -469,6 +469,8 @@ GET_MAP_TILE ENDP
 ; Input: AX = X position, BX = Y position
 ; Output: AH = FineX offset, AL = FineY offsets
 ; Modified: AX
+; NOTES: Fine offsets are fixed modulo 16 (tile size)
+; TODO: Tile size shoud be passed in input
 ; ----------------------------------------------------------
 RESOLVE_TILE_FINEOFFSET PROC
   PUSH BX
@@ -485,17 +487,17 @@ RESOLVE_TILE_FINEOFFSET ENDP
 ;-------------------------------------------------------------------------------------------------------
 ; RESOLVE_MAP_TILES
 ; Description: Resolves the map tiles for a given position, and a given layer (background or foreground)
-; Registers:
+; Registers: AX, BX, CX, DX, SI
 ; Input: AX = pos_x, BX = pos_y, DX = background (0) or foreground (1), SI = scene address
 ; Output: AX = FineX, FineY offsets, BX = top left, right tiles , CX = bottom left, right tiles
-; Modified:
+; Modified: AX, BX, CX, pos_x, pos_y
 ; ------------------------------------------------------------------------------------------------------
 RESOLVE_MAP_TILES PROC
   PUSH DX
   PUSH SI
   PUSH DI
 
-  MOV pos_x, AX
+  MOV pos_x, AX         ; Store temporary pos_x and pos_y
   MOV pos_y, BX
 
   CALL RESOLVE_TILE_FINEOFFSET
@@ -565,7 +567,7 @@ RESOLVE_MAP_TILES PROC
   MOV CL, AL            ; CL = Foreground tile id
 
 @rmt_return:
-  POP AX                ; Return Fine Offset X, Y
+  POP AX                ; Return Fine Offset X (AH), Y (AL)
   POP DI
   POP SI
   POP DX
