@@ -35,11 +35,12 @@ UPDATE_GRANDMA_0_0 PROC
   JNE @ug_skip
 
   ; If no game tick change, skip
+  XOR AH, AH
   MOV AL, game_tick
-  CMP last_grandma_tick, AL
+  CMP [BX].CHARACTER.ch_tick, AX
   JE @ug_skip
 
-  MOV last_grandma_tick, AL                     ; Save the last tick for grandma
+  MOV [BX].CHARACTER.ch_tick, AX                ; Save the last tick for grandma
 
   ; Only update every 4 ticks
   MOV AL, game_tick

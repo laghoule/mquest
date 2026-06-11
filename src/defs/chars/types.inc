@@ -18,7 +18,7 @@ CHAR_DIR_DATA ENDS
 
 EVENT STRUCT
   ev_addr              DW ?         ; Address of the event procedure
-  ev_tick              DW ?         ; Tick counter
+  ev_tick              DW ?         ; Tick counter (timestamp)
   ev_state             DW ?         ; State of the event
   ev_param             DW ?         ; Parameter of the event
 EVENT ENDS
@@ -26,6 +26,7 @@ EVENT ENDS
 CHARACTER STRUCT
   ch_action_addr       DW ?         ; Address of the action procedure
   ch_event             EVENT < >    ; Event data
+  ch_tick              DW ?         ; Tick counter (timestamp)
   ch_loc               LOCATION < > ; Current X, Y coordinate of the character
   ch_prev_loc          LOCATION < > ; Previous location of the character
   ch_dir               DB ?         ; Direction of the character
