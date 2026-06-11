@@ -132,7 +132,7 @@ GAME_LOOP PROC
 
 @gl_get_next_key:
   CALL SYNC_TICKS             ; Syncing timing
-  MOV delta_tick, cl          ; Missing ticks since last update
+  MOV delta_tick, Cl          ; Missing ticks since last update
   ADD pending_tick, CL        ; Accumulate pending ticks
 
   ; Temporary NPC update testing
