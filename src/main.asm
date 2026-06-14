@@ -51,8 +51,9 @@ INCLUDE defs/musics/consts.inc           ; Musics constants
 
 .CODE
   INCLUDE game/assets.asm                ; Assets functions
+  INCLUDE game/char/input.asm            ; Character input functions
+  INCLUDE game/char/action.asm           ; Character action functions
   INCLUDE game/events.asm                ; Events functions
-  INCLUDE game/player.asm                ; Player functions
   INCLUDE game/collis.asm                ; Collision functions
   INCLUDE game/transit.asm               ; Scene transition functions
   INCLUDE sys/args.asm                   ; Command-line functions
@@ -63,7 +64,6 @@ INCLUDE defs/musics/consts.inc           ; Musics constants
   INCLUDE sys/vga.asm                    ; VGA functions
   INCLUDE sys/timer.asm                  ; Timer functions
   INCLUDE sys/speaker.asm                ; Speaker functions
-  INCLUDE sys/input.asm                  ; Inputs functions
   INCLUDE gfx/char/movement.asm          ; Caracters animation functions
   INCLUDE gfx/char/render.asm            ; Caracters rendering functions
   INCLUDE gfx/tile.asm                   ; Tiles drawing functions

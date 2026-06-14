@@ -1,0 +1,90 @@
+;  Copyright (C) 2025, 2026 Pascal Gauthier
+;  This program is free software: you can redistribute it and/or modify
+;  it under the terms of the GNU General Public License as published by
+;  the Free Software Foundation, either version 3 of the License.
+
+;---------------------------------------------------------------
+; MOVE_CHAR
+; Description: Handles movement and collision for all directions
+; Registers: AX, BX, CL, DX
+; Input:  AX: char_index, CX: speed, DX: direction
+; Output: None
+; Modify: Character data table of char_index
+;---------------------------------------------------------------
+MOVE_CHAR PROC
+  SAVE_REGS
+
+  ; Calcul -> Test -> Action
+
+  MOV char_index, AX                        ; We save the character index for later use
+
+  SHL AX, 1                                 ; Conversion characted index -> offset (DW)
+  MOV BX, AX
+
+  MOV BX, [char_data_table + BX]            ; BX = Address of the character data structure
+
+  XOR DH, DH                                ; ch_dir is a byte, so we clear DH
+  MOV [BX].CHARACTER.ch_dir, DL             ; Set character direction from input DX
+
+  ; Speed control of the character
+  XOR AH, AH
+  MOV AL, CL
+
+  ; We retrieve the x,y coordinates of the character
+  MOV CX, [BX].CHARACTER.ch_loc.lo_x
+  MOV DX, [BX].CHARACTER.ch_loc.lo_y
+
+  ; We save the previous location of the character
+  MOV [BX].CHARACTER.ch_prev_loc.lo_x, CX
+  MOV [BX].CHARACTER.ch_prev_loc.lo_y, DX
+
+  ; Check for which direction to go
+  CMP [BX].CHARACTER.ch_dir, RIGHT_DIR      ; Check for right
+  JE @mm_calc_right
+
+  CMP [BX].CHARACTER.ch_dir, LEFT_DIR       ; Check for left
+  JE @mm_calc_left
+
+  CMP [BX].CHARACTER.ch_dir, UP_DIR         ; Check for up
+  JE @mm_calc_up
+
+  ; If we are here, it's down direction
+  ADD DX, AX                                ; Add pending_tick to Y position
+  JMP @mm_collision_detection               ; Goto collision detection
+
+@mm_calc_right:
+  ADD CX, AX                                ; Add pending_tick to X position
+  JMP @mm_collision_detection               ; Goto collision detection
+
+@mm_calc_left:
+  SUB CX, AX                                ; Subtract pending_tick from X position
+  JMP @mm_collision_detection               ; Goto collision detection
+
+@mm_calc_up:
+  SUB DX, AX                                ; Subtract pending_tick from Y position
+
+@mm_collision_detection:
+  CALL CHECK_CHAR_COLLISION
+  JC @mmg_collision_event                   ; Goto skip to animation if carry flag set
+
+  MOV AX, char_index
+  CALL CHECK_OBJECT_COLLISION               ; Check for collition via character hitbox
+  JC @mmg_collision_event                   ; Goto skip to animation if carry flag set
+
+  ; No collision detected
+  MOV [BX].CHARACTER.ch_loc.lo_x, CX        ; We save the x,y in the character struct
+  MOV [BX].CHARACTER.ch_loc.lo_y, DX
+  JMP @mmg_skip_to_anim
+
+@mmg_collision_event:
+  CMP [BX].CHARACTER.ch_event.ev_addr, 0    ; Check if event address is zero (no event action)
+  JE @mmg_skip_to_anim                      ; If zero, skip to animation
+  CALL [BX].CHARACTER.ch_event.ev_addr      ; Call collision event
+
+@mmg_skip_to_anim:
+  MOV AX, char_index
+  CALL UPDATE_CHARACTER_ANIM_INDEX          ; Update animation index
+
+  RESTORE_REGS
+  RET
+MOVE_CHAR ENDP
