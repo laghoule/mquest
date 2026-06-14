@@ -64,7 +64,8 @@ INCLUDE defs/musics/consts.inc           ; Musics constants
   INCLUDE sys/timer.asm                  ; Timer functions
   INCLUDE sys/speaker.asm                ; Speaker functions
   INCLUDE sys/input.asm                  ; Inputs functions
-  INCLUDE gfx/char.asm                   ; Caracters drawing functions
+  INCLUDE gfx/char/movement.asm          ; Caracters animation functions
+  INCLUDE gfx/char/render.asm            ; Caracters rendering functions
   INCLUDE gfx/tile.asm                   ; Tiles drawing functions
   INCLUDE gfx/scene.asm                  ; Scene drawing functions
   INCLUDE logic/npc.asm                  ; Non player character AI
