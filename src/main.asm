@@ -108,10 +108,15 @@ MAIN PROC
 
   CMP mute_flag, 1                    ; TODO: remove magic number
   JE @m_no_music
-  MOV SI, OFFSET greensleeves_data
+
+  MOV SI, OFFSET greensleeves_data    ; SI = the music theme data
   CALL INIT_MUSIC_THEME               ; Initialize music theme
+  JMP @m_with_music
 
 @m_no_music:
+  MOV music_theme_active, 0
+
+@m_with_music:
   ; --- Game loop ---
   CALL INIT_TICKS                     ; Initialise the game_tick & pending_tick
   CALL GAME_LOOP                      ; Start the game loop
@@ -133,7 +138,7 @@ GAME_LOOP PROC
 
 @gl_get_next_key:
   CALL SYNC_TICKS             ; Syncing timing
-  MOV delta_tick, Cl          ; Missing ticks since last update
+  MOV delta_tick, CL          ; Missing ticks since last update
   ADD pending_tick, CL        ; Accumulate pending ticks
 
   ; Temporary NPC update testing

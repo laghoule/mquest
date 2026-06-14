@@ -177,17 +177,22 @@ RESTORE_CHARACTER_BG ENDP
 ; ----------------------------------------------
 ; RENDER_CHARACTER
 ; Description: Renders a character on the screen
-; Registers: AX, BX, DX, SI, DI
+; Registers: AX, BX, CX, DX, SI, DI
 ; Input: AX = char_index
 ; Output: None
 ; Modified:
 ; ----------------------------------------------
 RENDER_CHARACTER PROC
-  PUSH AX                                   ; Save char_index (SHL will modify AX)
+  SAVE_REGS
+
+  MOV CX, AX                                ; Save char_index in CX
 
   SHL AX, 1
   MOV BX, AX
   MOV BX, [char_data_table + BX]
+
+  TEST [BX].CHARACTER.ch_event.ev_redraw, 1          ; Test if the character needs to be redrawn
+  JZ @rc_skip_redraw
 
   ; --- Ping-pong bg buffers ---
   MOV AX, [BX].CHARACTER.ch_bg_buf_addr
@@ -215,7 +220,7 @@ RENDER_CHARACTER PROC
   MOV SI, OFFSET metatile_sp_buffer
   CALL CROP_METATILE_RAM                    ; Crops 16x17 into ch_bg_buf_addr (ready for next frame)
 
-  POP AX
+  MOV AX, CX                                ; Restore char_index in AX
   CALL DRAW_CHARACTER_MEM                   ; Copies bg_buf into render_buf, draws sprite on top
 
   ; --- Wait for VSYNC before restoring bg buffer & drawing to VGA ---
@@ -224,5 +229,7 @@ RENDER_CHARACTER PROC
   CALL RESTORE_CHARACTER_BG
   CALL DRAW_CHARACTER_VGA                   ; Blits render_buf → VGA at current position
 
+@rc_skip_redraw:
+  RESTORE_REGS
   RET
 RENDER_CHARACTER ENDP

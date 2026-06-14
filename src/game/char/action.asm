@@ -72,6 +72,7 @@ MOVE_CHAR PROC
   JC @mmg_collision_event                   ; Goto skip to animation if carry flag set
 
   ; No collision detected
+  MOV [BX].CHARACTER.ch_event.ev_redraw, 1  ; Set redraw flag
   MOV [BX].CHARACTER.ch_loc.lo_x, CX        ; We save the x,y in the character struct
   MOV [BX].CHARACTER.ch_loc.lo_y, DX
   JMP @mmg_skip_to_anim

@@ -6,8 +6,10 @@
 ;-----------------------------------------------------------
 ; HANDLE_KEYBOARD_INPUT
 ; Description: Handles keyboard input for the game
-; Input:  None
+; Register: AX, BX, CX, DX
+; Input: None
 ; Output: AL = 0 (nothing), 1 (mouvement), 2 (quit)
+; Modified: music_theme_active, mute_flag
 ;-----------------------------------------------------------
 HANDLE_KEYBOARD_INPUT PROC
   MOV AH, 01h             ; Read keyboard input buffer
@@ -36,6 +38,12 @@ HANDLE_KEYBOARD_INPUT PROC
   JE @hki_move_down
 
 @hki_no_input:
+  XOR AX, AX
+  SHL AX, 1
+  MOV BX, AX
+  MOV BX, [char_data_table + BX]
+  MOV [BX].CHARACTER.ch_event.ev_redraw, 1
+  
   MOV AL, 0
   RET
 

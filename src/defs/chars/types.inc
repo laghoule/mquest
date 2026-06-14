@@ -21,6 +21,7 @@ EVENT STRUCT
   ev_tick              DW ?         ; Tick counter (timestamp)
   ev_state             DW ?         ; State of the event
   ev_param             DW ?         ; Parameter of the event
+  ev_redraw            DW ?         ; Redraw flag (1 = redraw, 0 = no redraw)
 EVENT ENDS
 
 CHARACTER STRUCT
