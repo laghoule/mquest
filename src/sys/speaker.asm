@@ -72,7 +72,7 @@ UPDATE_MUSIC_THEME PROC
 
   ; Control the speed of the music theme
   INC music_theme_speed_counter
-  CMP music_theme_speed_counter, 20
+  CMP music_theme_speed_counter, 5
   JL @umt_skipping                      ; Skip updating the music theme if the speed counter is less than 20
   MOV music_theme_speed_counter, 0      ; Reset the speed counter
 

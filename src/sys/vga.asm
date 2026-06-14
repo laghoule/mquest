@@ -7,8 +7,11 @@
 ; ------------------------------------------------------------------
 ; LOAD_GAME_PALETTE
 ; Description: Loads the game palette into the VGA palette registers
+; Registers: AX, CX, DX, SI
 ; Input: None
+;   Indirect: game_palette_data
 ; Output: None
+; Mofified: None
 ; ------------------------------------------------------------------
 LOAD_GAME_PALETTE PROC
   SAVE_REGS
@@ -30,3 +33,33 @@ LOAD_GAME_PALETTE PROC
   RESTORE_REGS
   RET
 LOAD_GAME_PALETTE ENDP
+
+; ---------------------------------------------------------------------------------
+; WAIT_VSYNC
+; Description: Waits for the start and end of the vertical VGA sync
+; Registers: AX, DX
+; Input: None
+; Output: None
+; Mofified: None
+; Notes:
+;   https://www.scs.stanford.edu/22wi-cs212/pintos/specs/freevga/vga/vgacrtc.htm
+;   https://www.scs.stanford.edu/22wi-cs212/pintos/specs/freevga/vga/crtcreg.htm#16
+; ---------------------------------------------------------------------------------
+WAIT_VSYNC PROC
+  PUSH AX
+  PUSH DX
+
+  MOV DX, 03DAh               ; VGA status port
+@wv_wait_end:
+  IN AL, DX                   ; Read the status register
+  TEST AL, 8                  ; Check if the vertical sync is active (bit 8)
+  JNZ @wv_wait_end            ; Wait for the end of the vertical sync
+@wv_wait_start:
+  IN AL, DX                   ; Read the status register
+  TEST AL, 8                  ; Check if the vertical sync is active (bit 8)
+  JZ @wv_wait_start           ; Wait for the start of the vertical sync
+
+  POP DX
+  POP AX
+  RET
+WAIT_VSYNC ENDP

@@ -21,19 +21,3 @@ CALC_VGA_POSITION MACRO AX, BX
 
   MOV DI, AX
 ENDM
-
-; Synchronize with the vertical retrace to avoid screen tearing
-; https://www.scs.stanford.edu/22wi-cs212/pintos/specs/freevga/vga/vgacrtc.htm
-; https://www.scs.stanford.edu/22wi-cs212/pintos/specs/freevga/vga/crtcreg.htm#16
-WAIT_VSYNC MACRO
-  LOCAL wait_start, wait_end
-  MOV DX, 03DAh               ; VGA status port
-wait_end:
-  IN AL, DX                   ; Read the status register
-  TEST AL, 8                  ; Check if the vertical sync is active (bit 8)
-  JNZ wait_end                ; Wait for the end of the vertical sync
-wait_start:
-  IN AL, DX                   ; Read the status register
-  TEST AL, 8                  ; Check if the vertical sync is active (bit 8)
-  JZ wait_start               ; Wait for the start of the vertical sync
-ENDM

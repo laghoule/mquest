@@ -255,9 +255,7 @@ RENDER_CHARACTER PROC
   CALL DRAW_CHARACTER_MEM                   ; Copies bg_buf into render_buf, draws sprite on top
 
   ; --- Wait for VSYNC before restoring bg buffer & drawing to VGA ---
-  PUSH AX                                   ; Save AX (char_index)
-  WAIT_VSYNC
-  POP AX                                    ; Restore AX (char_index)
+  CALL WAIT_VSYNC
 
   CALL RESTORE_CHARACTER_BG
   CALL DRAW_CHARACTER_VGA                   ; Blits render_buf → VGA at current position

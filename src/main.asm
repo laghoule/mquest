@@ -138,8 +138,9 @@ GAME_LOOP PROC
   ; Temporary NPC update testing
   CALL UPDATE_GRANDMA_0_0     ; TODO: use ch_action_addr of the character
 
-  ; Mute / Unmute music theme
-  CMP mute_flag, 1
+  ; Mute / Unmute music theme (only when a BIOS tick has elapsed)
+  ; TODO: Need to implement a better music timing algorithm
+  CMP delta_tick, 0
   JE @F
   CMP music_theme_active, 0
   JE @F
