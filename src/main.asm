@@ -98,13 +98,7 @@ MAIN PROC
   MOV map_buffer_addr, AX             ; map_buffer_addr is used to store the current scene buffer
   CALL DRAW_SCENE_VGA                 ; This is the background layer
 
-  ; Grandma
-  MOV AX, 1                           ; Charater index | TODO: remove magic number
-  CALL RENDER_CHARACTER
-
-  ; Mia
-  XOR AX, AX                          ; Charater index | TODO: remove magic number
-  CALL RENDER_CHARACTER
+  CALL RENDER_CHARACTERS              ; Render all characters on the screen
 
   CMP mute_flag, 1                    ; TODO: remove magic number
   JE @m_no_music
@@ -161,15 +155,15 @@ GAME_LOOP PROC
   CMP AL, 2                   ; Check if quit game key was pressed
   JE @gl_exit_game
 
-  XOR AX, AX                  ; Mia character
-  CALL RENDER_CHARACTER
-
-  CALL CHECK_SCENE_TRANSITION ; Check if scene transition is needed
+  CALL RENDER_CHARACTERS      ; Render all characters on the screen
+  CALL CHECK_SCENE_TRANSITION ; Check if scene transition is needed for Mia
 
   MOV pending_tick, 0         ; Reset pending ticks
   JMP @gl_get_next_key
 
 @gl_no_movement:
+  MOV AX, 1                   ; Render only NPC characters
+  CALL RENDER_CHARACTERS      ; Render all NPC characters on the screen
   CMP pending_tick, 3         ; Less than 4 ticks?
   JL @gl_get_next_key         ; Yes, keep the debt and loop again
   MOV pending_tick, 0         ; Reset pending ticks

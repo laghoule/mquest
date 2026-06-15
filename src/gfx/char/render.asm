@@ -174,6 +174,33 @@ RESTORE_CHARACTER_BG PROC
   RET
 RESTORE_CHARACTER_BG ENDP
 
+; -------------------------------------------------
+; RENDER_CHARACTERS
+; Description: Renders all characters on the screen
+; Registers: AX
+; Input: AX = 0 (all characters), 1 (npc only)
+; Output: None
+; Modified:
+; -------------------------------------------------
+RENDER_CHARACTERS PROC
+  PUSH AX
+
+  TEST AX, 1                                  ; Test if NPC only
+  JZ @rc_all_characters
+  MOV AX, 1
+
+@rc_all_characters:
+  XOR AX, AX                                  ; Initialize loop to 0
+@rc_loop:
+  CALL RENDER_CHARACTER                       ; Render the character index AX
+  INC AX                                      ; Increment char_index
+  CMP AX, 2                                   ; TODO: Max char index
+  JNE @rc_loop                                ; Repeat until all characters are rendered
+
+  POP AX
+  RET
+RENDER_CHARACTERS ENDP
+
 ; ----------------------------------------------
 ; RENDER_CHARACTER
 ; Description: Renders a character on the screen
@@ -185,13 +212,13 @@ RESTORE_CHARACTER_BG ENDP
 RENDER_CHARACTER PROC
   SAVE_REGS
 
-  MOV CX, AX                                ; Save char_index in CX
+  MOV CX, AX                                  ; Save char_index in CX
 
   SHL AX, 1
   MOV BX, AX
   MOV BX, [char_data_table + BX]
 
-  TEST [BX].CHARACTER.ch_event.ev_redraw, 1          ; Test if the character needs to be redrawn
+  TEST [BX].CHARACTER.ch_event.ev_redraw, 1   ; Test if the character needs to be redrawn
   JZ @rc_skip_redraw
 
   ; --- Ping-pong bg buffers ---

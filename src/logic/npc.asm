@@ -20,10 +20,11 @@ UPDATE_GRANDMA_0_0 PROC
   MOV AX, OFFSET PAUSE                          ; Offset of the label of the PAUSE proc
   MOV [BX].CHARACTER.ch_event.ev_addr, AX
   MOV [BX].CHARACTER.ch_event.ev_param, 2
-  
-  CMP [BX].CHARACTER.ch_event.ev_state, 0       ; If state is 0, we jump to @@
+
+  CMP [BX].CHARACTER.ch_event.ev_state, 0       ; Check for state 0 (not paused)
   JZ @F
 
+  ; --- Paused state ---
   MOV AX, 1                                     ; Grandma character index
   CALL [BX].CHARACTER.ch_event.ev_addr          ; State is not 0, so we call the pause event
   JMP @ug_skip
@@ -69,12 +70,16 @@ UPDATE_GRANDMA_0_0 PROC
 
 @ug_move:
   MOV CL, delta_tick                            ; Use delta_tick as the speed
+  MOV [BX].CHARACTER.ch_event.ev_redraw, 1      ; Set the redraw flag to true
   MOV AX, 1                                     ; AX is the character index in MOVE_CHAR (1 = grandma) | TODO: remove magic number
   CALL UPDATE_CHAR_TICK
   CALL MOVE_CHAR
-  CALL RENDER_CHARACTER
+  JMP @ug_return
 
 @ug_skip:
+  MOV [BX].CHARACTER.ch_event.ev_redraw, 0      ; Set the redraw flag to false
+
+@ug_return:
   RESTORE_REGS
   RET
 UPDATE_GRANDMA_0_0 ENDP

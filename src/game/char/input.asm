@@ -12,17 +12,22 @@
 ; Modified: music_theme_active, mute_flag
 ;-----------------------------------------------------------
 HANDLE_KEYBOARD_INPUT PROC
-  MOV AH, 01h             ; Read keyboard input buffer
+  XOR AX, AX
+  SHL AX, 1
+  MOV BX, AX
+  MOV BX, [char_data_table + BX]
+
+  MOV AH, 01h                                 ; Read keyboard input buffer
   INT 16h
   JZ @hki_no_input
 
-  MOV AH, 00h             ; Read key pressed on keyboard
+  MOV AH, 00h                                 ; Read key pressed on keyboard
   INT 16h
 
   CMP AH, KEY_ESC
   JE @hki_exit_game
 
-  CMP AH, KEY_MUTE        ; m key
+  CMP AH, KEY_MUTE                            ; m key
   JE @hki_mute_music
 
   CMP AH, KEY_RIGHT
@@ -38,12 +43,7 @@ HANDLE_KEYBOARD_INPUT PROC
   JE @hki_move_down
 
 @hki_no_input:
-  XOR AX, AX
-  SHL AX, 1
-  MOV BX, AX
-  MOV BX, [char_data_table + BX]
-  MOV [BX].CHARACTER.ch_event.ev_redraw, 1
-  
+  MOV [BX].CHARACTER.ch_event.ev_redraw, 0  ; No input, no redraw
   MOV AL, 0
   RET
 
@@ -64,14 +64,15 @@ HANDLE_KEYBOARD_INPUT PROC
 
 @hki_move:
   MOV CL, pending_tick
-  XOR AX, AX              ; Mia character index
+  MOV [BX].CHARACTER.ch_event.ev_redraw, 1  ; Input received, redraw
+  XOR AX, AX                                ; Mia character index
   CALL MOVE_CHAR
   MOV AL, 1
   RET
 
 ; Mute / Unmute the music
 @hki_mute_music:
-  CMP mute_flag, 1        ; Don't mute music if the mute flag is set (e.g. from command-line arguments)
+  CMP mute_flag, 1                          ; Don't mute music if the mute flag is set (e.g. from command-line arguments)
   JE @hki_no_input
 
   CMP music_theme_active, 1
