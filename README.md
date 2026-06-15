@@ -8,6 +8,14 @@ A retro adventure game developed in **8086 Assembly**, designed specifically for
 
 Mia is a young herbalist apprentice. Her grandmother has fallen ill, and the only cure is a remedy made from three rare plants hidden deep within the mystical forest. Players must guide Mia through the woods, navigating obstacles and searching for the ingredients to save her grandmother.
 
+## AI Policy
+
+All code in this project is **written by hand** — no AI-generated code is used.
+
+AI tools serve strictly as a **learning aid and mentor**, helping deepen understanding of:
+- 8086 Assembly programming
+- Retro video game development techniques
+
 ## Technical Specifications
 
 - **Target Hardware:** IBM PC-XT / Pocket 8086.
