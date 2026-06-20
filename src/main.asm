@@ -69,7 +69,7 @@ INCLUDE defs/musics/consts.inc           ; Musics constants
   INCLUDE gfx/tile.asm                   ; Tiles drawing functions
   INCLUDE gfx/scene.asm                  ; Scene drawing functions
   INCLUDE logic/update.asm               ; Logic update functions
-  INCLUDE logic/actions/npc.asm          ; NPC actions functions
+  INCLUDE logic/grandma/actions.asm          ; NPC actions functions
 
 MAIN PROC
   ; ---Initialize segments---
