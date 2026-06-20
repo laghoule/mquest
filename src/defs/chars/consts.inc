@@ -1,3 +1,5 @@
+NPC_TOTALS     EQU 1          ; Total number of NPCs in the game
+
 CHAR_WIDTH     EQU 16         ; Width of a character sprite in pixels
 CHAR_HEIGHT    EQU 17         ; Height of a character sprite in pixels
 CHAR_SIZE      EQU 272        ; Size of a character sprite in bytes

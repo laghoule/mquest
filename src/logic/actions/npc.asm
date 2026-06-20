@@ -83,29 +83,3 @@ UPDATE_GRANDMA_0_0 PROC
   RESTORE_REGS
   RET
 UPDATE_GRANDMA_0_0 ENDP
-
-;------------------------------------------------------------------------------
-; UPDATE_CHAR_TICK
-; Description: Updates the tick of a character
-; Registers: AX, BX, ES
-; Input: AX = character index
-; Output: None
-; Modified: [BX].CHARACTER.ch_event.ev_tick
-;------------------------------------------------------------------------------
-UPDATE_CHAR_TICK PROC
-  SAVE_REGS
-
-  SHL AX, 1                                     ; Conversion characted index -> offset (DW)
-  MOV BX, AX
-  MOV BX, [char_data_table + BX]                ; BX = Address of the character data structure
-
-  PUSH ES
-  MOV AX, 40h
-  MOV ES, AX
-  MOV AX, ES:[6Ch]
-  MOV [BX].CHARACTER.ch_event.ev_tick, AX       ; Set the tick to the current tick for the character
-  POP ES
-
-  RESTORE_REGS
-  RET
-UPDATE_CHAR_TICK ENDP

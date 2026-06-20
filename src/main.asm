@@ -68,7 +68,8 @@ INCLUDE defs/musics/consts.inc           ; Musics constants
   INCLUDE gfx/char/render.asm            ; Caracters rendering functions
   INCLUDE gfx/tile.asm                   ; Tiles drawing functions
   INCLUDE gfx/scene.asm                  ; Scene drawing functions
-  INCLUDE logic/npc.asm                  ; Non player character AI
+  INCLUDE logic/update.asm               ; Logic update functions
+  INCLUDE logic/actions/npc.asm          ; NPC actions functions
 
 MAIN PROC
   ; ---Initialize segments---
@@ -135,9 +136,6 @@ GAME_LOOP PROC
   MOV delta_tick, CL          ; Missing ticks since last update
   ADD pending_tick, CL        ; Accumulate pending ticks
 
-  ; Temporary NPC update testing
-  CALL UPDATE_GRANDMA_0_0     ; TODO: use ch_action_addr of the character
-
   ; Mute / Unmute music theme (only when a BIOS tick has elapsed)
   ; TODO: Need to implement a better music timing algorithm
   CMP delta_tick, 0
@@ -145,8 +143,9 @@ GAME_LOOP PROC
   CMP music_theme_active, 0
   JE @F
   CALL UPDATE_MUSIC_THEME     ; Update theme music
-@@:
 
+@@:
+  CALL UPDATE_NPC_ACTION      ; Update NPC characters
   CALL HANDLE_KEYBOARD_INPUT  ; Output AL = 0 (no key), AL = 1 (action), AL = 2 (quit game)
 
   CMP AL, 0                   ; Check if no key was pressed

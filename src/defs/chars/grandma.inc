@@ -2,7 +2,7 @@
 ; ch_action_addr, ch_event, ch_tick, ch_loc, ch_prev_loc, ch_dir, ch_dir_table_addr, ch_anim_idx, ch_anim_spd, ch_anim_cnt,
 ; ch_bg_buf_addr, ch_prev_bg_buf_addr, ch_sprt_buf_addr, ch_render_buf_addr, ch_scene_addr
 ; ------------------------------------------------------------------------------------------------------------------------
-grandma_data CHARACTER <0, <0, 0, 0, 0, 1>, 0, <280, 45>, <280, 45>, LEFT_DIR, OFFSET grandma_dir_table, 0, 1, 0, OFFSET grandma_bg_buffer, OFFSET grandma_prev_bg_buffer, OFFSET grandma_tile_buffer, OFFSET grandma_sprite_buffer, OFFSET map_scene_0_0>
+grandma_data CHARACTER <OFFSET UPDATE_GRANDMA_0_0, <0, 0, 0, 0, 1>, 0, <280, 45>, <280, 45>, LEFT_DIR, OFFSET grandma_dir_table, 0, 1, 0, OFFSET grandma_bg_buffer, OFFSET grandma_prev_bg_buffer, OFFSET grandma_tile_buffer, OFFSET grandma_sprite_buffer, OFFSET map_scene_0_0>
 
 grandma_tile_file           DB "assets/grandma.pic", 0  ; Grandma tileset
 grandma_bg_buffer           DB CHAR_SIZE DUP(0)         ; Grandma background buffer
