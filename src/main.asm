@@ -69,8 +69,16 @@ INCLUDE defs/musics/consts.inc           ; Musics constants
   INCLUDE gfx/tile.asm                   ; Tiles drawing functions
   INCLUDE gfx/scene.asm                  ; Scene drawing functions
   INCLUDE logic/update.asm               ; Logic update functions
-  INCLUDE logic/grandma/actions.asm          ; NPC actions functions
+  INCLUDE logic/grandma/actions.asm      ; NPC actions functions
 
+;---------------------------------------------------------
+; MAIN
+; Description: Main entry point of the game
+; Registers: AX, BX, CX, SI
+; Input: None
+; Output: None
+; Modified: current_scene_addr, map_buffer_addr, mute_flag
+;---------------------------------------------------------
 MAIN PROC
   ; ---Initialize segments---
   MOV AX, @DATA
@@ -84,9 +92,10 @@ MAIN PROC
   JC @m_exit                          ; If error, exit
 
   ; ---Initialize mode 13h with bios call / VGA---
+  ; https://en.wikipedia.org/wiki/Mode_13h
   MOV AX, 13h                         ; Mode 13h (320x200 256 colors)
   INT 10h                             ; Call BIOS interrupt to set video mode
-  MOV AX, VGA_ADDR                    ; VGA address in AX
+  MOV AX, 0A000h                      ; VGA address in AX
   MOV ES, AX                          ; Set ES to VGA address
 
   ; --- Loading custom VGA palette ---
@@ -117,7 +126,7 @@ MAIN PROC
   CALL GAME_LOOP                      ; Start the game loop
 
   ; ---Return to text mode---
-  MOV AX, TEXT_MODE
+  MOV AX, 0003h
   INT 10h
 
 @m_exit:
@@ -127,7 +136,14 @@ MAIN PROC
 
 MAIN ENDP
 
-; --- Game loop ---
+;-------------------------------------------------------
+; GAME_LOOP
+; Description: Main game loop
+; Registers: AX
+; Input: None
+; Output: None
+; Modified: delta_tick, pending_tick, music_theme_active
+;-------------------------------------------------------
 GAME_LOOP PROC
   SAVE_REGS
 
