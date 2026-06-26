@@ -1,8 +1,36 @@
-; --- definition ----------------------------------------------------------------------------------------------------------
-; ch_action_addr, ch_event, ch_tick, ch_loc, ch_prev_loc, ch_dir, ch_dir_table_addr, ch_anim_idx, ch_anim_spd, ch_anim_cnt,
-; ch_bg_buf_addr, ch_prev_bg_buf_addr, ch_sprt_buf_addr, ch_render_buf_addr, ch_scene_addr
-; ------------------------------------------------------------------------------------------------------------------------
-grandma_data CHARACTER <OFFSET UPDATE_GRANDMA_0_0, <0, 0, 0, 0, 1>, 0, <280, 45>, <280, 45>, LEFT_DIR, OFFSET grandma_dir_table, 0, 1, 0, OFFSET grandma_bg_buffer, OFFSET grandma_prev_bg_buffer, OFFSET grandma_tile_buffer, OFFSET grandma_sprite_buffer, OFFSET map_scene_0_0>
+; --- grandma_data CHARACTER structure fields: ---
+; ch_action_addr:      OFFSET UPDATE_GRANDMA_0_0
+; ch_event:            <0, 0, 0, 0, 1>
+; ch_tick:             0
+; ch_loc:              <280, 45>
+; ch_prev_loc:         <280, 45>
+; ch_dir:              LEFT_DIR
+; ch_dir_tbl_addr:     OFFSET grandma_dir_table
+; ch_anim_idx:         0
+; ch_anim_spd:         1
+; ch_anim_cnt:         0
+; ch_bg_buf_addr:      OFFSET grandma_bg_buffer
+; ch_prev_bg_buf_addr: OFFSET grandma_prev_bg_buffer
+; ch_sprt_buf_addr:    OFFSET grandma_tile_buffer
+; ch_render_buf_addr:  OFFSET grandma_sprite_buffer
+; ch_scene_addr:       OFFSET map_scene_0_0
+grandma_data CHARACTER <\
+  OFFSET UPDATE_GRANDMA_0_0,\
+  <0, 0, 0, 0, 1>,\
+  0,\
+  <280, 45>,\
+  <280, 45>,\
+  LEFT_DIR,\
+  OFFSET grandma_dir_table,\
+  0,\
+  1,\
+  0,\
+  OFFSET grandma_bg_buffer,\
+  OFFSET grandma_prev_bg_buffer,\
+  OFFSET grandma_tile_buffer,\
+  OFFSET grandma_sprite_buffer,\
+  OFFSET map_scene_0_0\
+>
 
 grandma_tile_file           DB "assets/grandma.pic", 0  ; Grandma tileset
 grandma_bg_buffer           DB CHAR_SIZE DUP(0)         ; Grandma background buffer
