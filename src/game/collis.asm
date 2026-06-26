@@ -104,6 +104,25 @@ CHECK_OBJECT_COLLISION ENDP
 ; Input: AX = Character ID
 ; Output: Carry flag set if collision
 ; Modified: aabb_ch1_left, aabb_ch1_right, aabb_ch1_top, aabb_ch1_bottom
+; Notes:
+;   Axis-Aligned Bounding Box (AABB) Collision detection:
+;
+;            (X1, Y1)  [top]
+;               +-------------------+
+;               |                   |
+;        [left] |    Character 1    | [right]
+;               |                   |
+;               +-------------------+
+;                               (X2, Y2)  [bottom]
+;
+;   No collision if any of these conditions are met:
+;   - Box 1 is to the left of Box 2  (aabb_ch1_right  < aabb_ch2_left)
+;   - Box 1 is to the right of Box 2 (aabb_ch1_left   > aabb_ch2_right)
+;   - Box 1 is above Box 2           (aabb_ch1_bottom < aabb_ch2_top)
+;   - Box 1 is below Box 2           (aabb_ch1_top    > aabb_ch2_bottom)
+;
+;   Otherwise, they overlap -> Collision detected!
+;   REF: https://kishimotostudios.com/articles/aabb_collision/
 ; ------------------------------------------------------------------------
 CHECK_CHAR_COLLISION PROC
   SAVE_REGS
