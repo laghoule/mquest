@@ -20,12 +20,6 @@ INCLUDE defs/game/consts.inc             ; Game constants
 INCLUDE defs/musics/consts.inc           ; Musics constants
 
 .DATA
-  ; --- game ---
-  INCLUDE defs/game/types.inc            ; Game types
-  INCLUDE defs/game/assets.inc           ; Game assets
-  INCLUDE defs/game/map-refs.inc         ; Map references
-  INCLUDE defs/game/map-scne.inc         ; Map scene data
-
   ; --- Musics ---
   INCLUDE defs/musics/themes.inc         ; Music variables and songs
 
@@ -34,6 +28,14 @@ INCLUDE defs/musics/consts.inc           ; Musics constants
   INCLUDE defs/chars/types.inc           ; Characters types definitions
   INCLUDE defs/chars/mia.inc             ; Mia animations sprite data
   INCLUDE defs/chars/grandma.inc         ; Grandma animations sprite data
+
+  ; --- Game ---
+  INCLUDE defs/game/types.inc            ; Game types
+  INCLUDE defs/game/assets.inc           ; Game assets
+  INCLUDE defs/game/collis.inc           ; Collisions definitions
+  INCLUDE defs/game/events.inc           ; Event definitions
+  INCLUDE defs/game/map-refs.inc         ; Map references
+  INCLUDE defs/game/map-scne.inc         ; Map scene data
 
   ; --- Palettes ---
   INCLUDE defs/gfx/pals/pal.inc          ; Palette data

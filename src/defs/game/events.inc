@@ -1,0 +1,7 @@
+; --- Tile Attribute Masks ---
+MASK_COLLISION EQU 00000111b  ; Bits 0-2
+MASK_SOUND     EQU 00011000b  ; Bits 3-4
+MASK_EVENT     EQU 00100000b  ; Bit 5
+MASK_ACTION    EQU 01000000b  ; Bit 6
+MASK_HAZARD    EQU 10000000b  ; Bit 7
+
