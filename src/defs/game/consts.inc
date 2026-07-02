@@ -18,6 +18,7 @@ SCENE_EDGE EQU 0
 SCENE_SCRATCHPAG_BG EQU 32    ; Rectangle of 2x2 tile (16x16 pixels)
 
 ; --- TILES ATTRIBUTS BITS ---
+; TODO: Remove when collision refactoring is done
 B_FR EQU 00000000b            ; Bit 0: Free (No collision)
 B_CL EQU 00000001b            ; Bit 0: Object collision
 B_EV EQU 00000010b            ; Bit 1: Event (Interaction)
@@ -31,21 +32,14 @@ B_EV EQU 00000010b            ; Bit 1: Event (Interaction)
 ;| 6 | Action | 1 bit (0:Rien, 1:Pickable / Ramassable) |
 ;| 7 | Hazard | 1 bit (0:Sain, 1:Dégâts / Ronces / Poison) |
 
-; --- TILE ATTRIBUTE MASKS ---
+; --- Tile Attributes Mask ---
 MASK_COLLISION EQU 00000111b  ; Bits 0-2
 MASK_SOUND     EQU 00011000b  ; Bits 3-4
 MASK_EVENT     EQU 00100000b  ; Bit 5
 MASK_ACTION    EQU 01000000b  ; Bit 6
 MASK_HAZARD    EQU 10000000b  ; Bit 7
 
-; --- COLLISION TYPES (Value of bits 0-2) ---
-COLL_NONE      EQU 0
-COLL_FULL      EQU 1
-COLL_BOTTOM    EQU 2
-COLL_TOP       EQU 3
-; ... (jusqu'à 7)
-
-; --- SOUND TYPES (Value of bits 3-4) ---
+; --- Sound Types (Value of bits 3-4) ---
 ; On utilise des décalages pour faciliter l'écriture
 SND_GRASS      EQU (0 SHL 3)
 SND_STONE      EQU (1 SHL 3)

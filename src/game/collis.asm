@@ -6,48 +6,173 @@
 ;---------------------------------------------------------------
 ; CHECK_TILE_COLLISION
 ; Description: Check if collision with tile at position (AX, BX)
-; Register: AL, DX
+; Register: AX, BX, CX, DX
 ; Input: AX = pos_x, BX = pos_y
 ; Output: Carry flag set if collision, clear otherwise
-; Modifed: Carry flag
+; Modifed: TX, pos_x, pos_y, Carry flag
+; Notes:
+;  1. LocalX = pos_x AND 15  |  LocalY = WorldY AND 15
+;
+;  2. Boundary Check (16x16 Tile) :
+;     0,0 +-----------------+ 15,0
+;         |  hb_x1,hb_y1    |
+;         |    +-----+      |
+;         |    |  *  |      | <-- * = (LocalX, LocalY)
+;         |    +-----+      |
+;         |        hb_x2,hb_y2
+;    0,15 +-----------------+ 15,15
+;
+;  3. COLLISION IF:
+;     (FineX >= hb_x1) AND (FineX <= hb_x2) AND
+;     (FineY >= hb_y1) AND (FineY <= hb_y2)
 ;---------------------------------------------------------------
 CHECK_TILE_COLLISION PROC
   SAVE_REGS
   CLC                         ; Clear carry flag
 
-  PUSH AX                     ; Save AX, because GER_TILE_PROP uses it for return value
+  MOV pos_x, AX
+  MOV pos_y, BX
 
+  ; Get position offset for tile collision check (AH = FineX, AL = FineY)
+  CALL RESOLVE_TILE_FINEOFFSET
+  MOV TX, AX
+
+  MOV CX, 2                   ; CX = number of layers to check
   XOR DX, DX                  ; DX = offset of the map (bg = 0)
+
+@ctc_next_layer:
+  MOV AX, pos_x
+  MOV BX, pos_y
   CALL GET_TILE_PROP          ; We then get the tile properties in AL
 
-  TEST AL, B_CL               ; We test if the tile is collidable
-  POP AX                      ; Restore pos_x in AX (need to be before jump)
-  JNZ @cc_is_collision        ; Jump if collision detected
+  AND AL, MASK_COLLISION      ; Mask out the collision bits
 
+  ; --- Check no collision ---
+  CMP AL, COLL_NONE          ; We test if the tile is collidable
+  JE @ctc_no_collision       ; Jump if collision detected
+
+  ; --- Check full collision ---
+  TEST AL, COLL_FULL
+  JNZ @ctc_is_collision
+
+  ; --- Get tile hitbox ---
+  CALL RETRIEVE_TILE_HITBOX   ;OUTPUT: AH = hb_x1, AL = hb_x2, BH = hb_y1, BL = hb_y2
+
+  MOV DX, TX                  ; Restore the FineOffset
+
+  ; --- TODO: Review ---
+  ; NOT (FineX >= hb_x1) AND (FineX <= hb_x2)
+  CMP DH, AH
+  JB @ctc_no_collision
+  CMP DH, BH
+  JA @ctc_no_collision
+  ; NOT (FineY >= hb_y1) AND (FineY <= hb_y2)
+  CMP DL, BH
+  JB @ctc_no_collision
+  CMP DL, BL
+  JA @ctc_no_collision
+
+  ; --- Collision detected ---
+  JMP @ctc_is_collision
+
+@ctc_no_collision:
   MOV DX, MAP_LAYER_SIZE      ; DX = offset of the scene (fg = 1, last part of the map)
-  CALL GET_TILE_PROP          ; We then get the tile properties in AL
+  DEC CX
+  JNZ @ctc_next_layer
 
-  TEST AL, B_CL               ; We test if the tile is collidable
-  JNZ @cc_is_collision        ; Jump if collision detected
+  JMP @ctc_done
 
-  JMP @cc_done
-
-@cc_is_collision:
+@ctc_is_collision:
   STC                         ; Set carry flag for detected collision
 
-@cc_done:
+@ctc_done:
   RESTORE_REGS
   RET
 CHECK_TILE_COLLISION ENDP
 
-; ------------------------------------------------------------------------
+;---------------------------------------------------------------------
+; RETRIEVE_TILE_HITBOX
+; Description: Retrieves the hitbox for a given tile collision bitmask
+; Registers: AX, BX,
+; Input: AL = Tile collision bits
+; Output: AX = Tile hitbox 1 (AH = x, AL = y)
+;         BX = Tile hitbox 2 (BH = x, BL = y)
+; Modified: None
+;---------------------------------------------------------------------
+RETRIEVE_TILE_HITBOX PROC
+  PUSH CX
+
+  TEST AL, COLL_BOTTOM
+  JNZ @rth_bottom
+
+  TEST AL, COLL_TOP
+  JNZ @rth_top
+
+  TEST AL, COLL_LEFT
+  JNZ @rth_left
+
+  TEST AL, COLL_RIGHT
+  JNZ @rth_right
+
+  TEST AL, COLL_CENTER
+  JNZ @rth_center
+
+  TEST AL, COLL_BARRIER
+  JNZ @rth_barrier
+
+  ; --- No hitbox found ---
+  ; Should not happen, but handle it gracefully
+  XOR AX, AX
+  XOR BX, BX
+  JMP @rth_return
+
+@rth_bottom:
+  MOV AX, 0 ; idx in tile_hb_table
+  JMP @rth_get_hitbox
+
+@rth_top:
+  MOV AX, 1 ; idx in tile_hb_table
+  JMP @rth_get_hitbox
+
+@rth_left:
+  MOV AX, 2 ; idx in tile_hb_table
+  JMP @rth_get_hitbox
+
+@rth_right:
+  MOV AX, 3 ; idx in tile_hb_table
+  JMP @rth_get_hitbox
+
+@rth_center:
+  MOV AX, 4 ; idx in tile_hb_table
+  JMP @rth_get_hitbox
+
+@rth_barrier:
+  MOV AX, 5 ; idx in tile_hb_table
+
+@rth_get_hitbox:
+  SHL AX, 1 ; multiply by 2 (hb_1)
+  SHL AX, 1 ; multiply by 4 (hb_2)
+
+  MOV BX, AX
+  MOV BX, [tile_hb_table + BX]
+  MOV AH, [BX].HITBOX.hb_x1
+  MOV AL, [BX].HITBOX.hb_y1
+  MOV BH, [BX].HITBOX.hb_x2
+  MOV BL, [BX].HITBOX.hb_y2
+
+@rth_return:
+  POP CX
+  RET
+RETRIEVE_TILE_HITBOX ENDP
+
+; -------------------------------------------------------------------------------
 ; CHECK_OBJECT_COLLISION
-; Description: Check if a character hitbox collides with object in the map
+; Description: Check if a character hitbox collides with object hitbox in the map
 ; Registers: AX, BX, CX, DX, SI, DI
 ; Input: AX = Character index, CX = X position, DX = Y position
 ; Output: Carry flag = 1 if collision detected
 ; Modified: Carry flag
-; ------------------------------------------------------------------------
+;--------------------------------------------------------------------------------
 CHECK_OBJECT_COLLISION PROC
   SAVE_REGS
 

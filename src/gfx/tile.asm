@@ -329,7 +329,7 @@ CHECK_OUT_OF_BOUND_POSITION ENDP
 ; Registers: AX, BX, CX, DX, SI
 ; Input: AX = pos_x, BX = pos_y, DX = offset of the scene to check
 ;   Implicit: curr_scne, map_tiles_props
-; Output: AL = tile properties
+; Output: AL = tile properties, AH = tile type
 ; Modified: AX, TX
 ; ----------------------------------------------------------------
 GET_TILE_PROP PROC
