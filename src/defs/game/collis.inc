@@ -16,6 +16,8 @@
 
 ; --- Tile Hitbox Table ---
 tile_hb_table LABEL WORD
+  HITBOX <0, 0, 0, 0>    ; 0: COLL_NONE
+  HITBOX <0, 0, 15, 15>  ; 1: COLL_FULL
   HITBOX <0, 8, 15, 15>  ; 2: COLL_BOTTOM
   HITBOX <0, 0, 15,  7>  ; 3: COLL_TOP
   HITBOX <0, 0,  5, 15>  ; 4: COLL_LEFT

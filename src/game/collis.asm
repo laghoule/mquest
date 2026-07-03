@@ -35,7 +35,9 @@ CHECK_TILE_COLLISION PROC
 
   ; Get position offset for tile collision check (AH = FineX, AL = FineY)
   CALL RESOLVE_TILE_FINEOFFSET
-  MOV TX, AX
+  SUB SP, 2
+  MOV BP, SP
+  MOV [BP], AX
 
   MOV CX, 2                   ; CX = number of layers to check
   XOR DX, DX                  ; DX = offset of the map (bg = 0)
@@ -57,14 +59,13 @@ CHECK_TILE_COLLISION PROC
 
   ; --- Get tile hitbox ---
   CALL RETRIEVE_TILE_HITBOX   ;OUTPUT: AH = hb_x1, AL = hb_x2, BH = hb_y1, BL = hb_y2
-
-  MOV DX, TX                  ; Restore the FineOffset
+  MOV DX, [BP]                ; Restore the FineOffset
 
   ; --- TODO: Review ---
   ; NOT (FineX >= hb_x1) AND (FineX <= hb_x2)
   CMP DH, AH
   JB @ctc_no_collision
-  CMP DH, BH
+  CMP DH, AL
   JA @ctc_no_collision
   ; NOT (FineY >= hb_y1) AND (FineY <= hb_y2)
   CMP DL, BH
@@ -86,6 +87,8 @@ CHECK_TILE_COLLISION PROC
   STC                         ; Set carry flag for detected collision
 
 @ctc_done:
+  INC SP
+  INC SP
   RESTORE_REGS
   RET
 CHECK_TILE_COLLISION ENDP
@@ -127,27 +130,27 @@ RETRIEVE_TILE_HITBOX PROC
   JMP @rth_return
 
 @rth_bottom:
-  MOV AX, 0 ; idx in tile_hb_table
-  JMP @rth_get_hitbox
-
-@rth_top:
-  MOV AX, 1 ; idx in tile_hb_table
-  JMP @rth_get_hitbox
-
-@rth_left:
   MOV AX, 2 ; idx in tile_hb_table
   JMP @rth_get_hitbox
 
-@rth_right:
+@rth_top:
   MOV AX, 3 ; idx in tile_hb_table
   JMP @rth_get_hitbox
 
-@rth_center:
+@rth_left:
   MOV AX, 4 ; idx in tile_hb_table
   JMP @rth_get_hitbox
 
-@rth_barrier:
+@rth_right:
   MOV AX, 5 ; idx in tile_hb_table
+  JMP @rth_get_hitbox
+
+@rth_center:
+  MOV AX, 6 ; idx in tile_hb_table
+  JMP @rth_get_hitbox
+
+@rth_barrier:
+  MOV AX, 7 ; idx in tile_hb_table
 
 @rth_get_hitbox:
   SHL AX, 1 ; multiply by 2 (hb_1)
