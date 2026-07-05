@@ -28,16 +28,16 @@
 ;---------------------------------------------------------------
 CHECK_TILE_COLLISION PROC
   SAVE_REGS
-  CLC                         ; Clear carry flag
 
+  ; TODO: This can be saved on the stack instead of var
   MOV pos_x, AX
   MOV pos_y, BX
 
   ; Get position offset for tile collision check (AH = FineX, AL = FineY)
   CALL RESOLVE_TILE_FINEOFFSET
-  SUB SP, 2
+  SUB SP, 2                   ; Allocate space on the stack for the FineOffset
   MOV BP, SP
-  MOV [BP], AX
+  MOV [BP], AX                ; BP = pointer to the FineOffset on the stack
 
   MOV CX, 2                   ; CX = number of layers to check
   XOR DX, DX                  ; DX = offset of the map (bg = 0)
@@ -45,30 +45,30 @@ CHECK_TILE_COLLISION PROC
 @ctc_next_layer:
   MOV AX, pos_x
   MOV BX, pos_y
-  CALL GET_TILE_PROP          ; We then get the tile properties in AL
+  CALL GET_TILE_PROP          ; Output: AL = tile properties
 
   AND AL, MASK_COLLISION      ; Mask out the collision bits
 
   ; --- Check no collision ---
-  CMP AL, COLL_NONE          ; We test if the tile is collidable
-  JE @ctc_no_collision       ; Jump if collision detected
+  CMP AL, COLL_NONE
+  JE @ctc_no_collision
 
   ; --- Check full collision ---
-  TEST AL, COLL_FULL
-  JNZ @ctc_is_collision
+  CMP AL, COLL_FULL
+  JE @ctc_is_collision
 
   ; --- Get tile hitbox ---
-  CALL RETRIEVE_TILE_HITBOX   ;OUTPUT: AH = hb_x1, AL = hb_x2, BH = hb_y1, BL = hb_y2
+  CALL RETRIEVE_TILE_HITBOX   ; Output: AH = hb_x1, AL = hb_y1, BH = hb_x2, BL = hb_y2
   MOV DX, [BP]                ; Restore the FineOffset
 
-  ; --- TODO: Review ---
+  ; --- Check tile hitbox ---
   ; NOT (FineX >= hb_x1) AND (FineX <= hb_x2)
   CMP DH, AH
   JB @ctc_no_collision
-  CMP DH, AL
+  CMP DH, BH
   JA @ctc_no_collision
   ; NOT (FineY >= hb_y1) AND (FineY <= hb_y2)
-  CMP DL, BH
+  CMP DL, AL
   JB @ctc_no_collision
   CMP DL, BL
   JA @ctc_no_collision
@@ -77,17 +77,18 @@ CHECK_TILE_COLLISION PROC
   JMP @ctc_is_collision
 
 @ctc_no_collision:
+  CLC                         ; Clear carry flag for no collision
   MOV DX, MAP_LAYER_SIZE      ; DX = offset of the scene (fg = 1, last part of the map)
-  DEC CX
+  DEC CX                      ; Decrement layer counter
   JNZ @ctc_next_layer
 
-  JMP @ctc_done
+  JMP @ctc_done               ; Jump to done if no collision detected
 
 @ctc_is_collision:
   STC                         ; Set carry flag for detected collision
 
 @ctc_done:
-  INC SP
+  INC SP                      ; Clean up stack
   INC SP
   RESTORE_REGS
   RET
@@ -98,30 +99,30 @@ CHECK_TILE_COLLISION ENDP
 ; Description: Retrieves the hitbox for a given tile collision bitmask
 ; Registers: AX, BX,
 ; Input: AL = Tile collision bits
-; Output: AX = Tile hitbox 1 (AH = x, AL = y)
-;         BX = Tile hitbox 2 (BH = x, BL = y)
+; Output: AH = hb_x1, AL = hb_y1, BH = hb_x2, BL = hb_y2
 ; Modified: None
 ;---------------------------------------------------------------------
 RETRIEVE_TILE_HITBOX PROC
   PUSH CX
 
-  TEST AL, COLL_BOTTOM
-  JNZ @rth_bottom
+  ; --- Retrieve hitbox based on collision bitmask ---
+  CMP AL, COLL_BOTTOM
+  JE @rth_bottom
 
-  TEST AL, COLL_TOP
-  JNZ @rth_top
+  CMP AL, COLL_TOP
+  JE @rth_top
 
-  TEST AL, COLL_LEFT
-  JNZ @rth_left
+  CMP AL, COLL_LEFT
+  JE @rth_left
 
-  TEST AL, COLL_RIGHT
-  JNZ @rth_right
+  CMP AL, COLL_RIGHT
+  JE @rth_right
 
-  TEST AL, COLL_CENTER
-  JNZ @rth_center
+  CMP AL, COLL_CENTER
+  JE @rth_center
 
-  TEST AL, COLL_BARRIER
-  JNZ @rth_barrier
+  CMP AL, COLL_BARRIER
+  JE @rth_barrier
 
   ; --- No hitbox found ---
   ; Should not happen, but handle it gracefully
@@ -129,39 +130,41 @@ RETRIEVE_TILE_HITBOX PROC
   XOR BX, BX
   JMP @rth_return
 
+  ; --- Set the index to use in tile_hb_table
 @rth_bottom:
-  MOV AX, 2 ; idx in tile_hb_table
+  MOV AX, 2
   JMP @rth_get_hitbox
 
 @rth_top:
-  MOV AX, 3 ; idx in tile_hb_table
+  MOV AX, 3
   JMP @rth_get_hitbox
 
 @rth_left:
-  MOV AX, 4 ; idx in tile_hb_table
+  MOV AX, 4
   JMP @rth_get_hitbox
 
 @rth_right:
-  MOV AX, 5 ; idx in tile_hb_table
+  MOV AX, 5
   JMP @rth_get_hitbox
 
 @rth_center:
-  MOV AX, 6 ; idx in tile_hb_table
+  MOV AX, 6
   JMP @rth_get_hitbox
 
 @rth_barrier:
-  MOV AX, 7 ; idx in tile_hb_table
+  MOV AX, 7
 
 @rth_get_hitbox:
   SHL AX, 1 ; multiply by 2 (hb_1)
   SHL AX, 1 ; multiply by 4 (hb_2)
 
   MOV BX, AX
-  MOV BX, [tile_hb_table + BX]
+  ADD BX, OFFSET tile_hb_table  ; Direct address of HITBOX entry (no indirection)
   MOV AH, [BX].HITBOX.hb_x1
   MOV AL, [BX].HITBOX.hb_y1
-  MOV BH, [BX].HITBOX.hb_x2
-  MOV BL, [BX].HITBOX.hb_y2
+  MOV CH, [BX].HITBOX.hb_x2
+  MOV CL, [BX].HITBOX.hb_y2
+  MOV BX, CX
 
 @rth_return:
   POP CX
@@ -195,7 +198,9 @@ CHECK_OBJECT_COLLISION PROC
   MOV SI, [SI]                              ; Dereference the direction data (hitbox, sprites, ...)
   MOV DI, [SI].CHAR_DIR_DATA.cd_hitbox      ; Dereference the hitbox
 
-  ; Hitbox 1 position X (CX -> AX (X))
+  ; --------------------------------
+  ; TEST POINT 1 : Top-Left (X1, Y1)
+  ; --------------------------------
   XOR AX, AX
   MOV AL, [DI].HITBOX.hb_x1
   ADD AX, CX                                ; Add hitbox P1X to X position
@@ -208,12 +213,41 @@ CHECK_OBJECT_COLLISION PROC
   CALL CHECK_TILE_COLLISION                 ; Check for collision , carry flag will be set if collision
   JC @chc_return                            ; If collision, return
 
-  ; Hitbox 2 position X (CX -> AX (X))
+; ---------------------------------
+; TEST POINT 2 : Top-Right (X2, Y1)
+; ---------------------------------
+  XOR AX, AX
+  MOV AL, [DI].HITBOX.hb_x2                 ; Utilise X2
+  ADD AX, CX                                ; + Position X de Mia
+
+  XOR BX, BX
+  MOV BL, [DI].HITBOX.hb_y1                 ; Utilise Y1
+  ADD BX, DX                                ; + Position Y de Mia
+
+  CALL CHECK_TILE_COLLISION
+  JC @chc_return                            ; Si collision, on quitte direct
+
+; -----------------------------------
+; TEST POINT 3 : Bottom Left (X1, Y2)
+; -----------------------------------
+  XOR AX, AX
+  MOV AL, [DI].HITBOX.hb_x1                 ; Utilise X1
+  ADD AX, CX                                ; + Position X de Mia
+
+  XOR BX, BX
+  MOV BL, [DI].HITBOX.hb_y2                 ; Utilise Y2
+  ADD BX, DX                                ; + Position Y de Mia
+
+  CALL CHECK_TILE_COLLISION
+  JC @chc_return                            ; Si collision, on quitte direct
+
+  ; ------------------------------------
+  ; TEST POINT 4 : Bottom Right (X2, Y2)
+  ; ------------------------------------
   XOR AX, AX
   MOV AL, [DI].HITBOX.hb_x2
   ADD AX, CX                                ; Add hitbox P2X to X position
 
-  ; Hitbox 2 position Y (DX -> BX (Y))
   XOR BX, BX
   MOV BL, [DI].HITBOX.hb_y2
   ADD BX, DX                                ; Add hitbox P2Y to Y position

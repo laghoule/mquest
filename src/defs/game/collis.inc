@@ -20,8 +20,8 @@ tile_hb_table LABEL WORD
   HITBOX <0, 0, 15, 15>  ; 1: COLL_FULL
   HITBOX <0, 8, 15, 15>  ; 2: COLL_BOTTOM
   HITBOX <0, 0, 15,  7>  ; 3: COLL_TOP
-  HITBOX <0, 0,  5, 15>  ; 4: COLL_LEFT
-  HITBOX <5, 0, 15, 15>  ; 5: COLL_RIGHT
+  HITBOX <0, 0, 5, 15>   ; 4: COLL_LEFT
+  HITBOX <11, 0, 15, 15> ; 5: COLL_RIGHT
   HITBOX <4, 4, 11, 11>  ; 6: COLL_CENTER
   HITBOX <0, 6, 15,  9>  ; 7: COLL_BARRIER
 
