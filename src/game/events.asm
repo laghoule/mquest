@@ -4,7 +4,7 @@
 ;  the Free Software Foundation, either version 3 of the License.
 
 ;--------------------------------------------------
-; PAUSE
+; EV_PAUSE
 ; Description: Wait for a number of second (max 10)
 ; Registers: AX, BX, CX, DX, ES
 ; Input: CX = Number of second to wait
@@ -12,7 +12,7 @@
 ; Output: None
 ; Modify: [BX].CHARACTER.ch_event.ev_state
 ;--------------------------------------------------
-PAUSE PROC
+EV_PAUSE PROC
   SAVE_REGS
 
   SHL AX, 1                                 ;  Conversion characted index -> offset (DW)
@@ -53,4 +53,4 @@ PAUSE PROC
 @s_return:
   RESTORE_REGS
   RET
-PAUSE ENDP
+EV_PAUSE ENDP
