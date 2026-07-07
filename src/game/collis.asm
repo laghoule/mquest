@@ -246,7 +246,7 @@ CHECK_OBJECT_COLLISION PROC
   ; ------------------------------------
   XOR AX, AX
   MOV AL, [DI].HITBOX.hb_x2
-  ADD AX, CX                                ; Add hitbox P2X to X position
+  ADD AX, CX                                ; Add hitbox P2X to X position;
 
   XOR BX, BX
   MOV BL, [DI].HITBOX.hb_y2

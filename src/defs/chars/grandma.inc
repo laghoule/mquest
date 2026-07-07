@@ -72,7 +72,7 @@ grandma_sprt_left_table     DW CHAR_SPRT_IDX_3  ; tile 3
                             DW CHAR_SPRT_IDX_11 ; tile 11
 
 ; --- Grandma hitbox data ---
-grandma_hb_left             HITBOX <1, 1, 15, 16>
-grandma_hb_right            HITBOX <0, 1, 15, 16>
-grandma_hb_top              HITBOX <1, 1, 15, 16>
-grandma_hb_bottom           HITBOX <1, 1, 15, 16>
+grandma_hb_left             HITBOX <4, 10, 11, 15>
+grandma_hb_right            HITBOX <4, 10, 11, 15>
+grandma_hb_top              HITBOX <4, 10, 11, 15>
+grandma_hb_bottom           HITBOX <4, 10, 11, 15>

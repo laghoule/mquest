@@ -2,8 +2,8 @@
 ; ch_action_addr:      0
 ; ch_event:            <0, 0, 0, 0, 1>
 ; ch_tick:             0
-; ch_loc:              <280, 90>
-; ch_prev_loc:         <280, 90>
+; ch_loc:              <200, 90>
+; ch_prev_loc:         <200, 90>
 ; ch_dir:              DOWN_DIR
 ; ch_dir_tbl_addr:     OFFSET mia_dir_table
 ; ch_anim_idx:         0
@@ -18,8 +18,8 @@ mia_data CHARACTER <\
   0,\
   <0, 0, 0, 0, 1>,\
   0,\
-  <280, 90>,\
-  <280, 90>,\
+  <200, 90>,\
+  <200, 90>,\
   DOWN_DIR,\
   OFFSET mia_dir_table,\
   0,\
@@ -72,7 +72,7 @@ mia_sprt_left_table     DW CHAR_SPRT_IDX_3  ; tile 3
                         DW CHAR_SPRT_IDX_11 ; tile 11
 
 ; --- Mia hitbox data ---
-mia_hb_left             HITBOX <1, 1, 15, 16>
-mia_hb_right            HITBOX <1, 1, 15, 16>
-mia_hb_top              HITBOX <1, 1, 15, 16>
-mia_hb_bottom           HITBOX <1, 1, 15, 16>
+mia_hb_left             HITBOX <4, 10, 11, 15>
+mia_hb_right            HITBOX <4, 10, 11, 15>
+mia_hb_top              HITBOX <4, 10, 11, 15>
+mia_hb_bottom           HITBOX <4, 10, 11, 15>
