@@ -21,7 +21,7 @@ AI tools serve strictly as a **learning aid and mentor**, helping deepen underst
 - **Target Hardware:** IBM PC-XT / Pocket 8086.
 - **Processor:** Optimized for **Intel 8088-1 (10 MHz)** and **NEC V30**.
 - **Graphics:** VGA Mode 13h (320x200, 256 colors).
-- **Language:** 8086 Assembly (MASM 6.11 syntax).
+- **Language:** 8086 Assembly (Intel syntax).
 - **Development Environment:**
   - **OS:** Linux (Cross-development).
   - **IDE:** [Zed](https://zed.dev/).
