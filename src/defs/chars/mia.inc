@@ -46,10 +46,14 @@ mia_dir_table           DW OFFSET mia_right_data
                         DW OFFSET mia_down_data
 
 ; --- Mia direction data ---
-mia_right_data          CHAR_DIR_DATA <OFFSET mia_sprt_right_table, OFFSET mia_hb_right,  RIGHT_DIR>
-mia_left_data           CHAR_DIR_DATA <OFFSET mia_sprt_left_table,  OFFSET mia_hb_left,   LEFT_DIR>
-mia_up_data             CHAR_DIR_DATA <OFFSET mia_sprt_up_table,    OFFSET mia_hb_top,    UP_DIR>
-mia_down_data           CHAR_DIR_DATA <OFFSET mia_sprt_down_table,  OFFSET mia_hb_bottom, DOWN_DIR>
+;  cd_sprt_tbl_addr     DW ?         ; Address of the sprite table
+;  cd_hitbox_tile       HITBOX < >   ; Hitbox of tile object
+;  cd_hitbox_npc        HITBOX < >   ; Hitbox of NPC
+;  cd_dir               DB ?         ; Direction of the character
+mia_right_data          CHAR_DIR_DATA <OFFSET mia_sprt_right_table, <4, 10, 11, 15>, <0, 0, 15, 16> >
+mia_left_data           CHAR_DIR_DATA <OFFSET mia_sprt_left_table,  <4, 10, 11, 15>, <0, 0, 15, 16> >
+mia_up_data             CHAR_DIR_DATA <OFFSET mia_sprt_up_table,    <4, 10, 11, 15>, <0, 0, 15, 16> >
+mia_down_data           CHAR_DIR_DATA <OFFSET mia_sprt_down_table,  <4, 10, 11, 15>, <0, 0, 15, 16> >
 
 ; --- Mia animation down table ---
 mia_sprt_down_table     DW CHAR_SPRT_IDX_0  ; tile 0
@@ -70,9 +74,3 @@ mia_sprt_up_table       DW CHAR_SPRT_IDX_2  ; tile 2
 mia_sprt_left_table     DW CHAR_SPRT_IDX_3  ; tile 3
                         DW CHAR_SPRT_IDX_7  ; tile 7
                         DW CHAR_SPRT_IDX_11 ; tile 11
-
-; --- Mia hitbox data ---
-mia_hb_left             HITBOX <4, 10, 11, 15>
-mia_hb_right            HITBOX <4, 10, 11, 15>
-mia_hb_top              HITBOX <4, 10, 11, 15>
-mia_hb_bottom           HITBOX <4, 10, 11, 15>

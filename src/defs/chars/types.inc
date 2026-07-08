@@ -12,8 +12,8 @@ HITBOX ENDS
 
 CHAR_DIR_DATA STRUCT
   cd_sprt_tbl_addr     DW ?         ; Address of the sprite table
-  cd_hitbox            DW ?         ; Address of the hitbox | TODO: should be HITBOX struct
-  cd_dir               DB ?         ; Direction of the character | TODO: value already in CHARACTER struct, check if really needed
+  cd_hitbox_tile       HITBOX < >   ; Hitbox of tile object
+  cd_hitbox_npc        HITBOX < >   ; Hitbox of NPC
 CHAR_DIR_DATA ENDS
 
 EVENT STRUCT

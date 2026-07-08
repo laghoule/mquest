@@ -196,18 +196,17 @@ CHECK_OBJECT_COLLISION PROC
   MOV SI, [BX].CHARACTER.ch_dir_tbl_addr    ; SI = Address of the 4-directions table
   ADD SI, AX                                ; SI = Address of the direction data
   MOV SI, [SI]                              ; Dereference the direction data (hitbox, sprites, ...)
-  MOV DI, [SI].CHAR_DIR_DATA.cd_hitbox      ; Dereference the hitbox
 
   ; --------------------------------
   ; TEST POINT 1 : Top-Left (X1, Y1)
   ; --------------------------------
   XOR AX, AX
-  MOV AL, [DI].HITBOX.hb_x1
+  MOV AL, [SI].CHAR_DIR_DATA.cd_hitbox_tile.hb_x1
   ADD AX, CX                                ; Add hitbox P1X to X position
 
   ; Hitbox 1 position Y (DX -> BX (Y))
   XOR BX, BX
-  MOV BL, [DI].HITBOX.hb_y1
+  MOV BL, [SI].CHAR_DIR_DATA.cd_hitbox_tile.hb_y1
   ADD BX, DX                                ; Add hitbox P1Y to Y position
 
   CALL CHECK_TILE_COLLISION                 ; Check for collision , carry flag will be set if collision
@@ -217,11 +216,11 @@ CHECK_OBJECT_COLLISION PROC
 ; TEST POINT 2 : Top-Right (X2, Y1)
 ; ---------------------------------
   XOR AX, AX
-  MOV AL, [DI].HITBOX.hb_x2                 ; Utilise X2
+  MOV AL, [SI].CHAR_DIR_DATA.cd_hitbox_tile.hb_x2                 ; Utilise X2
   ADD AX, CX                                ; + Position X de Mia
 
   XOR BX, BX
-  MOV BL, [DI].HITBOX.hb_y1                 ; Utilise Y1
+  MOV BL, [SI].CHAR_DIR_DATA.cd_hitbox_tile.hb_y1                 ; Utilise Y1
   ADD BX, DX                                ; + Position Y de Mia
 
   CALL CHECK_TILE_COLLISION
@@ -231,11 +230,11 @@ CHECK_OBJECT_COLLISION PROC
 ; TEST POINT 3 : Bottom Left (X1, Y2)
 ; -----------------------------------
   XOR AX, AX
-  MOV AL, [DI].HITBOX.hb_x1                 ; Utilise X1
+  MOV AL, [SI].CHAR_DIR_DATA.cd_hitbox_tile.hb_x1                 ; Utilise X1
   ADD AX, CX                                ; + Position X de Mia
 
   XOR BX, BX
-  MOV BL, [DI].HITBOX.hb_y2                 ; Utilise Y2
+  MOV BL, [SI].CHAR_DIR_DATA.cd_hitbox_tile.hb_y2                 ; Utilise Y2
   ADD BX, DX                                ; + Position Y de Mia
 
   CALL CHECK_TILE_COLLISION
@@ -245,11 +244,11 @@ CHECK_OBJECT_COLLISION PROC
   ; TEST POINT 4 : Bottom Right (X2, Y2)
   ; ------------------------------------
   XOR AX, AX
-  MOV AL, [DI].HITBOX.hb_x2
+  MOV AL, [SI].CHAR_DIR_DATA.cd_hitbox_tile.hb_x2
   ADD AX, CX                                ; Add hitbox P2X to X position;
 
   XOR BX, BX
-  MOV BL, [DI].HITBOX.hb_y2
+  MOV BL, [SI].CHAR_DIR_DATA.cd_hitbox_tile.hb_y2
   ADD BX, DX                                ; Add hitbox P2Y to Y position
 
   CALL CHECK_TILE_COLLISION                 ; Check for collition, carry flag will be set if collision
@@ -294,40 +293,39 @@ CHECK_CHAR_COLLISION PROC
   MOV BX, [char_data_table + BX]            ; BX = Address of the character data structure
 
   ; TODO: This is a copy/paste of CHECK_HITBOX_COLLISION
-  ;Resolve the direction indirection: Master table -> direction data block
+  ; Resolve the direction indirection: Master table -> direction data block
   MOV SI, [BX].CHARACTER.ch_dir_tbl_addr    ; SI = Address of the 4-directions table
   XOR DH, DH
   MOV DL, [BX].CHARACTER.ch_dir
   SHL DX, 1                                 ; DX = Direction * 2 (word)
   ADD SI, DX                                ; SI = Address of the direction data
   MOV SI, [SI]                              ; Dereference the direction data (hitbox, sprites, ...)
-  MOV DI, [SI].CHAR_DIR_DATA.cd_hitbox      ; Dereference the hitbox
   ;-----------------------------------
 
   ; --- character 1 left ---
   XOR CH, CH
-  MOV CL, [DI].HITBOX.hb_x1
+  MOV CL, [SI].CHAR_DIR_DATA.cd_hitbox_npc.hb_x1
   MOV aabb_ch1_left, CX
   MOV CX, [BX].CHARACTER.ch_loc.lo_x
   ADD aabb_ch1_left, CX                     ; aabb_ch1_left =  pos x + hb_x1
 
   ; --- character 1 right ---
   XOR CH, CH
-  MOV CL, [DI].HITBOX.hb_x2
+  MOV CL, [SI].CHAR_DIR_DATA.cd_hitbox_npc.hb_x2
   MOV aabb_ch1_right, CX
   MOV CX, [BX].CHARACTER.ch_loc.lo_x
   ADD aabb_ch1_right, CX                    ; aabb_ch1_right = pos x + hb_x2
 
   ; --- character 1 top ---
   XOR CH, CH
-  MOV CL, [DI].HITBOX.hb_y1
+  MOV CL, [SI].CHAR_DIR_DATA.cd_hitbox_npc.hb_y1
   MOV aabb_ch1_top, CX
   MOV CX, [BX].CHARACTER.ch_loc.lo_y
   ADD aabb_ch1_top, CX                      ; aabb_ch1_top = pos y + hb_y1
 
   ; --- character 1 bottom ---
   XOR CH, CH
-  MOV CL, [DI].HITBOX.hb_y2
+  MOV CL, [SI].CHAR_DIR_DATA.cd_hitbox_npc.hb_y2
   MOV aabb_ch1_bottom, CX
   MOV CX, [BX].CHARACTER.ch_loc.lo_y
   ADD aabb_ch1_bottom, CX                   ; aabb_ch1_bottom = pos y + hb_y2
@@ -374,19 +372,18 @@ CHECK_CHAR_BOUNDS_COLLISION PROC
   JNE @ccbc_no_collision
 
   ; TODO: This is a copy/paste of CHECK_HITBOX_COLLISION
-  ;Resolve the direction indirection: Master table -> direction data block
+  ; Resolve the direction indirection: Master table -> direction data block
   MOV SI, [BX].CHARACTER.ch_dir_tbl_addr    ; SI = Address of the 4-directions table
   XOR DH, DH
   MOV DL, [BX].CHARACTER.ch_dir
   SHL DX, 1                                 ; DX = Direction * 2 (word)
   ADD SI, DX                                ; SI = Address of the direction data
   MOV SI, [SI]                              ; Dereference the direction data (hitbox, sprites, ...)
-  MOV DI, [SI].CHAR_DIR_DATA.cd_hitbox      ; Dereference the hitbox
   ;-----------------------------------
 
   ; --- character 2 left ---
   XOR DH, DH
-  MOV DL, [DI].HITBOX.hb_x1
+  MOV DL, [SI].CHAR_DIR_DATA.cd_hitbox_npc.hb_x1
   MOV aabb_ch2_left, DX
   MOV DX, [BX].CHARACTER.ch_loc.lo_x
   ADD aabb_ch2_left, DX                     ; aabb_ch2_left = pos x + hb_x1
@@ -397,7 +394,7 @@ CHECK_CHAR_BOUNDS_COLLISION PROC
 
   ; --- character 2 right ---
   XOR DH, DH
-  MOV DL, [DI].HITBOX.hb_x2
+  MOV DL, [SI].CHAR_DIR_DATA.cd_hitbox_npc.hb_x2
   MOV aabb_ch2_right, DX
   MOV DX, [BX].CHARACTER.ch_loc.lo_x
   ADD aabb_ch2_right, DX                    ; aabb_ch2_right = pos x + hb_x2
@@ -408,7 +405,7 @@ CHECK_CHAR_BOUNDS_COLLISION PROC
 
   ; --- character 2 top ---
   XOR DH, DH
-  MOV DL, [DI].HITBOX.hb_y1
+  MOV DL, [SI].CHAR_DIR_DATA.cd_hitbox_npc.hb_y1
   MOV aabb_ch2_top, DX
   MOV DX, [BX].CHARACTER.ch_loc.lo_y
   ADD aabb_ch2_top, DX                      ; aabb_ch2_top = pos y + hb_y1
@@ -419,7 +416,7 @@ CHECK_CHAR_BOUNDS_COLLISION PROC
 
   ; --- character 2 bottom ---
   XOR DH, DH
-  MOV DL, [DI].HITBOX.hb_y2
+  MOV DL, [SI].CHAR_DIR_DATA.cd_hitbox_npc.hb_y2
   MOV aabb_ch2_bottom, DX
   MOV DX, [BX].CHARACTER.ch_loc.lo_y
   ADD aabb_ch2_bottom, DX                   ; aabb_ch2_bottom = pos y + hb_y2

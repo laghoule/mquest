@@ -24,8 +24,8 @@ INCLUDE defs/musics/consts.inc           ; Musics constants
   INCLUDE defs/musics/themes.inc         ; Music variables and songs
 
   ; --- Characters ---
-  INCLUDE defs/chars/chars.inc           ; Characters sprites tables and data
   INCLUDE defs/chars/types.inc           ; Characters types definitions
+  INCLUDE defs/chars/chars.inc           ; Characters sprites tables and data
   INCLUDE defs/chars/mia.inc             ; Mia animations sprite data
   INCLUDE defs/chars/grandma.inc         ; Grandma animations sprite data
 

@@ -46,10 +46,14 @@ grandma_dir_table           DW OFFSET grandma_right_data
                             DW OFFSET grandma_down_data
 
 ; --- Grandma direction data ---
-grandma_right_data          CHAR_DIR_DATA <OFFSET grandma_sprt_right_table, OFFSET grandma_hb_right,  RIGHT_DIR>
-grandma_left_data           CHAR_DIR_DATA <OFFSET grandma_sprt_left_table,  OFFSET grandma_hb_left,   LEFT_DIR>
-grandma_up_data             CHAR_DIR_DATA <OFFSET grandma_sprt_up_table,    OFFSET grandma_hb_top,    UP_DIR>
-grandma_down_data           CHAR_DIR_DATA <OFFSET grandma_sprt_down_table,  OFFSET grandma_hb_bottom, DOWN_DIR>
+;  cd_sprt_tbl_addr         DW ?         ; Address of the sprite table
+;  cd_hitbox_tile           HITBOX < >   ; Hitbox of tile object
+;  cd_hitbox_npc            HITBOX < >   ; Hitbox of NPC
+;  cd_dir                   DB ?         ; Direction of the character
+grandma_right_data          CHAR_DIR_DATA <OFFSET grandma_sprt_right_table, <4, 10, 11, 15>, <0, 0, 15, 16> >
+grandma_left_data           CHAR_DIR_DATA <OFFSET grandma_sprt_left_table,  <4, 10, 11, 15>, <0, 0, 15, 16> >
+grandma_up_data             CHAR_DIR_DATA <OFFSET grandma_sprt_up_table,    <4, 10, 11, 15>, <0, 0, 15, 16> >
+grandma_down_data           CHAR_DIR_DATA <OFFSET grandma_sprt_down_table,  <4, 10, 11, 15>, <0, 0, 15, 16> >
 
 ; --- Grandma animation down table ---
 grandma_sprt_down_table     DW CHAR_SPRT_IDX_0  ; tile 0
@@ -70,9 +74,3 @@ grandma_sprt_up_table       DW CHAR_SPRT_IDX_2  ; tile 2
 grandma_sprt_left_table     DW CHAR_SPRT_IDX_3  ; tile 3
                             DW CHAR_SPRT_IDX_7  ; tile 7
                             DW CHAR_SPRT_IDX_11 ; tile 11
-
-; --- Grandma hitbox data ---
-grandma_hb_left             HITBOX <4, 10, 11, 15>
-grandma_hb_right            HITBOX <4, 10, 11, 15>
-grandma_hb_top              HITBOX <4, 10, 11, 15>
-grandma_hb_bottom           HITBOX <4, 10, 11, 15>
