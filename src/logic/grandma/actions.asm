@@ -17,7 +17,7 @@ UPDATE_GRANDMA_0_0 PROC
   ; Load grandma character
   MOV BX, [char_data_table + 2]
 
-  MOV AX, OFFSET EV_PAUSE                          ; Offset of the label of the PAUSE proc
+  MOV AX, OFFSET EV_PAUSE                       ; Offset of the label of the PAUSE proc
   MOV [BX].CHARACTER.ch_event.ev_addr, AX
   MOV [BX].CHARACTER.ch_event.ev_param, 2
 
