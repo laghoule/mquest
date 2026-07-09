@@ -262,7 +262,7 @@ CHECK_OBJECT_COLLISION ENDP
 ; CHECK_CHAR_COLLISION
 ; Description: Check for character collision with other charater
 ; Registers: AX, BX, CX, DX, SI, DI
-; Input: AX = Character ID
+; Input: AX = Character index
 ; Output: Carry flag set if collision
 ; Modified: aabb_ch1_left, aabb_ch1_right, aabb_ch1_top, aabb_ch1_bottom
 ; Notes:
@@ -288,7 +288,7 @@ CHECK_OBJECT_COLLISION ENDP
 CHECK_CHAR_COLLISION PROC
   SAVE_REGS
 
-  SHL AX, 1                                 ; Character ID * 2 (word)
+  SHL AX, 1                                 ; Character index * 2 (word)
   MOV BX, AX
   MOV BX, [char_data_table + BX]            ; BX = Address of the character data structure
 
@@ -347,7 +347,6 @@ CHECK_CHAR_COLLISION PROC
 
 @ccc_skip:
   LOOP @ccc_next_char
-
 
 @ccc_return:
   RESTORE_REGS
