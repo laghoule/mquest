@@ -13,6 +13,7 @@
 ;---------------------------------------------------------------
 MOVE_CHAR PROC
   SAVE_REGS
+  MOV BP, SP
 
   ; Calcul -> Test -> Action
 
@@ -64,11 +65,11 @@ MOVE_CHAR PROC
   SUB DX, AX                                ; Subtract pending_tick from Y position
 
 @mm_collision_detection:
-  CALL CHECK_CHAR_COLLISION
+  MOV AX, [BP]                              ; Read char_index from stack
+  CALL CHECK_CHAR_COLLISION                 ; Input: AX = char_index, CX = new_x, DX = new_y
   JC @mmg_collision_event                   ; Goto skip to animation if carry flag set
 
-  MOV AX, char_index
-  CALL CHECK_OBJECT_COLLISION               ; Check for collition via character hitbox
+  CALL CHECK_OBJECT_COLLISION               ; Input: AX = char_index, CX = new_x, DX = new_y
   JC @mmg_collision_event                   ; Goto skip to animation if carry flag set
 
   ; No collision detected
