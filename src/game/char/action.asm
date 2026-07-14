@@ -17,8 +17,6 @@ MOVE_CHAR PROC
 
   ; Calcul -> Test -> Action
 
-  MOV char_index, AX                        ; We save the character index for later use
-
   SHL AX, 1                                 ; Conversion characted index -> offset (DW)
   MOV BX, AX
 
@@ -84,7 +82,7 @@ MOVE_CHAR PROC
   CALL [BX].CHARACTER.ch_event.ev_addr      ; Call collision event
 
 @mmg_skip_to_anim:
-  MOV AX, char_index
+  MOV AX, [BP+AX_SP_IDX]
   CALL UPDATE_CHARACTER_ANIM_INDEX          ; Update animation index
 
   RESTORE_REGS

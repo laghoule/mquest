@@ -2,6 +2,7 @@
 ; Use with RESTORE_REGS
 SAVE_REGS MACRO
   ; We can use BP via SP assignment like this to access saved registers
+  PUSH BP   ; [BP+12]
   PUSH DI   ; [BP+10]
   PUSH SI   ; [BP+8]
   PUSH DX   ; [BP+6]
@@ -19,4 +20,5 @@ RESTORE_REGS MACRO
   POP DX
   POP SI
   POP DI
+  POP BP
 ENDM
