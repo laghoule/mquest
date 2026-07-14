@@ -20,6 +20,9 @@ INCLUDE defs/game/consts.inc             ; Game constants
 INCLUDE defs/musics/consts.inc           ; Musics constants
 
 .DATA
+  ; --- Macros ---
+  INCLUDE defs/macros/consts.inc         ; Macros constants
+
   ; --- Musics ---
   INCLUDE defs/musics/themes.inc         ; Music variables and songs
 

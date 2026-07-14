@@ -65,7 +65,7 @@ MOVE_CHAR PROC
   SUB DX, AX                                ; Subtract pending_tick from Y position
 
 @mm_collision_detection:
-  MOV AX, [BP]                              ; Read char_index from stack
+  MOV AX, [BP+AX_SP_IDX]                    ; Read char_index from stack
   CALL CHECK_CHAR_COLLISION                 ; Input: AX = char_index, CX = new_x, DX = new_y
   JC @mmg_collision_event                   ; Goto skip to animation if carry flag set
 

@@ -287,6 +287,7 @@ CHECK_OBJECT_COLLISION ENDP
 ; ------------------------------------------------------------------------
 CHECK_CHAR_COLLISION PROC
   SAVE_REGS
+  MOV BP, SP
 
   SHL AX, 1                                 ; Character index * 2 (word)
   MOV BX, AX
@@ -306,38 +307,38 @@ CHECK_CHAR_COLLISION PROC
   XOR CH, CH
   MOV CL, [SI].CHAR_DIR_DATA.cd_hitbox_npc.hb_x1
   MOV aabb_ch1_left, CX
-  MOV CX, [BX].CHARACTER.ch_loc.lo_x
+  MOV CX, [BP+CX_SP_IDX]
   ADD aabb_ch1_left, CX                     ; aabb_ch1_left =  pos x + hb_x1
 
   ; --- character 1 right ---
   XOR CH, CH
   MOV CL, [SI].CHAR_DIR_DATA.cd_hitbox_npc.hb_x2
   MOV aabb_ch1_right, CX
-  MOV CX, [BX].CHARACTER.ch_loc.lo_x
+  MOV CX, [BP+CX_SP_IDX]
   ADD aabb_ch1_right, CX                    ; aabb_ch1_right = pos x + hb_x2
 
   ; --- character 1 top ---
   XOR CH, CH
   MOV CL, [SI].CHAR_DIR_DATA.cd_hitbox_npc.hb_y1
   MOV aabb_ch1_top, CX
-  MOV CX, [BX].CHARACTER.ch_loc.lo_y
+  MOV CX, [BP+DX_SP_IDX]
   ADD aabb_ch1_top, CX                      ; aabb_ch1_top = pos y + hb_y1
 
   ; --- character 1 bottom ---
   XOR CH, CH
   MOV CL, [SI].CHAR_DIR_DATA.cd_hitbox_npc.hb_y2
   MOV aabb_ch1_bottom, CX
-  MOV CX, [BX].CHARACTER.ch_loc.lo_y
+  MOV CX, [BP+DX_SP_IDX]
   ADD aabb_ch1_bottom, CX                   ; aabb_ch1_bottom = pos y + hb_y2
 
-  MOV CX, 2  ; 2 characters in the game for now | TODO: calc this dynamically
+  MOV CX, 2                                 ; 2 characters in the game for now | TODO: calc this dynamically
 
 @ccc_next_char:
-  MOV BX, CX ; TODO: This is a hack to avoid a bug
-  DEC BX     ; Check to replace this with another strategie
+  MOV BX, CX                                ; TODO: This is a hack to avoid a bug
+  DEC BX                                    ; Check to replace this with another strategie
   SHL BX, 1
 
-  CMP BX, AX
+  CMP BX, AX                                ; Skip collision check if current character
   JE @ccc_skip
 
   MOV BX, [char_data_table + BX]            ; BX = Address of the character data structure
