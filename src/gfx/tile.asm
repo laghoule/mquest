@@ -143,93 +143,90 @@ DRAW_TILE_RAM ENDP
 ; --------------------------------------------------------------------------
 DRAW_METATILE_RAM PROC
   SAVE_REGS
+  MOV BP, SP
 
-  MOV pos_x, AX           ; Save X position
-  MOV pos_y, BX           ; Save Y position
-
-  MOV SI, [SI]            ; SI = Dereference scene address (sc_map_buffer_addr)
-
-  MOV DX, 0               ; Initial layer is background (0)
+  MOV SI, [SI]              ; SI = Dereference scene address (sc_map_buffer_addr)
+  MOV DX, 0                 ; Initial layer is background (0)
 
 @dspr_next_layer:
-  MOV AX, pos_x
-  MOV BX, pos_y
+  MOV AX, [BP + AX_SP_IDX]  ; AX = X position
+  MOV BX, [BP + BX_SP_IDX]  ; BX = Y position
 
   ; --- Resolve the 4 tiles that are needed to draw the background ----
   CALL RESOLVE_MAP_TILES
 
-  PUSH AX                 ; Save X, Y offsets
-  PUSH BX                 ; Save top left, right tiles
-  PUSH DI                 ; Save memory tile buffer
+  PUSH AX                   ; Save X, Y offsets
+  PUSH BX                   ; Save top left, right tiles
+  PUSH DI                   ; Save memory tile buffer
 
   ; --- Top left tile id ---
-  XOR AH, AH              ; Clear AH
-  MOV AL, BH              ; AX = tile id for top left
+  XOR AH, AH                ; Clear AH
+  MOV AL, BH                ; AX = tile id for top left
 
   ; Get the offset of the tile in the tileset
-  MOV AH, AL              ; Multiply by 256 (bitshifting of 8 bits)
-  XOR AL, AL              ; AX = tile id * 256 (offset)
+  MOV AH, AL                ; Multiply by 256 (bitshifting of 8 bits)
+  XOR AL, AL                ; AX = tile id * 256 (offset)
 
   ADD AX, OFFSET map_tileset_buffer ; Add tileset buffer offset to tile id to get the offset in the tileset
 
-  PUSH BX                 ; Save BL (top right tile id)
-  MOV BX, DX              ; Map layer
-  CALL DRAW_TILE_RAM      ; Draw the BG tile in buffer
-  POP BX                  ; Restore BL (top right tile id)
+  PUSH BX                   ; Save BL (top right tile id)
+  MOV BX, DX                ; Map layer
+  CALL DRAW_TILE_RAM        ; Draw the BG tile in buffer
+  POP BX                    ; Restore BL (top right tile id)
   ; ------------------------
 
   ; --- Top right tile id ---
-  ADD DI, 16              ; Next tile in buffer
-  XOR AH, AH              ; Clear AH
-  MOV AL, BL              ; AX = tile id for top right
+  ADD DI, 16                ; Next tile in buffer
+  XOR AH, AH                ; Clear AH
+  MOV AL, BL                ; AX = tile id for top right
 
   ; Get the offset of the tile in the tileset
-  MOV AH, AL              ; Multiply by 256 (bitshifting of 8 bits)
-  XOR AL, AL              ; AX = tile id * 256 (offset)
+  MOV AH, AL                ; Multiply by 256 (bitshifting of 8 bits)
+  XOR AL, AL                ; AX = tile id * 256 (offset)
 
   ADD AX, OFFSET map_tileset_buffer ; Add tileset buffer offset to tile id to get the offset in the tileset
 
-  MOV BX, DX              ; Map layer
-  CALL DRAW_TILE_RAM      ; Draw the BG tile in buffer
+  MOV BX, DX                ; Map layer
+  CALL DRAW_TILE_RAM        ; Draw the BG tile in buffer
   ; ------------------------
 
   ; --- Bottom left tile id ---
-  ADD DI, 496             ; Next tile in buffer (512 - 16)
-  XOR AH, AH              ; Clear AH
-  MOV AL, CH              ; AX = tile id for bottom left
+  ADD DI, 496               ; Next tile in buffer (512 - 16)
+  XOR AH, AH                ; Clear AH
+  MOV AL, CH                ; AX = tile id for bottom left
 
   ; Get the offset of the tile in the tileset
-  MOV AH, AL              ; Multiply by 256 (bitshifting of 8 bits)
-  XOR AL, AL              ; AX = tile id * 256 (offset)
+  MOV AH, AL                ; Multiply by 256 (bitshifting of 8 bits)
+  XOR AL, AL                ; AX = tile id * 256 (offset)
 
   ADD AX, OFFSET map_tileset_buffer ; Add tileset buffer offset to tile id to get the offset in the tileset
 
-  MOV BX, DX              ; Map layer
-  CALL DRAW_TILE_RAM      ; Draw the BG tile in buffer
+  MOV BX, DX                ; Map layer
+  CALL DRAW_TILE_RAM        ; Draw the BG tile in buffer
   ; ------------------------
 
   ; --- Bottom right tile id ---
-  ADD DI, 16              ; Next tile in buffer (528 − 512)
-  XOR AH, AH              ; Clear AH
-  MOV AL, CL              ; AX = tile id for bottom right
+  ADD DI, 16                ; Next tile in buffer (528 − 512)
+  XOR AH, AH                ; Clear AH
+  MOV AL, CL                ; AX = tile id for bottom right
 
   ; Get the offset of the tile in the tileset
-  MOV AH, AL              ; Multiply by 256 (bitshifting of 8 bits)
-  XOR AL, AL              ; AX = tile id * 256 (offset)
+  MOV AH, AL                ; Multiply by 256 (bitshifting of 8 bits)
+  XOR AL, AL                ; AX = tile id * 256 (offset)
 
   ADD AX, OFFSET map_tileset_buffer ; Add tileset buffer offset to tile id to get the offset in the tileset
 
-  MOV BX, DX              ; Map layer
-  CALL DRAW_TILE_RAM      ; Draw the BG tile in buffer
+  MOV BX, DX                ; Map layer
+  CALL DRAW_TILE_RAM        ; Draw the BG tile in buffer
   ; ------------------------
 
-  POP DI                  ; Restore memory tile buffer
-  POP BX                  ; Restore top left, right tiles
-  POP AX                  ; Restore X, Y offsets
+  POP DI                    ; Restore memory tile buffer
+  POP BX                    ; Restore top left, right tiles
+  POP AX                    ; Restore X, Y offsets
 
-  INC DX                  ; Next layer
-  CMP DX, 1               ; Check if we've drawn all layers
-  JLE @dspr_next_layer    ; If DX is lower than or equal 1, draw next layer (0, 1 layer)
+  INC DX                    ; Next layer
+  CMP DX, 1                 ; Check if we've drawn all layers
+  JLE @dspr_next_layer      ; If DX is lower than or equal 1, draw next layer (0, 1 layer)
 
   RESTORE_REGS
   RET
