@@ -493,17 +493,20 @@ RESOLVE_MAP_TILES PROC
   PUSH DX
   PUSH SI
   PUSH DI
+  PUSH BP
 
-  MOV pos_x, AX         ; Store temporary pos_x and pos_y
-  MOV pos_y, BX
+  PUSH AX               ; Save AX and BX (pos_x, pos_y)
+  PUSH BX
+
+  MOV BP, SP            ; BP = stack pointer
 
   CALL RESOLVE_TILE_FINEOFFSET
 
   PUSH AX               ; Save the offsets
 
   ; --- Top left tile ---
-  MOV AX, pos_x
-  MOV BX, pos_y
+  MOV AX, [BP + 2]      ; pos x
+  MOV BX, [BP]          ; pos y
   CALL GET_MAP_TILE     ; Get the tiles at the AX, BX position
   XOR BX, BX            ; Clear BX
   TEST DX, 1            ; Check if we want the background layer
@@ -515,11 +518,11 @@ RESOLVE_MAP_TILES PROC
 
 @rmt_top_right:
   ; --- Top right tile ---
-  MOV AX, pos_x         ; AX = pos_x + (CHAR_HEIGHT - 1)
+  MOV AX, [BP + 2]       ; AX = pos x + (CHAR_HEIGHT - 1)
   ADD AX, CHAR_WIDTH
   DEC AX
   PUSH BX               ; Save BX (BH = top left tile id)
-  MOV BX, pos_y
+  MOV BX, [BP]          ; pos y
   CALL GET_MAP_TILE     ; Get the tiles at the AX, BX position
   POP BX                ; Restore BX (BH = top left tile id)
   TEST DX, 1            ; Check if we want the background layer
@@ -531,9 +534,9 @@ RESOLVE_MAP_TILES PROC
 
 @rmt_bottom_left:
   ; --- Bottom left tile ---
-  MOV AX, pos_x
+  MOV AX, [BP + 2]      ; pos x
   PUSH BX               ; Save BX (BH = top left tile id, BL = top right tile id)
-  MOV BX, pos_y         ; BX = pos_y + (CHAR_HEIGHT - 1)
+  MOV BX, [BP]          ; BX = pos y + (CHAR_HEIGHT - 1)
   ADD BX, CHAR_HEIGHT
   DEC BX
   CALL GET_MAP_TILE     ; Get the tiles at the AX, BX position
@@ -547,11 +550,11 @@ RESOLVE_MAP_TILES PROC
 
 @rmt_bottom_right:
   ; --- Bottom right tile ---
-  MOV AX, pos_x         ; AX = pos_x + (CHAR_HEIGHT - 1)
+  MOV AX, [BP + 2]      ; AX = pos x + (CHAR_HEIGHT - 1)
   ADD AX, CHAR_WIDTH
   DEC AX
   PUSH BX               ; Save BX (BH = top left tile id, BL = top right tile id)
-  MOV BX, pos_y         ; BX = pos_y + (CHAR_HEIGHT - 1)
+  MOV BX, [BP]          ; BX = pos y + (CHAR_HEIGHT - 1)
   ADD BX, CHAR_HEIGHT
   DEC BX
   CALL GET_MAP_TILE     ; Get the tiles at the AX, BX position
@@ -565,6 +568,8 @@ RESOLVE_MAP_TILES PROC
 
 @rmt_return:
   POP AX                ; Return Fine Offset X (AH), Y (AL)
+  ADD SP, 4
+  POP BP
   POP DI
   POP SI
   POP DX
