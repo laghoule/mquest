@@ -484,10 +484,10 @@ RESOLVE_TILE_FINEOFFSET ENDP
 ;-------------------------------------------------------------------------------------------------------
 ; RESOLVE_MAP_TILES
 ; Description: Resolves the map tiles for a given position, and a given layer (background or foreground)
-; Registers: AX, BX, CX, DX, SI
+; Registers: AX, BX, CX, DX, SI, BP
 ; Input: AX = pos_x, BX = pos_y, DX = background (0) or foreground (1), SI = scene address
 ; Output: AX = FineX, FineY offsets, BX = top left, right tiles , CX = bottom left, right tiles
-; Modified: AX, BX, CX, pos_x, pos_y
+; Modified: AX, BX, CX
 ; ------------------------------------------------------------------------------------------------------
 RESOLVE_MAP_TILES PROC
   PUSH DX
