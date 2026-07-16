@@ -28,23 +28,19 @@
 ;---------------------------------------------------------------
 CHECK_TILE_COLLISION PROC
   SAVE_REGS
-
-  ; TODO: This can be saved on the stack instead of var
-  MOV pos_x, AX
-  MOV pos_y, BX
+  SUB SP, 2                   ; Allocate space on the stack for the FineOffset (1 word)
+  MOV BP, SP
 
   ; Get position offset for tile collision check (AH = FineX, AL = FineY)
   CALL RESOLVE_TILE_FINEOFFSET
-  SUB SP, 2                   ; Allocate space on the stack for the FineOffset
-  MOV BP, SP
   MOV [BP], AX                ; BP = pointer to the FineOffset on the stack
 
   MOV CX, 2                   ; CX = number of layers to check
   XOR DX, DX                  ; DX = offset of the map (bg = 0)
 
 @ctc_next_layer:
-  MOV AX, pos_x
-  MOV BX, pos_y
+  MOV AX, [BP + 2]            ; AX = pos_x
+  MOV BX, [BP + 4]            ; BX = pos_y
   CALL GET_TILE_PROP          ; Output: AL = tile properties
 
   AND AL, MASK_COLLISION      ; Mask out the collision bits
@@ -88,8 +84,7 @@ CHECK_TILE_COLLISION PROC
   STC                         ; Set carry flag for detected collision
 
 @ctc_done:
-  INC SP                      ; Clean up stack
-  INC SP
+  ADD SP, 2                   ; Clean up stack
   RESTORE_REGS
   RET
 CHECK_TILE_COLLISION ENDP
