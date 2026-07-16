@@ -7,7 +7,7 @@
 ; DRAW_TILE_VGA
 ; Description: Draws a tile with or without transparency on VGA
 ; Registers: AX, BX, CX, DX, SI, DI
-; Input:  AX = tileset offset, BX = map type (bg || fg)
+; Input:  AX = tileset offset, BX = map type (bg || fg), [BP] = X position, [BP + 2] = Y position
 ; Output: None
 ; Modified: None
 ; -------------------------------------------------------------
@@ -20,7 +20,8 @@ DRAW_TILE_VGA PROC
   LEA SI, [BX]                    ; Tileset offset
 
   ; Here BX is rewritten by SYNC_POS_REGS
-  SYNC_POS_REGS                   ; AX=pos_x, BX=pos_y
+  MOV AX, [BP]                    ; AX = X position
+  MOV BX, [BP + 2]                ; BX = Y position
   CALC_VGA_POSITION AX, BX        ; Calculate VGA position in DI
 
   POP BX                          ; Restore map type in BX

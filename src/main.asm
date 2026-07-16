@@ -9,7 +9,6 @@ TITLE Mia's Herbal Quest
 .STACK 100h
 
 ; --- Macros ---
-INCLUDE defs/macros/chars.inc            ; Character macros
 INCLUDE defs/macros/sys.inc              ; System macros
 INCLUDE defs/macros/vga.inc              ; VGA macros
 

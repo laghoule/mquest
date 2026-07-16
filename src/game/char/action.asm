@@ -67,6 +67,7 @@ MOVE_CHAR PROC
   CALL CHECK_CHAR_COLLISION                 ; Input: AX = char_index, CX = new_x, DX = new_y
   JC @mmg_collision_event                   ; Goto skip to animation if carry flag set
 
+  MOV AX, [BP+AX_SP_IDX] 
   CALL CHECK_OBJECT_COLLISION               ; Input: AX = char_index, CX = new_x, DX = new_y
   JC @mmg_collision_event                   ; Goto skip to animation if carry flag set
 

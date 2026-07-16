@@ -13,6 +13,12 @@
 DRAW_SCENE_VGA PROC
   SAVE_REGS
 
+  ; --- Local variables (X, Y position) ---
+  ; [BP] = X position
+  ; [BP + 2] = Y position
+  SUB SP, 4
+  MOV BP, SP
+
   MOV SI, AX                           ; Load offset of scene buffer
   MOV CX, 2                            ; 2 layer (bg, fg)
 
@@ -31,12 +37,14 @@ DRAW_SCENE_VGA PROC
   MOV BX, 0                            ; Set BX to the background layer
 
 @dsv_start_draw:
-  MOV pos_y, 0
+  XOR DX, DX
+  MOV [BP + 2], DX                     ; Y position = 0
   MOV DX, MAP_SCENE_HEIGHT             ; Lines / height
 
   @dsv_draw_line:
+    XOR CX, CX
+    MOV [BP], CX                       ; X position = 0
     MOV CX, MAP_SCENE_WIDTH            ; Columns / width
-    MOV pos_x, 0
 
     @dsv_draw_tile:
       PUSH CX
@@ -64,10 +72,12 @@ DRAW_SCENE_VGA PROC
 
     @dsv_skip_tile:
       POP CX                           ; Restore columns counter
-      ADD pos_x, MAP_TILE_WIDTH        ; Increment position by tile width
+      MOV AX, MAP_TILE_WIDTH           ; CAUTION, AX overide
+      ADD [BP], AX                     ; Increment X position by tile width
       LOOP @dsv_draw_tile              ; Loop until all columns are drawn
 
-    ADD pos_y, MAP_TILE_HEIGHT         ; Increment position by tile height
+    MOV AX, MAP_TILE_HEIGHT            ; CAUTION AX overide
+    ADD [BP + 2], AX                   ; Increment position by tile height
     DEC DX                             ; Decrement rows counter
     JNZ @dsv_draw_line                 ; Loop until all lines are drawn
 
@@ -75,6 +85,7 @@ DRAW_SCENE_VGA PROC
     POP SI
     LOOP @dsv_next_layer
 
+  ADD SP, 4                            ; Restore stack pointer
   RESTORE_REGS
   RET
 DRAW_SCENE_VGA ENDP
