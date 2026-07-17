@@ -6,10 +6,10 @@
 ;---------------------------------------------------------------
 ; CHECK_TILE_COLLISION
 ; Description: Check if collision with tile at position (AX, BX)
-; Register: AX, BX, CX, DX
-; Input: AX = pos_x, BX = pos_y
+; Register: AX, BX, CX, DX, BP
+; Input: AX = X position, BX = Y position
 ; Output: Carry flag set if collision, clear otherwise
-; Modifed: TX, pos_x, pos_y, Carry flag
+; Modifed: TX, Carry flag
 ; Notes:
 ;  1. LocalX = pos_x AND 15  |  LocalY = WorldY AND 15
 ;
@@ -39,8 +39,9 @@ CHECK_TILE_COLLISION PROC
   XOR DX, DX                  ; DX = offset of the map (bg = 0)
 
 @ctc_next_layer:
-  MOV AX, [BP + 2]            ; AX = pos_x
-  MOV BX, [BP + 4]            ; BX = pos_y
+  ; --- Use X, Y from stack to get tile properties ---
+  MOV AX, [BP + 2]            ; AX = X position
+  MOV BX, [BP + 4]            ; BX = Y position
   CALL GET_TILE_PROP          ; Output: AL = tile properties
 
   AND AL, MASK_COLLISION      ; Mask out the collision bits
@@ -84,7 +85,8 @@ CHECK_TILE_COLLISION PROC
   STC                         ; Set carry flag for detected collision
 
 @ctc_done:
-  ADD SP, 2                   ; Clean up stack
+  INC SP                      ; Clean up stack, cannot use ADD, because it clears the carry flag
+  INC SP
   RESTORE_REGS
   RET
 CHECK_TILE_COLLISION ENDP

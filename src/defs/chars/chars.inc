@@ -17,5 +17,3 @@ char_data_table DW OFFSET mia_data      ; Mia character data
 
 ; --- Generic sprite info ---
 char_index            DW 0              ; Character index (0: Mia) ; TODO: should be a DB
-;pos_x                 DW 0              ; Sprite x position
-;pos_y                 DW 0              ; Sprite y position
