@@ -5,8 +5,7 @@ CALC_VGA_POSITION MACRO AX, BX
   MOV CX, BX
   ; --- No MUL operation, so we use SHL : DI = (Y * 320) + X ---
   ; Calculatin Y * 256 (shifting left of 8)
-  MOV BH, BL            ; Fast bitshift of 8 bits
-  XOR BL, BL
+  XCHG BH, BL            ; Fast bitshift of 8 bits
 
   ; Calculing Y * 64 (shifting left of 6)
   SHL CX, 1             ; AX = Y * 64
