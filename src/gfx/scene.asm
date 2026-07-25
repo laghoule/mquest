@@ -14,10 +14,18 @@ DRAW_SCENE_VGA PROC
   SAVE_REGS
 
   ; --- Local variables (X, Y position) ---
-  ; [BP] = X position
+  ; [BP + 0] = X position
   ; [BP + 2] = Y position
-  SUB SP, 4
+  ; [BP + 4] = Map tile width
+  ; [BP + 6] = Map tile height
+  SUB SP, 8
   MOV BP, SP
+
+  XOR BX, BX
+  MOV BX, MAP_TILE_WIDTH
+  MOV [BP + 4], BX
+  MOV BX, MAP_TILE_HEIGHT
+  MOV [BP + 6], BX
 
   MOV SI, AX                           ; Load offset of scene buffer
   MOV CX, 2                            ; 2 layer (bg, fg)
@@ -85,7 +93,7 @@ DRAW_SCENE_VGA PROC
     POP SI
     LOOP @dsv_next_layer
 
-  ADD SP, 4                            ; Restore stack pointer
+  ADD SP, 8                            ; Restore stack pointer
   RESTORE_REGS
   RET
 DRAW_SCENE_VGA ENDP
