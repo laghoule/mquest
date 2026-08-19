@@ -57,6 +57,7 @@ AI tools serve strictly as a **learning aid and mentor**, helping deepen underst
 - [x] **PC Speaker Music:** Integrate background music using the Intel 8253 PIT.
 - [x] **Multi-Screen Navigation:** Implement "Flip-Screen" world navigation system (Zelda-style).
 - [x] **Collision Detection:** Implement tile-based collision sensing.
+- [ ] **HUD** Head's up display for 
 - [ ] **Joystick Support:** Add support for analog game controllers via Port 201h.
 - [ ] **A fun game scenario** This is the most diffult part, I'm not sure what to do yet.
 
