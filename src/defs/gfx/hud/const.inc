@@ -1,0 +1,1 @@
+HUD_VGA_OFFSET EQU 0DC00h ; VRAM offset for HUD (320 x 24 pixels)
