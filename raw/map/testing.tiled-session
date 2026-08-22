@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "map.json",
+    "activeFile": "",
     "expandedProjectPaths": [
         "."
     ],
@@ -27,8 +27,8 @@
             "scale": 8,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 287.125,
-                "y": 94.4375
+                "x": 120.75,
+                "y": 94.3125
             }
         },
         "map.json#basictiles": {
@@ -86,7 +86,6 @@
     "map.tileWidth": 16,
     "map.width": 20,
     "openFiles": [
-        "map.json"
     ],
     "project": "testing.tiled-project",
     "property.type": "int",
