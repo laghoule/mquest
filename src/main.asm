@@ -16,6 +16,7 @@ INCLUDE defs/macros/vga.inc              ; VGA macros
 INCLUDE defs/sys/consts.inc              ; System constants
 INCLUDE defs/chars/consts.inc            ; Character constants
 INCLUDE defs/game/consts.inc             ; Game constants
+INCLUDE defs/gfx/hud/consts.inc          ; HUD constants
 INCLUDE defs/musics/consts.inc           ; Musics constants
 
 .DATA
@@ -71,7 +72,7 @@ INCLUDE defs/musics/consts.inc           ; Musics constants
   INCLUDE gfx/char/movement.asm          ; Caracters animation functions
   INCLUDE gfx/char/render.asm            ; Caracters rendering functions
   INCLUDE gfx/tile.asm                   ; Tiles drawing functions
-  INCLUDE gfx/hud.asm                    ; HUD drawing functions
+  INCLUDE gfx/hud/hud.asm                ; HUD drawing functions
   INCLUDE gfx/scene.asm                  ; Scene drawing functions
   INCLUDE logic/update.asm               ; Logic update functions
   INCLUDE logic/grandma/actions.asm      ; NPC actions functions

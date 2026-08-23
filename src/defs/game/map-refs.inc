@@ -6,7 +6,7 @@ MAP_TILE_WIDTH EQU 16
 MAP_TILE_HEIGHT EQU 16
 MAP_TILES_COUNT EQU 107
 
-map_tiles_props LABEL BYTE
+map_tiles_attributes LABEL BYTE
   DB 00000000b ; Index: 0 (GID: 1 Source: set_0.png)
   DB 00000000b ; Index: 1 (GID: 2 Source: set_0.png)
   DB 00000000b ; Index: 2 (GID: 3 Source: set_0.png)
@@ -114,4 +114,3 @@ map_tiles_props LABEL BYTE
   DB 00001110b ; Index: 104 (GID: 2432 Source: basictiles.png)
   DB 00000001b ; Index: 105 (GID: 2450 Source: basictiles.png)
   DB 00000000b ; Index: 106 (GID: 3274 Source: test.png)
-

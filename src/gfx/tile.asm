@@ -366,58 +366,58 @@ GET_TILE_PROP PROC
 @gtp_position_validated:
   ; TODO: we may reorganize the operation for better optimization
   ; Index = (Y/16 * 20) + (X/16).
-  MOV AX, CX                      ; Restore pos_x in AX
+  MOV AX, CX                            ; Restore pos_x in AX
   ; AX = Y/16
-  MOV AX, BX                      ; Bit shift right by 4
-  SHR AX, 1                       ; to get Y / 16
-  SHR AX, 1                       ; 4 SHR is better on the 8086
+  MOV AX, BX                            ; Bit shift right by 4
+  SHR AX, 1                             ; to get Y / 16
+  SHR AX, 1                             ; 4 SHR is better on the 8086
   SHR AX, 1
   SHR AX, 1
 
   ; BX = Y/16
-  MOV BX, AX                      ; We now have the line, save in BX
+  MOV BX, AX                            ; We now have the line, save in BX
 
   ; BX = Y/16 * 16
-  SHL BX, 1                       ; We now need to multiply by 20
-  SHL BX, 1                       ; We decompose because 20, is not a factor of 2
-  SHL BX, 1                       ; Shift left by 4, to get multiply by 16
+  SHL BX, 1                             ; We now need to multiply by 20
+  SHL BX, 1                             ; We decompose because 20, is not a factor of 2
+  SHL BX, 1                             ; Shift left by 4, to get multiply by 16
   SHL BX, 1
 
   ; CX = Y/16 * 4
   PUSH CX
-  MOV CX, AX                      ; We save the line in CX
-  SHL CX, 1                       ; We shift left by 2, to get multiply by 4
+  MOV CX, AX                            ; We save the line in CX
+  SHL CX, 1                             ; We shift left by 2, to get multiply by 4
   SHL CX, 1
 
   ; Combine the two results
   ; 16 times + 4 times = 20 times
-  ADD BX, CX                      ; We now have BX = (Y/16 * 20)
+  ADD BX, CX                            ; We now have BX = (Y/16 * 20)
   POP CX
 
   ; AX = X/16
-  MOV AX, CX                      ; Restore pos_x in AX
-  SHR AX, 1                       ; Bit shift right (4 times = /16)
+  MOV AX, CX                            ; Restore pos_x in AX
+  SHR AX, 1                             ; Bit shift right (4 times = /16)
   SHR AX, 1
   SHR AX, 1
   SHR AX, 1
 
   ; Index (Y/16 * 20) + (X/16)
-  ADD BX, AX                  ; We now have our index in BX
+  ADD BX, AX                            ; We now have our index in BX
 
-  MOV SI, [map_buffer_addr]       ; Must be in SI for retriving the tile
-  ADD SI, DX                      ; SI now point the the offset of the scene (bg or fg)
-  MOV AL, [SI + BX]               ; Offset of map_buffer_addr + index is the tile type
-  XOR AH, AH                      ; Clear AH
+  MOV SI, [map_buffer_addr]             ; Must be in SI for retriving the tile
+  ADD SI, DX                            ; SI now point the the offset of the scene (bg or fg)
+  MOV AL, [SI + BX]                     ; Offset of map_buffer_addr + index is the tile type
+  XOR AH, AH                            ; Clear AH
 
-  MOV BX, AX                      ; BX = Final Map Index (0-239)
+  MOV BX, AX                            ; BX = Final Map Index (0-239)
 
-  MOV AL, [map_tiles_props + BX]  ; Load tile properties via the index
-  MOV AH, BL                      ; Save the tile type in AH
+  MOV AL, [map_tiles_attributes + BX]   ; Load tile attributes via the index
+  MOV AH, BL                            ; Save the tile type in AH
 
 @gtp_return:
-  MOV TX, AX                      ; Use a software register to temporary store AX
+  MOV TX, AX                            ; Use a software register to temporary store AX
   RESTORE_REGS
-  MOV AX, TX                      ; Restore AX for returning properties in AL
+  MOV AX, TX                            ; Restore AX for returning properties in AL
   RET
 GET_TILE_PROP ENDP
 
