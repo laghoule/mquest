@@ -33,6 +33,47 @@
 ; -------------------------------------------------------------------
 DRAW_HUD_VGA PROC
   SAVE_REGS
+
+  ;===========
+  ; PROTOTYPE
+  ;===========
+
+  ; --- Local variables ---
+  ; [BP + 0] = X position
+  ; [BP + 2] = Y position
+  ; [BP + 4] = HUD tile width
+  ; [BP + 6] = HUD tile height
+  SUB SP, 8
+  MOV BP, SP
+
+  MOV BX, 0
+  MOV [BP + 0], BX   ; TODO: magic number
+  MOV BX, 176
+  MOV [BP + 2], BX ; TODO: magic number
+  MOV BX, HUD_TILE_WIDTH
+  MOV [BP + 4], BX
+  MOV BX, HUD_TILE_HEIGHT
+  MOV [BP + 6], BX
+
+  MOV SI, OFFSET hud_buffer
+  MOV CX, HUD_SCENE_WIDTH
+
+  @dhd_next_tile:
+  LODSB
+
+  MOV AH, AL    ; 16x16 offset
+  XOR AL, AL
+
+  ADD AX, OFFSET hud_tileset_buffer
+  CALL DRAW_TILE_VGA               ; Draw opaque tile on screen
+
+  MOV BX, HUD_TILE_WIDTH
+  ADD [BP + 0], BX
+  XOR BX, BX
+
+  LOOP @dhd_next_tile
+
+  ADD SP, 8
   RESTORE_REGS
   RET
 DRAW_HUD_VGA ENDP

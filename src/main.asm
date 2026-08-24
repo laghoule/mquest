@@ -43,6 +43,10 @@ INCLUDE defs/musics/consts.inc           ; Musics constants
   ; --- Palettes ---
   INCLUDE defs/gfx/pals/pal.inc          ; Palette data
 
+  ; --- Head's up display ---
+  INCLUDE defs/gfx/hud/hud-refs.inc      ; HUD data
+  INCLUDE defs/gfx/hud/hud-scne.inc      ; HUD scene data
+
   ; --- Scenes ---
   INCLUDE defs/gfx/scene/tile.inc        ; Tile data
   INCLUDE defs/gfx/scene/scene.inc       ; Scene data
@@ -116,6 +120,8 @@ MAIN PROC
 
   CALL RENDER_CHARACTERS              ; Render all characters on the screen
 
+  CALL DRAW_HUD_VGA
+  
   CMP mute_flag, 1                    ; TODO: remove magic number
   JE @m_no_music
 

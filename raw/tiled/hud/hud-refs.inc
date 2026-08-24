@@ -5,3 +5,10 @@ hud_tileset_buffer DB 768 DUP(0)
 HUD_TILE_WIDTH EQU 16
 HUD_TILE_HEIGHT EQU 16
 HUD_TILES_COUNT EQU 3
+
+hud_tiles_attributes LABEL BYTE
+  DB 00000000b ; Index: 0 (GID: 2 Source: b_pal.png)
+  DB 00000000b ; Index: 1 (GID: 3 Source: b_pal.png)
+  DB 00000000b ; Index: 2 (GID: 4 Source: b_pal.png)
+
+
