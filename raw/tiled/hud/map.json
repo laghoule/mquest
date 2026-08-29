@@ -1,9 +1,17 @@
 { "compressionlevel":-1,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"json",
+         "target":"map.json"
+        }
+    },
  "height":1,
  "infinite":false,
  "layers":[
         {
-         "data":[2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4],
+         "data":[14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16],
          "height":1,
          "id":1,
          "name":"bg",
@@ -31,7 +39,7 @@
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.12.2",
- "tileheight":16,
+ "tileheight":24,
  "tilesets":[
         {
          "columns":12,
@@ -40,10 +48,10 @@
          "imageheight":64,
          "imagewidth":192,
          "margin":0,
-         "name":"bricks",
+         "name":"b_pal",
          "spacing":0,
-         "tilecount":48,
-         "tileheight":16,
+         "tilecount":24,
+         "tileheight":24,
          "tilewidth":16
         }],
  "tilewidth":16,

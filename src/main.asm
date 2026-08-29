@@ -45,7 +45,7 @@ INCLUDE defs/musics/consts.inc           ; Musics constants
 
   ; --- Head's up display ---
   INCLUDE defs/gfx/hud/hud-refs.inc      ; HUD data
-  INCLUDE defs/gfx/hud/hud-scne.inc      ; HUD scene data
+  INCLUDE defs/gfx/hud/hud.inc           ; HUD scene data
 
   ; --- Scenes ---
   INCLUDE defs/gfx/scene/tile.inc        ; Tile data

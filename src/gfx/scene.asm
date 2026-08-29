@@ -16,8 +16,8 @@ DRAW_SCENE_VGA PROC
   ; --- Local variables (X, Y position) ---
   ; [BP + 0] = X position
   ; [BP + 2] = Y position
-  ; [BP + 4] = Map tile width
-  ; [BP + 6] = Map tile height
+  ; [BP + 4] = Map tile width  ; FIXME inverted
+  ; [BP + 6] = Map tile height ;FIXEME inverted
   SUB SP, 8
   MOV BP, SP
 
