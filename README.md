@@ -16,6 +16,8 @@ AI tools serve strictly as a **learning aid and mentor**, helping deepen underst
 - 8086 Assembly programming
 - Retro video game development techniques
 
+Also used as a documentation and debugging partner.
+
 ## Technical Specifications
 
 - **Target Hardware:** IBM PC-XT / Pocket 8086.
