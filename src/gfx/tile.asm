@@ -11,8 +11,8 @@
 ;        BX = map type (bg || fg)
 ;        [BP + 0] = X position
 ;        [BP + 2] = Y position
-;        [BP + 4] = Map tile width
-;        [BP + 6] = Map tile height
+;        [BP + 4] = Map tile height
+;        [BP + 6] = Map tile width
 ; Output: None
 ; Modified: None
 ; -------------------------------------------------------------
