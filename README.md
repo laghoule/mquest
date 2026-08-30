@@ -76,8 +76,11 @@ And on real hardware, with Dos 6.22:
 
 ## Assets
 
-- **Character Sprites:** Custom 16x17 pixel art by **_Fleurman_** via [OpenGameArt.org](https://opengameart.org/content/tiny-characters-set).
-- **Environment Tiles:** Based on the "Batch 5" (16x16) tileset by **Hyptosis** via [OpenGameArt.org](https://opengameart.org/content/lots-of-free-2d-tiles-and-sprites-by-hyptosis).
+- **Character**
+    - [Fleurman](https://opengameart.org/content/tiny-characters-set)
+- **Tilesets**
+    - [Hyptosis](https://opengameart.org/content/lots-of-free-2d-tiles-and-sprites-by-hyptosis)
+    - [Emcee Flesher](https://opengameart.org/content/teeny-xeenies)
 
 ## Build Instructions
 
