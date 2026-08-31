@@ -27,7 +27,8 @@ Also used as a documentation and debugging partner.
 - **Development Environment:**
   - **OS:** Linux (Cross-development).
   - **IDE:** [Zed](https://zed.dev/).
-  - **Tools:** 
+  - **Tools:**
+  - - [resizepixel](https://www.resizepixel.com/) - Pixel resizer
     - [png2asm](https://github.com/laghoule/png2asm) - PNG-to-ASM sprite conversion
     - [png2pal](https://github.com/laghoule/png2pal) - PNG-to Gimp Palette conversion
     - [png2pic](https://github.com/laghoule/png2pic) - PNG-to-PIC sprite conversion
