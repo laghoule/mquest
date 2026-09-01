@@ -7,6 +7,7 @@ map_tileset_file  DB "assets/map-ts.til", 0
 ;----------
 hud_file          DB "assets/hud-wrld.map", 0 ; TODO: RENAME
 hud_tileset_file  DB "assets/hud-ts.til", 0   ; TODO: RENAME
+hud_portrait_file DB "assets/hud-face.pic", 0
 
 
 ; ASSET struct <file_addr, buffer_addr>
@@ -19,6 +20,7 @@ map_tileset_assets  ASSET <OFFSET map_tileset_file,  OFFSET map_tileset_buffer>
 
 hud_assets          ASSET <OFFSET hud_file,          OFFSET hud_buffer>
 hud_tileset_assets  ASSET <OFFSET hud_tileset_file,  OFFSET hud_tileset_buffer>
+hud_portrait_assets ASSET <OFFSET hud_portrait_file, OFFSET hud_portrait_buffer>
 
 ; Assets table is the list of all assets in the game
 ;---------------------------------------------------
@@ -28,5 +30,6 @@ assets_table    DW grandma_assets
                 DW map_tileset_assets
                 DW hud_assets
                 DW hud_tileset_assets
+                DW hud_portrait_assets
 
 assets_count    EQU ($ - assets_table) / 2   ; Number of assets in the table

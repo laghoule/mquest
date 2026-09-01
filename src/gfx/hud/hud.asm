@@ -30,12 +30,26 @@
 ; -------------------------------------------------------------------
 ; DRAW_HUD_VGA
 ; Description: Draw / update the HUD on the VGA screen
-; Registers: AX, BX, CX, DX, SI, DI, BP
+; Registers:
 ; Input: None
 ; Output: None
 ; Modified: None
 ; -------------------------------------------------------------------
 DRAW_HUD_VGA PROC
+  CALL DRAW_HUD_BASE
+  CALL DRAW_HUD_PORTRAIT
+  RET
+DRAW_HUD_VGA ENDP
+
+; -------------------------------------------------------------------
+; DRAW_HUD_BASE
+; Description: Draw the base of the HUD (background)
+; Registers: AX, BX, CX, DX, SI, DI, BP
+; Input: None
+; Output: None
+; Modified: None
+; -------------------------------------------------------------------
+DRAW_HUD_BASE PROC
   SAVE_REGS
 
   ; --- Local variables ---
@@ -96,4 +110,40 @@ DRAW_HUD_VGA PROC
   ADD SP, 8                                 ; Restore stack (free local variables)
   RESTORE_REGS
   RET
-DRAW_HUD_VGA ENDP
+DRAW_HUD_BASE ENDP
+
+; -------------------------------------------------------------------
+; DRAW_HUD_PORTRAIT
+; Description: Draw the Mia portrait on the HUD
+; Registers: AX, BX, BP
+; Input: None
+; Output: None
+; Modified: None
+; -------------------------------------------------------------------
+DRAW_HUD_PORTRAIT PROC
+  SAVE_REGS
+
+  ; --- Local variables ---
+  ; [BP + 0] = X position
+  ; [BP + 2] = Y position
+  ; [BP + 4] = HUD tile height
+  ; [BP + 6] = HUD tile width
+  SUB SP, 8
+  MOV BP, SP
+
+  MOV BX, 4
+  MOV [BP + 0], BX                          ; TODO: magic number
+  MOV BX, 178
+  MOV [BP + 2], BX                          ; TODO: magic number
+  MOV BX, 20
+  MOV [BP + 4], BX
+  MOV BX, 20
+  MOV [BP + 6], BX
+
+  MOV AX, OFFSET hud_portrait_buffer
+  CALL DRAW_TILE_VGA
+
+  ADD SP, 8
+  RESTORE_REGS
+  RET
+DRAW_HUD_PORTRAIT ENDP

@@ -1,0 +1,1 @@
+hud_portrait_buffer DB 400 DUP(0)

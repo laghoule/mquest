@@ -46,6 +46,7 @@ INCLUDE defs/musics/consts.inc           ; Musics constants
   ; --- Head's up display ---
   INCLUDE defs/gfx/hud/hud-refs.inc      ; HUD data
   INCLUDE defs/gfx/hud/hud.inc           ; HUD scene data
+  INCLUDE defs/gfx/hud/portrait.inc      ; Portrait data
 
   ; --- Scenes ---
   INCLUDE defs/gfx/scene/tile.inc        ; Tile data
@@ -119,8 +120,7 @@ MAIN PROC
   CALL DRAW_SCENE_VGA                 ; This is the background layer
 
   CALL RENDER_CHARACTERS              ; Render all characters on the screen
-
-  CALL DRAW_HUD_VGA
+  CALL DRAW_HUD_VGA                   ; Draw the head's up display
   
   CMP mute_flag, 1                    ; TODO: remove magic number
   JE @m_no_music
