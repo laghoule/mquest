@@ -12,6 +12,7 @@
 ;         DI = offset of the destination error message
 ; Output:
 ; Modified:
+; FIXME: error opening file message is truncate some times, need testing
 ; ---------------------------------------------------------------------
 CONCAT_ERROR_MSG PROC
   SAVE_REGS
