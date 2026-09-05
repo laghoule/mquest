@@ -168,8 +168,8 @@ DRAW_HUD_HEART PROC
   SUB SP, 8
   MOV BP, SP
 
-  MOV CX, 4
-  MOV DX, 40
+  MOV CX, 3
+  MOV DX, 35
   
   @next_heart:
   MOV BX, DX
