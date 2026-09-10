@@ -1,5 +1,5 @@
 {
-    "activeFile": "",
+    "activeFile": "base/map3.json",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
@@ -35,6 +35,23 @@
         },
         "base/map2.tmj#teen_pall": {
             "scaleInDock": 1
+        },
+        "base/map3.json": {
+            "scale": 8,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 225,
+                "y": 26.5625
+            }
+        },
+        "base/map3.json#boh_pal": {
+            "scaleInDock": 5.5
+        },
+        "base/map3.json#teen_pall": {
+            "scaleInDock": 5.5
+        },
+        "base/map3.json#teen_pall_2": {
+            "scaleInDock": 5.5
         },
         "brick.json": {
             "scale": 7.00921875,
@@ -115,9 +132,11 @@
     "last.imagePath": "/home/pgauthier/src/asm/mquest/raw/tiled/hud/base",
     "map.lastUsedFormat": "json",
     "openFiles": [
+        "base/map3.json"
     ],
     "project": "",
     "recentFiles": [
+        "base/map3.json",
         "base/map2.tmj",
         "base/map2.json",
         "map2.json",
