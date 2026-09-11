@@ -17,6 +17,7 @@ STR_LEN PROC
   
   XOR CX, CX                ; Clear CX
 
+  ; --- CX is the len of the string ---
 @sl_loop:
   MOV AL, [SI]              ; Put character in AL
   CMP AL, 0                 ; Jump to end if AL is 0 (end of string)
