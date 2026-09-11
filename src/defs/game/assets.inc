@@ -8,7 +8,7 @@ map_tileset_file  DB "assets/map-ts.til", 0
 hud_file          DB "assets/hud-wrld.map", 0 ; TODO: RENAME
 hud_tileset_file  DB "assets/hud-ts.til", 0   ; TODO: RENAME
 hud_portrait_file DB "assets/hud-face.pic", 0
-hud_heart_file    DB "assets/heart.pic", 0
+hud_heart_file    DB "assets/hud-hrt.pic", 0
 
 
 ; ASSET struct <file_addr, buffer_addr>
