@@ -6,13 +6,15 @@
 ;----------------------------------------------------------------------
 ; STR_LEN
 ; Description: Count the length of a string (terminated by 0)
-; Input:  SI: Offset of the string to count (without the terminating 0)
+; Registers: AX, CX, SI
+; Input: SI: Offset of the string to count (without the terminating 0)
 ; Output: CX: Length of the string
+; Modified: None
 ;----------------------------------------------------------------------
 STR_LEN PROC
-  SAVE_REGS
-  MOV BP, SP
-
+  PUSH AX
+  PUSH SI
+  
   XOR CX, CX                ; Clear CX
 
 @sl_loop:
@@ -25,7 +27,7 @@ STR_LEN PROC
   JMP @sl_loop              ; Jump to next iteration
 
 @sl_end_string:
-  RESTORE_REGS
-  MOV CX, [BP + CX_SP_IDX]  ; String len in CX
+  POP SI
+  POP AX
   RET
 STR_LEN ENDP

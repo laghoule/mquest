@@ -3,13 +3,15 @@
 ;  it under the terms of the GNU General Public License as published by
 ;  the Free Software Foundation, either version 3 of the License.
 
-;--------------------------------------------------------------
+;------------------------------------------------------
 ; PRINT
 ; Description: Print a message to the console
+; Registers: AX, BX, CX, DX, SI
 ; Input: AL = 0 (stdout) or 1 (stderr)
-;        DX: Offset of the error message to print
+;        DX = Offset of the error message to print
 ; Output: None
-; -------------------------------------------------------------
+; TODO: Check for 3 print strategie (instead of concat)
+; -----------------------------------------------------
 PRINT PROC
   SAVE_REGS
 
