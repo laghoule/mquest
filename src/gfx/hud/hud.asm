@@ -165,16 +165,20 @@ DRAW_HUD_HEART PROC
   ; [BP + 2] = Y position
   ; [BP + 4] = HUD tile height
   ; [BP + 6] = HUD tile width
-  SUB SP, 8
+  ; [BP + 8] = Next heart Y position
+  SUB SP, 10
   MOV BP, SP
 
   MOV CX, 3
   MOV DX, 35
+  XOR BX, BX
+  MOV [BP + 8], BX
   
   @next_heart:
   MOV BX, DX
   MOV [BP + 0], BX                          ; TODO: magic number
-  MOV BX, 182
+  MOV BX, 178
+  ADD BX, [BP + 8]
   MOV [BP + 2], BX                          ; TODO: magic number
   MOV BX, 12
   MOV [BP + 4], BX
@@ -185,9 +189,11 @@ DRAW_HUD_HEART PROC
   CALL DRAW_TILE_VGA
 
   ADD DX, 15
+  MOV BX, 4
+  ADD [BP + 8], BX
   LOOP @next_heart
 
-  ADD SP, 8
+  ADD SP, 10
   RESTORE_REGS
   RET
 DRAW_HUD_HEART ENDP
