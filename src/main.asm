@@ -19,6 +19,9 @@ INCLUDE defs/game/consts.inc             ; Game constants
 INCLUDE defs/gfx/hud/consts.inc          ; HUD constants
 INCLUDE defs/musics/consts.inc           ; Musics constants
 
+.DATA?
+  INCLUDE defs/gfx/hud/hud-buff.inc      ; Map buffer
+
 .DATA
   ; --- Macros ---
   INCLUDE defs/macros/consts.inc         ; Macros constants
