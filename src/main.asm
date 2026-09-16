@@ -20,7 +20,8 @@ INCLUDE defs/gfx/hud/consts.inc          ; HUD constants
 INCLUDE defs/musics/consts.inc           ; Musics constants
 
 .DATA?
-  INCLUDE defs/gfx/hud/hud-buff.inc      ; Map buffer
+  INCLUDE defs/game/map-buff.inc         ; Map buffer
+  INCLUDE defs/gfx/hud/hud-buff.inc      ; Hud buffer
 
 .DATA
   ; --- Macros ---
@@ -124,7 +125,7 @@ MAIN PROC
 
   CALL RENDER_CHARACTERS              ; Render all characters on the screen
   CALL DRAW_HUD_VGA                   ; Draw the head's up display
-  
+
   CMP mute_flag, 1                    ; TODO: remove magic number
   JE @m_no_music
 
