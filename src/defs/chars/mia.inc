@@ -33,10 +33,6 @@ mia_data CHARACTER <\
 >
 
 mia_tile_file           DB "assets/mia.pic", 0  ; Mia tileset
-mia_bg_buffer           DB CHAR_SIZE DUP(0)     ; Mia background buffer
-mia_prev_bg_buffer      DB CHAR_SIZE DUP(0)     ; Mia previous background buffer
-mia_tile_buffer         DB 3500 DUP(0)          ; Mia buffered tiles sprite
-mia_sprite_buffer       DB 272 DUP(0)           ; Mia buffered sprite
 
 ; --- Mia movement data table ---
 ; Must follow orders define in defs/game/dir.inc
