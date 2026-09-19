@@ -20,7 +20,7 @@ INCLUDE defs/gfx/hud/consts.inc          ; HUD constants
 INCLUDE defs/musics/consts.inc           ; Musics constants
 
 .DATA?
-  INCLUDE defs/chars/buffers.inc         ; Characters buffers / FIXME: this create artifact on one sprite of each characters
+  INCLUDE defs/chars/buffers.inc         ; Characters buffers
   INCLUDE defs/game/map-buff.inc         ; Map buffer
   INCLUDE defs/gfx/hud/buffers.inc       ; HUD buffers
   INCLUDE defs/gfx/hud/hud-buff.inc      ; Base HUD buffer
