@@ -174,7 +174,7 @@ DRAW_HUD_HEART PROC
   MOV DX, 35
   XOR BX, BX
   MOV [BP + 8], BX
-  
+
   @next_heart:
   MOV BX, DX
   MOV [BP + 0], BX                          ; TODO: magic number
@@ -220,6 +220,24 @@ DRAW_HUD_INVENTORY PROC
   MOV [BP + 6], BX
 
   MOV AX, OFFSET hud_invt_plant_buffer
+  CALL DRAW_TILE_VGA
+
+  MOV BX, 120
+  MOV [BP + 0], BX                          ; TODO: magic number
+
+  MOV AX, OFFSET hud_invt_potion_buffer
+  CALL DRAW_TILE_VGA
+
+  MOV BX, 152
+  MOV [BP + 0], BX                          ; TODO: magic number
+
+  MOV AX, OFFSET hud_invt_tool_buffer
+  CALL DRAW_TILE_VGA
+
+  MOV BX, 184
+  MOV [BP + 0], BX                          ; TODO: magic number
+
+  MOV AX, OFFSET hud_invt_book_buffer
   CALL DRAW_TILE_VGA
 
   ADD SP, 8
