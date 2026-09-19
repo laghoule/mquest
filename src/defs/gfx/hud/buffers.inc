@@ -1,0 +1,3 @@
+hud_portrait_buffer   DB 400 DUP(?)
+hud_heart_buffer      DB 256 DUP(?)
+hud_invt_plant_buffer DB 256 DUP(?)

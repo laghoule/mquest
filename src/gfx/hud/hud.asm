@@ -39,6 +39,7 @@ DRAW_HUD_VGA PROC
   CALL DRAW_HUD_BASE
   CALL DRAW_HUD_PORTRAIT
   CALL DRAW_HUD_HEART
+  CALL DRAW_HUD_INVENTORY
   RET
 DRAW_HUD_VGA ENDP
 
@@ -197,3 +198,31 @@ DRAW_HUD_HEART PROC
   RESTORE_REGS
   RET
 DRAW_HUD_HEART ENDP
+
+DRAW_HUD_INVENTORY PROC
+  SAVE_REGS
+
+  ; --- Local variables ---
+  ; [BP + 0] = X position
+  ; [BP + 2] = Y position
+  ; [BP + 4] = HUD tile height
+  ; [BP + 6] = HUD tile width
+  SUB SP, 8
+  MOV BP, SP
+
+  MOV BX, 88
+  MOV [BP + 0], BX                          ; TODO: magic number
+  MOV BX, 180
+  MOV [BP + 2], BX                          ; TODO: magic number
+  MOV BX, 16
+  MOV [BP + 4], BX
+  MOV BX, 16
+  MOV [BP + 6], BX
+
+  MOV AX, OFFSET hud_invt_plant_buffer
+  CALL DRAW_TILE_VGA
+
+  ADD SP, 8
+  RESTORE_REGS
+  RET
+DRAW_HUD_INVENTORY ENDP
