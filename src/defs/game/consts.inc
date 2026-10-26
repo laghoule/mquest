@@ -6,7 +6,7 @@ DOWN_DIR    EQU 3
 
 ; --- Directions to check for scene transitions ---
 LIMIT_NORTH    EQU 0
-LIMIT_SOUTH    EQU 158        ; Room for status bar
+LIMIT_SOUTH    EQU 158        ; Room for HUD
 LIMIT_EAST     EQU 305        ; Not 320, because of we check via pos_x hitbox 2
 LIMIT_WEST     EQU 0
 

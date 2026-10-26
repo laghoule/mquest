@@ -45,7 +45,6 @@ grandma_dir_table           DW OFFSET grandma_right_data
 ;  cd_sprt_tbl_addr         DW ?         ; Address of the sprite table
 ;  cd_hitbox_tile           HITBOX < >   ; Hitbox of tile object
 ;  cd_hitbox_npc            HITBOX < >   ; Hitbox of NPC
-;  cd_dir                   DB ?         ; Direction of the character
 grandma_right_data          CHAR_DIR_DATA <OFFSET grandma_sprt_right_table, <4, 10, 11, 15>, <0, 0, 15, 16> >
 grandma_left_data           CHAR_DIR_DATA <OFFSET grandma_sprt_left_table,  <4, 10, 11, 15>, <0, 0, 15, 16> >
 grandma_up_data             CHAR_DIR_DATA <OFFSET grandma_sprt_up_table,    <4, 10, 11, 15>, <0, 0, 15, 16> >

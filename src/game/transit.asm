@@ -3,7 +3,7 @@
 ;  it under the terms of the GNU General Public License as published by
 ;  the Free Software Foundation, either version 3 of the License.
 
-;----------------------------------------------------------------
+;--------------------------------------------------------------------
 ; CHECK_SCENE_TRANSITION
 ; Description: Check if the player is on a scene transition direction
 ; Register: AX, BX, CX, DX, SI
@@ -11,7 +11,7 @@
 ;   Implicit: mia_data
 ; Output:
 ; Modifed: curr_scne
-;----------------------------------------------------------------
+;--------------------------------------------------------------------
 CHECK_SCENE_TRANSITION PROC
   SAVE_REGS
 
@@ -41,122 +41,175 @@ CHECK_SCENE_TRANSITION PROC
   CMP [BX].CHARACTER.ch_loc.lo_y, LIMIT_NORTH ; Check if the player is on the north limit
   JA @cs_no_transition                        ; If not, no transition
 
-  PUSH BX                                   ; Save BX mia_data
-  MOV BX, [BX].CHARACTER.ch_scene_addr      ; Load the scene address
-  MOV SI, [BX].SCENE.sc_north_addr          ; Load the north scene address
-  POP BX
-  CMP SI, SCENE_EDGE                        ; Check if the north scene is an edge
-  JE @cs_no_transition                      ; If it is, no transition
+  MOV AX, UP_DIR                              ; AX = direction
+  CALL LOAD_SCENE_ADDR
+  CALL IS_SCENE_EDGE                          ; Check if the north scene is an edge
+  JC @cs_scene_edge                           ; If it is, no transition
 
-  XOR CX, CX                                ; CX = 0 for y transition
-  MOV DX, LIMIT_SOUTH                       ; DX = south limit for y transition
-  JMP @cs_load_scene_transition             ; Jump to scene transition
+  XOR CX, CX                                  ; CX = 0 for y transition
+  MOV DX, LIMIT_SOUTH                         ; DX = south limit for y transition
+  JMP @cs_load_scene_transition               ; Jump to scene transition
 
   ; South scene boundery check
 @cs_south_boundery_check:
   CMP [BX].CHARACTER.ch_loc.lo_y, LIMIT_SOUTH ; Check if the player is on the south limit
   JNA @cs_no_transition                       ; If not, no transition
 
-  PUSH BX
-  MOV BX, [BX].CHARACTER.ch_scene_addr      ; Load the scene address
-  MOV SI, [BX].SCENE.sc_south_addr          ; Load the south scene address
-  POP BX
-  CMP SI, SCENE_EDGE                        ; Check if the south scene is an edge
-  JE @cs_no_transition                      ; If it is, no transition
+  MOV AX, UP_DIR                              ; AX = direction
+  CALL LOAD_SCENE_ADDR
+  CALL IS_SCENE_EDGE                          ; Check if the north scene is an edge
+  JC @cs_scene_edge                           ; If it is, no transition
 
-  XOR CX, CX                                ; CX = 0 for y transition
-  MOV DX,LIMIT_NORTH                        ; DX = north limit for y transition
-  JMP @cs_load_scene_transition             ; Jump to scene transition
+  XOR CX, CX                                  ; CX = 0 for y transition
+  MOV DX,LIMIT_NORTH                          ; DX = north limit for y transition
+  JMP @cs_load_scene_transition               ; Jump to scene transition
 
   ; East boundery check
 @cs_east_boundery_check:
   CMP [BX].CHARACTER.ch_loc.lo_x, LIMIT_EAST  ; Check if the player is on the east limit
   JNA @cs_no_transition                       ; If not, no transition
 
-  PUSH BX
-  MOV BX, [BX].CHARACTER.ch_scene_addr      ; Load the scene address
-  MOV SI, [BX].SCENE.sc_east_addr           ; Load the east scene address
-  POP BX
-  CMP SI, SCENE_EDGE                        ; Check if the east scene is an edge
-  JE @cs_no_transition                      ; If it is, no transition
+  MOV AX, UP_DIR                              ; AX = direction
+  CALL LOAD_SCENE_ADDR
+  CALL IS_SCENE_EDGE                          ; Check if the north scene is an edge
+  JC @cs_scene_edge                           ; If it is, no transition
 
-  MOV CX, 1                                 ; CX = 1 for x transition
-  MOV DX, LIMIT_WEST                        ; DX = west limit for x transition
-  JMP @cs_load_scene_transition             ; Jump to scene transition
+  MOV CX, 1                                   ; CX = 1 for x transition
+  MOV DX, LIMIT_WEST                          ; DX = west limit for x transition
+  JMP @cs_load_scene_transition               ; Jump to scene transition
 
   ; West boundery check
 @cs_west_boundery_check:
   CMP [BX].CHARACTER.ch_loc.lo_x, LIMIT_WEST  ; Check if the player is on the west limit
   JA @cs_no_transition                        ; If not, no transition
 
-  PUSH BX
-  MOV BX, [BX].CHARACTER.ch_scene_addr      ; Load the scene address
-  MOV SI, [BX].SCENE.sc_west_addr           ; Load the west scene address
-  POP BX
-  CMP SI, SCENE_EDGE                        ; Check if the west scene is an edge
-  JE @cs_no_transition                      ; If it is, no transition
+  MOV AX, UP_DIR                              ; AX = direction
+  CALL LOAD_SCENE_ADDR
+  CALL IS_SCENE_EDGE                          ; Check if the north scene is an edge
+  JC @cs_scene_edge                           ; If it is, no transition
 
-  MOV CX, 1                                 ; CX = 1 for x transition
-  MOV DX, LIMIT_EAST                        ; DX = east limit for x transition
+  MOV CX, 1                                   ; CX = 1 for x transition
+  MOV DX, LIMIT_EAST                          ; DX = east limit for x transition
+  JMP @cs_load_scene_transition               ; Jump to scene transition
+
+@cs_scene_edge:
+  JMP @cs_no_transition
 
   ; Load scene transition
 @cs_load_scene_transition:
   PUSH BX
-  MOV BX, [SI].SCENE.sc_map_buffer_addr     ; Load the map buffer address
-  MOV map_buffer_addr, BX                   ; Set the map buffer address
+  MOV BX, [SI].SCENE.sc_map_buffer_addr       ; Load the map buffer address
+  MOV map_buffer_addr, BX                     ; Set the map buffer address
   POP BX
 
-  TEST CX, 1                                ; Check if it's an x transition
-  JCXZ @cs_check_and_update_y_transition    ; If not, it's a y transition
-  JMP @cs_check_and_update_x_transition     ; If it is, it's an x transition
+  TEST CX, 1                                  ; Check if it's an x transition
+  JCXZ @cs_check_and_update_y_transition      ; If not, it's a y transition
+  JMP @cs_check_and_update_x_transition       ; If it is, it's an x transition
 
   ; x transition
 @cs_check_and_update_x_transition:
   PUSH DX
   XOR AX, AX
-  MOV CX, DX                                ; CX = pos_x
-  MOV DX, [BX].CHARACTER.ch_loc.lo_y        ; DX = pos_y
-  CALL CHECK_OBJECT_COLLISION               ; Check if there is a collision
+  MOV CX, DX                                  ; CX = pos_x
+  MOV DX, [BX].CHARACTER.ch_loc.lo_y          ; DX = pos_y
+  CALL CHECK_OBJECT_COLLISION                 ; Check if there is a collision
   POP DX
-  JC @cs_restore_scene                      ; If there is a collision, restore the scene and return
+  JC @cs_restore_scene                        ; If there is a collision, restore the scene and return
 
-  MOV [BX].CHARACTER.ch_loc.lo_x, DX        ; Set the x position in the character structure
-  MOV [BX].CHARACTER.ch_prev_loc.lo_x, DX   ; Save the previous x position
-  MOV [BX].CHARACTER.ch_scene_addr, SI      ; Set the scene address in the character structure
-  JMP @cs_draw_transition                   ; Draw the transition
+  MOV [BX].CHARACTER.ch_loc.lo_x, DX          ; Set the x position in the character structure
+  MOV [BX].CHARACTER.ch_prev_loc.lo_x, DX     ; Save the previous x position
+  MOV [BX].CHARACTER.ch_scene_addr, SI        ; Set the scene address in the character structure
+  JMP @cs_draw_transition                     ; Draw the transition
 
   ; y transition
 @cs_check_and_update_y_transition:
   XOR AX, AX
-  MOV CX, [BX].CHARACTER.ch_loc.lo_x        ; CX = pos_x, DX is already pos_y
-  CALL CHECK_OBJECT_COLLISION               ; Check if there is a collision
-  JC @cs_restore_scene                      ; If there is a collision, restore the scene and return
+  MOV CX, [BX].CHARACTER.ch_loc.lo_x          ; CX = pos_x, DX is already pos_y
+  CALL CHECK_OBJECT_COLLISION                 ; Check if there is a collision
+  JC @cs_restore_scene                        ; If there is a collision, restore the scene and return
 
-  MOV [BX].CHARACTER.ch_loc.lo_y, DX        ; Set the y position in the character structure
-  MOV [BX].CHARACTER.ch_prev_loc.lo_y, DX   ; Save the previous y position
-  MOV [BX].CHARACTER.ch_scene_addr, SI      ; Set the scene address in the character structure
-  JMP @cs_draw_transition                   ; Draw the transition
+  MOV [BX].CHARACTER.ch_loc.lo_y, DX          ; Set the y position in the character structure
+  MOV [BX].CHARACTER.ch_prev_loc.lo_y, DX     ; Save the previous y position
+  MOV [BX].CHARACTER.ch_scene_addr, SI        ; Set the scene address in the character structure
+  JMP @cs_draw_transition                     ; Draw the transition
 
 @cs_restore_scene:
   MOV BX, OFFSET mia_data
 
-  MOV BX, [BX].CHARACTER.ch_scene_addr      ; Load the scene address
-  MOV SI, [BX].SCENE.sc_map_buffer_addr     ; Load the west scene address
+  MOV BX, [BX].CHARACTER.ch_scene_addr        ; Load the scene address
+  MOV SI, [BX].SCENE.sc_map_buffer_addr       ; Load the west scene address
 
-  MOV map_buffer_addr, SI                   ; Set the new map buffer address
+  MOV map_buffer_addr, SI                     ; Set the new map buffer address
   JMP @cs_no_transition
 
   ; Draw the transition
 @cs_draw_transition:
-  MOV current_scene_addr, SI                ; Set the current scene address
-  MOV AX, map_buffer_addr                   ; Load the map buffer address in AX, needed for DRAW_SCENE
-  CALL DRAW_SCENE_VGA                       ; Draw the scene
+  MOV current_scene_addr, SI                  ; Set the current scene address
+  MOV AX, map_buffer_addr                     ; Load the map buffer address in AX, needed for DRAW_SCENE
+  CALL DRAW_SCENE_VGA                         ; Draw the scene
 
-  XOR AX, AX                                ; AX = 0 for mia character
-  CALL RENDER_CHARACTER                     ; Render the character
+  XOR AX, AX                                  ; AX = 0 for mia character
+  CALL RENDER_CHARACTER                       ; Render the character
 
   ; No transition needed
 @cs_no_transition:
   RESTORE_REGS
   RET
 CHECK_SCENE_TRANSITION ENDP
+
+;--------------------------------------------
+; LOAD_SCENE_ADDR
+; Description: Loads the scene address in SI
+; Register: AX, BX, SI
+; Input: AX = direction, BX = character struc
+; Output: None
+; Modifed: SI
+;--------------------------------------------
+LOAD_SCENE_ADDR PROC
+  PUSH BP
+  MOV BP, [BX].CHARACTER.ch_scene_addr      ; Load the scene address
+
+  CMP AX, UP_DIR                            ; North direction
+  JE @lc_north
+  CMP AX, DOWN_DIR                          ; South direction
+  JE @lc_south
+  CMP AX, RIGHT_DIR                         ; East direction
+  JE @lc_east
+  CMP AX, LEFT_DIR                          ; West direction
+  JE @lc_west
+
+@lc_north:
+  MOV SI, [BP].SCENE.sc_north_addr          ; Load the north scene address
+  JMP @lc_return
+@lc_south:
+  MOV SI, [BP].SCENE.sc_south_addr          ; Load the south scene address
+  JMP @lc_return
+@lc_east:
+  MOV SI, [BP].SCENE.sc_east_addr           ; Load the east scene address
+  JMP @lc_return
+@lc_west:
+  MOV SI, [BP].SCENE.sc_west_addr           ; Load the west scene address
+
+@lc_return:
+  POP BP
+  RET
+LOAD_SCENE_ADDR ENDP
+
+;--------------------------------------------
+; IS_SCENE_EDGE
+; Description: Checks if the scene is an edge
+; Register: SI
+; Input: SI = scene address
+; Output: Carry flag set if it is an edge
+; Modifed: Carry flag
+;--------------------------------------------
+IS_SCENE_EDGE PROC
+  CLC                                       ; Clear carry flag
+
+  CMP SI, SCENE_EDGE                        ; Check if the west scene is an edge
+  JNZ @ise_return
+  STC                                       ; It is an edge, set carry flag
+
+@ise_return:
+  RET
+IS_SCENE_EDGE ENDP
