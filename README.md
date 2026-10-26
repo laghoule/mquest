@@ -32,6 +32,7 @@ Also used as a documentation and debugging partner.
     - [png2asm](https://github.com/laghoule/png2asm) - PNG-to-ASM sprite conversion
     - [png2pal](https://github.com/laghoule/png2pal) - PNG-to Gimp Palette conversion
     - [png2pic](https://github.com/laghoule/png2pic) - PNG-to-PIC sprite conversion
+    - pngs2tileset - Multiple pngs to tileset [under development]
     - [gpl2asm](https://github.com/laghoule/gpl2asm) - GIMP palette-to-ASM conversion
     - [tiled2map](https://github.com/laghoule/tiled2map) - Tiled to .map and ASM includes
   - **Emulator:** DOSBox-X for rapid testing.
