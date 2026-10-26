@@ -41,7 +41,7 @@ CHECK_SCENE_TRANSITION PROC
   CMP [BX].CHARACTER.ch_loc.lo_y, LIMIT_NORTH ; Check if the player is on the north limit
   JA @cs_no_transition                        ; If not, no transition
 
-  MOV AX, UP_DIR                              ; AX = direction
+  MOV AX, UP_DIR                              ; AX = north direction
   CALL LOAD_SCENE_ADDR
   CALL IS_SCENE_EDGE                          ; Check if the north scene is an edge
   JC @cs_no_transition                          ; If it is, no transition
@@ -55,7 +55,7 @@ CHECK_SCENE_TRANSITION PROC
   CMP [BX].CHARACTER.ch_loc.lo_y, LIMIT_SOUTH ; Check if the player is on the south limit
   JNA @cs_no_transition                       ; If not, no transition
 
-  MOV AX, UP_DIR                              ; AX = direction
+  MOV AX, DOWN_DIR                             ; AX = south direction
   CALL LOAD_SCENE_ADDR
   CALL IS_SCENE_EDGE                          ; Check if the north scene is an edge
   JC @cs_no_transition                           ; If it is, no transition
@@ -69,7 +69,7 @@ CHECK_SCENE_TRANSITION PROC
   CMP [BX].CHARACTER.ch_loc.lo_x, LIMIT_EAST  ; Check if the player is on the east limit
   JNA @cs_no_transition                       ; If not, no transition
 
-  MOV AX, UP_DIR                              ; AX = direction
+  MOV AX, RIGHT_DIR                           ; AX = righ direction
   CALL LOAD_SCENE_ADDR
   CALL IS_SCENE_EDGE                          ; Check if the north scene is an edge
   JC @cs_no_transition                        ; If it is, no transition
@@ -83,7 +83,7 @@ CHECK_SCENE_TRANSITION PROC
   CMP [BX].CHARACTER.ch_loc.lo_x, LIMIT_WEST  ; Check if the player is on the west limit
   JA @cs_no_transition                        ; If not, no transition
 
-  MOV AX, UP_DIR                              ; AX = direction
+  MOV AX, LEFT_DIR                            ; AX = west direction
   CALL LOAD_SCENE_ADDR
   CALL IS_SCENE_EDGE                          ; Check if the north scene is an edge
   JC @cs_no_transition                        ; If it is, no transition
@@ -163,8 +163,8 @@ CHECK_SCENE_TRANSITION ENDP
 ; Modifed: SI
 ;--------------------------------------------
 LOAD_SCENE_ADDR PROC
-  PUSH BP
-  MOV BP, [BX].CHARACTER.ch_scene_addr      ; Load the scene address
+  PUSH BX
+  MOV BX, [BX].CHARACTER.ch_scene_addr      ; Load the scene address
 
   CMP AX, UP_DIR                            ; North direction
   JE @lc_north
@@ -176,19 +176,19 @@ LOAD_SCENE_ADDR PROC
   JE @lc_west
 
 @lc_north:
-  MOV SI, [BP].SCENE.sc_north_addr          ; Load the north scene address
+  MOV SI, [BX].SCENE.sc_north_addr          ; Load the north scene address
   JMP @lc_return
 @lc_south:
-  MOV SI, [BP].SCENE.sc_south_addr          ; Load the south scene address
+  MOV SI, [BX].SCENE.sc_south_addr          ; Load the south scene address
   JMP @lc_return
 @lc_east:
-  MOV SI, [BP].SCENE.sc_east_addr           ; Load the east scene address
+  MOV SI, [BX].SCENE.sc_east_addr           ; Load the east scene address
   JMP @lc_return
 @lc_west:
-  MOV SI, [BP].SCENE.sc_west_addr           ; Load the west scene address
+  MOV SI, [BX].SCENE.sc_west_addr           ; Load the west scene address
 
 @lc_return:
-  POP BP
+  POP BX
   RET
 LOAD_SCENE_ADDR ENDP
 
@@ -203,8 +203,8 @@ LOAD_SCENE_ADDR ENDP
 IS_SCENE_EDGE PROC
   CLC                                       ; Clear carry flag
 
-  TEST SI, SCENE_EDGE                       ; Check if the scene is an edge
-  JNZ @ise_return
+  CMP SI, SCENE_EDGE                       ; Check if the scene is an edge
+  JNE @ise_return
   STC                                       ; It is an edge, set carry flag
 
 @ise_return:
