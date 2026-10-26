@@ -48,18 +48,24 @@ MOVE_CHAR PROC
   JE @mm_calc_up
 
   ; If we are here, it's down direction
+  ; --- South ---
   ADD DX, AX                                ; Add pending_tick to Y position
   JMP @mm_collision_detection               ; Goto collision detection
 
+; --- East ---
 @mm_calc_right:
   ADD CX, AX                                ; Add pending_tick to X position
   JMP @mm_collision_detection               ; Goto collision detection
 
+; --- West ---
 @mm_calc_left:
   SUB CX, AX                                ; Subtract pending_tick from X position
   JMP @mm_collision_detection               ; Goto collision detection
 
+; --- North ---
 @mm_calc_up:
+  CMP [BX].CHARACTER.ch_loc.lo_y, LIMIT_NORTH ; North limit: the hitbox sits lower in the sprite, so stop here
+  JBE @mmg_skip_to_anim                     ; If yes, skip to animation
   SUB DX, AX                                ; Subtract pending_tick from Y position
 
 @mm_collision_detection:
@@ -67,7 +73,7 @@ MOVE_CHAR PROC
   CALL CHECK_CHAR_COLLISION                 ; Input: AX = char_index, CX = new_x, DX = new_y
   JC @mmg_collision_event                   ; Goto skip to animation if carry flag set
 
-  MOV AX, [BP+AX_SP_IDX] 
+  MOV AX, [BP+AX_SP_IDX]
   CALL CHECK_OBJECT_COLLISION               ; Input: AX = char_index, CX = new_x, DX = new_y
   JC @mmg_collision_event                   ; Goto skip to animation if carry flag set
 
