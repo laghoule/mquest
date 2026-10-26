@@ -44,7 +44,7 @@ CHECK_SCENE_TRANSITION PROC
   MOV AX, UP_DIR                              ; AX = direction
   CALL LOAD_SCENE_ADDR
   CALL IS_SCENE_EDGE                          ; Check if the north scene is an edge
-  JC @cs_scene_edge                           ; If it is, no transition
+  JC @cs_no_transition                          ; If it is, no transition
 
   XOR CX, CX                                  ; CX = 0 for y transition
   MOV DX, LIMIT_SOUTH                         ; DX = south limit for y transition
@@ -58,7 +58,7 @@ CHECK_SCENE_TRANSITION PROC
   MOV AX, UP_DIR                              ; AX = direction
   CALL LOAD_SCENE_ADDR
   CALL IS_SCENE_EDGE                          ; Check if the north scene is an edge
-  JC @cs_scene_edge                           ; If it is, no transition
+  JC @cs_no_transition                           ; If it is, no transition
 
   XOR CX, CX                                  ; CX = 0 for y transition
   MOV DX,LIMIT_NORTH                          ; DX = north limit for y transition
@@ -72,7 +72,7 @@ CHECK_SCENE_TRANSITION PROC
   MOV AX, UP_DIR                              ; AX = direction
   CALL LOAD_SCENE_ADDR
   CALL IS_SCENE_EDGE                          ; Check if the north scene is an edge
-  JC @cs_scene_edge                           ; If it is, no transition
+  JC @cs_no_transition                        ; If it is, no transition
 
   MOV CX, 1                                   ; CX = 1 for x transition
   MOV DX, LIMIT_WEST                          ; DX = west limit for x transition
@@ -86,14 +86,11 @@ CHECK_SCENE_TRANSITION PROC
   MOV AX, UP_DIR                              ; AX = direction
   CALL LOAD_SCENE_ADDR
   CALL IS_SCENE_EDGE                          ; Check if the north scene is an edge
-  JC @cs_scene_edge                           ; If it is, no transition
+  JC @cs_no_transition                        ; If it is, no transition
 
   MOV CX, 1                                   ; CX = 1 for x transition
   MOV DX, LIMIT_EAST                          ; DX = east limit for x transition
   JMP @cs_load_scene_transition               ; Jump to scene transition
-
-@cs_scene_edge:
-  JMP @cs_no_transition
 
   ; Load scene transition
 @cs_load_scene_transition:
@@ -206,7 +203,7 @@ LOAD_SCENE_ADDR ENDP
 IS_SCENE_EDGE PROC
   CLC                                       ; Clear carry flag
 
-  CMP SI, SCENE_EDGE                        ; Check if the west scene is an edge
+  TEST SI, SCENE_EDGE                       ; Check if the scene is an edge
   JNZ @ise_return
   STC                                       ; It is an edge, set carry flag
 
