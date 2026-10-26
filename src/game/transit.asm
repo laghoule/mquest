@@ -58,7 +58,7 @@ CHECK_SCENE_TRANSITION PROC
   MOV AX, DOWN_DIR                             ; AX = south direction
   CALL LOAD_SCENE_ADDR
   CALL IS_SCENE_EDGE                          ; Check if the north scene is an edge
-  JC @cs_no_transition                           ; If it is, no transition
+  JC @cs_no_transition                        ; If it is, no transition
 
   XOR CX, CX                                  ; CX = 0 for y transition
   MOV DX,LIMIT_NORTH                          ; DX = north limit for y transition
@@ -203,7 +203,7 @@ LOAD_SCENE_ADDR ENDP
 IS_SCENE_EDGE PROC
   CLC                                       ; Clear carry flag
 
-  CMP SI, SCENE_EDGE                       ; Check if the scene is an edge
+  CMP SI, SCENE_EDGE                        ; Check if the scene is an edge
   JNE @ise_return
   STC                                       ; It is an edge, set carry flag
 
