@@ -1,16 +1,9 @@
 ; Tile width: 1 byte
 ; Tile height: 1 byte
-; Number of pixel total: 2 bytes
+; Number of pixel total: 1 byte
 ; Number of tiles total: 1 byte
-PIC_HDR_SIZE EQU 5      ; .pic file format
-
-; Tile width: 1 byte
-; Tile height: 1 byte
-TIL_HDR_SIZE EQU 3      ; .til file format
-
-; Scene width: 1 byte
-; Scene height: 1 byte
-MAP_HDR_SIZE EQU 2      ; .map file format
+; TODO: This is not a good idea, remove the header (regenerate assets)
+PIC_HDR_SIZE EQU 4      ; .pic file format
 
 SCREEN_WIDTH    EQU 320
 SCREEN_HEIGHT   EQU 200
