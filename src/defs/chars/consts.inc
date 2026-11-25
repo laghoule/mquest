@@ -18,11 +18,3 @@ CHAR_SPRT_IDX_9 EQU 2448      ; Right
 CHAR_SPRT_IDX_10 EQU 2720     ; Up
 CHAR_SPRT_IDX_11 EQU 2992     ; Left
 
-; Offset of field in CHARACTER struct
-CH_X                 EQU 0    ; X coordinate of the character
-CH_Y                 EQU 2    ; Y coordinate of the character
-CH_DIR               EQU 4    ; Direction of the character
-CH_DIR_TABLE_PTR     EQU 6    ; Pointer to the direction table
-CH_ANIM_IDX          EQU 8    ; Index of the current animation frame
-CH_BG_SAVE_PTR       EQU 10   ; Pointer to the background save buffer
-CH_SPRITE_BUFFER_PTR EQU 12   ; Pointer to the sprite buffer
