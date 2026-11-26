@@ -57,7 +57,6 @@ DRAW_CHARACTER_MEM PROC
 
   ; --- Sprite buffered data ---
   MOV SI, [BX].CHARACTER.ch_sprt_buf_addr     ; Load character offset buffer
-  ADD SI, PIC_HDR_SIZE                        ; Jump above .pic header size
   ADD SI, AX                                  ; Tile index in the tileset buffef
 
   MOV DX, CHAR_HEIGHT                         ; Height of the sprite (number of lines)
